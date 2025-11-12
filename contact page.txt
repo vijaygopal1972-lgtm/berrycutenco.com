@@ -13,7 +13,7 @@
 <body>
 <header class="nav">
   <div class="nav-inner">
-    <a class="logo" href="#">
+    <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo">
       <span class="brand">BerryCuteNCo</span>
     </a>
@@ -21,7 +21,7 @@
     <nav class="menu">
       <a href="/index.html">Home</a>
       <a href="/shop.html">Shop</a>
-      <a class="cta" href="#">Contact</a>
+      <a class="cta" href="/contact.html">Contact</a>
     </nav>
   </div>
 </header>
@@ -89,3 +89,4 @@ main{max-width:900px;margin:24px auto;padding:0 16px}
   .info-block p{font-size:0.95rem}
 
 }
+
