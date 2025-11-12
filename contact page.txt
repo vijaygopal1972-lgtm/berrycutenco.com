@@ -1,9 +1,4 @@
- contact page
---------------
-html code
-----------
-
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -24,8 +19,8 @@ html code
     </a>
     <div class="spacer"></div>
     <nav class="menu">
-      <a href="#">Home</a>
-      <a href="#">Shop</a>
+      <a href="/index.html">Home</a>
+      <a href="/shop.html">Shop</a>
       <a class="cta" href="#">Contact</a>
     </nav>
   </div>
@@ -92,4 +87,5 @@ main{max-width:900px;margin:24px auto;padding:0 16px}
 @media(max-width:600px){
   .contact h1{font-size:1.7rem}
   .info-block p{font-size:0.95rem}
+
 }
