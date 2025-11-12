@@ -82,6 +82,7 @@
   let currentLabel = '1 scoop';
   let currentItems = '5+ items';
 
+  // Function to handle the pill clicks
   pills.forEach(p => {
     p.addEventListener('click', () => {
       pills.forEach(x => x.classList.remove('active'));
@@ -93,8 +94,9 @@
     });
   });
 
+  // Function to handle the Add to Cart click
   addBtn.addEventListener('click', () => {
-    alert('Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')}');
+    alert(Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')});
   });
 </script>
 </body>
