@@ -13,7 +13,7 @@
 
 <header class="nav">
   <div class="nav-inner">
-    <a class="logo" href="#">
+    <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo">
       <span class="brand">BerryCuteNCo</span>
     </a>
@@ -185,6 +185,7 @@ h1{font-family:"Baloo 2";font-size:1.85rem;margin:4px 0 8px;color:#5b2145}
   .gallery{order:1}
   .details{order:2}
 }
+
 
 
 
