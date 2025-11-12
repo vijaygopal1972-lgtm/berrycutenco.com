@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BerryCuteNCo — Shop</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html">
+      <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo">
+      <span class="brand">BerryCuteNCo</span>
+    </a>
+    <div class="spacer"></div>
+    <nav class="menu">
+      <a href="/index.html">Home</a>
+      <a class="cta" href="/shop.html">Shop</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="product">
+  <div class="gallery card">
+    <img src="https://i.ibb.co/hFp562zG/IMG-1611.jpg" alt="BerryCuteNCo Mystery Scoop">
+  </div>
+
+  <div class="details card">
+    <h1>Hello Kitty Mystery Scoop</h1>
+    <div class="price-range">₹999 – ₹2,499</div>
+
+    <div class="option-group" role="group" aria-label="Scoop size">
+      <button class="pill active" data-price="999"  data-items="5+ items"  data-label="1 scoop">1 scoop (5+ items) — ₹999</button>
+      <button class="pill"        data-price="1899" data-items="10+ items" data-label="2 scoops">2 scoops (10+ items) — ₹1,899</button>
+      <button class="pill"        data-price="2499" data-items="15+ items" data-label="3 scoops">3 scoops (15+ items) — ₹2,499</button>
+    </div>
+
+    <div class="purchase-row">
+      <button id="addToCart" class="btn">
+        <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+        <span class="btn-price">₹999</span>
+      </button>
+    </div>
+
+    <div class="info">
+      <h3 class="accent"><i class="fa-regular fa-star"></i> What’s in a Scoop?</h3>
+      <p class="muted">Every scoop is a unique mix of cute & useful goodies — no two are ever the same!</p>
+      <ul class="bullets">
+        <li>Bags (tote bag, makeup pouch, coin purse)</li>
+        <li>Glass cups & sippers</li>
+        <li>Keychains & phone charms</li>
+        <li>Card holder</li>
+        <li>Labubu mats (door mats / table mats)</li>
+        <li>Stationery items</li>
+        <li>Mirror</li>
+        <li>Hand towels</li>
+        <li>Beauty products</li>
+        <li>…and many more surprises!</li>
+      </ul>
+
+      <h3 class="accent"><i class="fa-solid fa-gift"></i> Bonus</h3>
+      <p class="muted">We sometimes tuck in a tiny extra treat — a little sparkle to make your unboxing feel extra special. ✨</p>
+
+      <h3 class="accent"><i class="fa-regular fa-circle-question"></i> Please Note</h3>
+      <p class="muted"><strong>All mystery scoop sales are final.</strong> The fun is in the unknown, so enjoy the surprise!</p>
+    </div>
+  </div>
+</main>
+
+<script>
+  const pills    = document.querySelectorAll('.pill');
+  const btnPrice = document.querySelector('.btn-price');
+  const addBtn   = document.getElementById('addToCart');
+
+  let currentPrice = 999;
+  let currentLabel = '1 scoop';
+  let currentItems = '5+ items';
+
+  pills.forEach(p => {
+    p.addEventListener('click', () => {
+      pills.forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      currentPrice = Number(p.dataset.price);
+      currentLabel = p.dataset.label;
+      currentItems = p.dataset.items;
+      btnPrice.textContent = ₹${currentPrice.toLocaleString('en-IN')};
+    });
+  });
+
+  addBtn.addEventListener('click', () => {
+    alert(Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')});
+  });
+</script>
+</body>
+</html>
