@@ -91,14 +91,14 @@
       currentLabel = p.dataset.label;
       currentItems = p.dataset.items;
       // CORRECTED: Added backticks around the price update
-      btnPrice.textContent = ₹${currentPrice.toLocaleString('en-IN')};
+      btnPrice.textContent = \₹${currentPrice.toLocaleString('en-IN')}';'
     });
   });
 
   // Function to handle the Add to Cart click
   addBtn.addEventListener('click', () => {
     // CORRECTED: Added backticks around the alert message
-    alert(Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')});
+    alert(\Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')}');'
   });
 </script>
 </body>
