@@ -20,7 +20,7 @@
     <div class="spacer"></div>
     <nav class="menu">
       <a href="/index.html">Home</a>
-      <a class="cta" href="#">Shop</a>
+      <a class="cta" href="/shop.html">Shop</a>
       <a href="/contact.html">Contact</a>
     </nav>
   </div>
@@ -185,6 +185,7 @@ h1{font-family:"Baloo 2";font-size:1.85rem;margin:4px 0 8px;color:#5b2145}
   .gallery{order:1}
   .details{order:2}
 }
+
 
 
 
