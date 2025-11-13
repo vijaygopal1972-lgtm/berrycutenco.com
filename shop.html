@@ -74,88 +74,77 @@
 </main>
 
 <script>
+   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    // --- 1. VARIABLE DECLARATION ---
+    // Select all necessary elements at the start
     const pills    = document.querySelectorAll('.pill');
-  const btnPrice = document.querySelector('.btn-price');
-  const addBtn   = document.getElementById('addToCart');
-  const payBtn   = document.getElementById('rzp-button1'); // NEW: Get the Pay button
+    const btnPrice = document.querySelector('.btn-price');
+    const addBtn   = document.getElementById('addToCart');
+    const payBtn   = document.getElementById('rzp-button1'); // The new Pay button
 
-  // Initial values for product selection
-  let currentPrice = 999;
-  let currentLabel = '1 scoop';
-  let currentItems = '5+ items';
-  // -------------------------------------------------------------
+    // Variables to track the currently selected item
+    let currentPrice = 999;
+    let currentLabel = '1 scoop';
+    let currentItems = '5+ items';
 
-  // 1. Function to handle the pill clicks (Updates price on BOTH buttons)
-  pills.forEach(p => {
-    p.addEventListener('click', () => {
-      pills.forEach(x => x.classList.remove('active'));
-      p.classList.add('active');
-      currentPrice = Number(p.dataset.price);
-      currentLabel = p.dataset.label;
-      currentItems = p.dataset.items;
-      
-      // Update Add to Cart button price
-      btnPrice.textContent = `₹${currentPrice.toLocaleString('en-IN')}`;
-      
-      // Update Pay button text
-      payBtn.innerHTML = <i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${currentPrice.toLocaleString('en-IN')} (Razorpay);
+    // --- 2. PILL CLICK HANDLER (Updates Price) ---
+    pills.forEach(p => {
+        p.addEventListener('click', () => {
+            // Update active state
+            pills.forEach(x => x.classList.remove('active'));
+            p.classList.add('active');
+            
+            // Update tracking variables
+            currentPrice = Number(p.dataset.price);
+            currentLabel = p.dataset.label;
+            currentItems = p.dataset.items;
+            
+            // Update button texts
+            btnPrice.textContent = `₹${currentPrice.toLocaleString('en-IN')}`;
+            payBtn.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${currentPrice.toLocaleString('en-IN')} (Razorpay)`;
+        });
     });
-  });
 
-  // 2. Function to handle the Add to Cart click (Still shows Demo Cart)
-  addBtn.addEventListener('click', () => {
-    alert(`Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')}`);
-  });
-  
-  // 3. RAZORPAY PAYMENT LOGIC (Modified from your code)
-  // We define the Razorpay function after the initial price is set
-  payBtn.onclick = function(e){
-      e.preventDefault(); // Prevents default button action
-
-      var options = {
-          // ⚠️ CRITICAL: Replace 'YOUR_KEY_ID' with your actual Razorpay Key ID
-          "key": "YOUR_KEY_ID", 
-          
-          // DYNAMIC AMOUNT: Converts Rupees to Paise (multiplies by 100)
-          "amount": (currentPrice * 100).toString(), 
-          "currency": "INR", // Set to Indian Rupee
-          "name": "BerryCuteNCo",
-          "description": ${currentLabel} - Mystery Scoop,
-          "image": "https://i.ibb.co/DH8LcRWf/logo.png", // Use your logo image
-          
-          // ⚠️ CRITICAL: This MUST be generated on your SERVER for security.
-          // You CANNOT use a static order ID in production.
-          "order_id": "ORDER_ID_GENERATED_ON_SERVER", 
-          
-          "handler": function (response){
-              // After successful payment, send these details to your server for verification
-              alert("Payment Success! ID: " + response.razorpay_payment_id);
-              // window.location.href = "/payment-success.html?id=" + response.razorpay_payment_id;
-          },
-          "prefill": { 
-              "name": "Customer Name", // Replace with actual customer data
-              "email": "customer@example.com", 
-              "contact": "9999999999"  
-          },
-          "notes": {
-              "address": "Customer Shipping Address"
-          },
-          "theme": {
-              "color": "#e0788d" // Berry Cute theme color
-          }
-      };
-      
-      var rzp1 = new Razorpay(options);
-      
-      rzp1.on('payment.failed', function (response){
-              alert("Payment Failed: " + response.error.description);
-      });
-      
-      rzp1.open(); // Open the payment modal
-  };
-</script>
-
-<script src="https://checkout.razorpay.com/v1/checkout.js">
+    // --- 3. ADD TO CART HANDLER (Demo Cart) ---
+    addBtn.addEventListener('click', () => {
+        alert(`Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')}`);
+    });
+    
+    // --- 4. RAZORPAY PAYMENT HANDLER ---
+    payBtn.addEventListener('click', function(e){
+        e.preventDefault(); // Stop the button's default action
+        
+        // Define Razorpay options using the current dynamic price
+        var options = {
+            "key": "YOUR_KEY_ID", 
+            "amount": (currentPrice * 100).toString(), // Price in Paise
+            "currency": "INR",
+            "name": "BerryCuteNCo",
+            "description": `${currentLabel} - Mystery Scoop`,
+            "order_id": "ORDER_ID_GENERATED_ON_SERVER", // ⚠️ Must be server-generated!
+            "handler": function (response){
+                alert("Payment Success! ID: " + response.razorpay_payment_id);
+                // After success, redirect to server for verification
+            },
+            "prefill": {
+                "name": "Customer Name",
+                "email": "customer@example.com",
+                "contact": "9999999999"
+            },
+            "theme": {
+                "color": "#e0788d"
+            }
+        };
+        
+        var rzp1 = new Razorpay(options);
+        
+        rzp1.on('payment.failed', function (response){
+            alert("Payment Failed: " + response.error.description);
+        });
+        
+        rzp1.open(); // Open the payment modal
+    });
 </script>
 </body>
 </html>
