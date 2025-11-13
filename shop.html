@@ -74,15 +74,18 @@
 </main>
 
 <script>
-   const pills    = document.querySelectorAll('.pill');
+    const pills    = document.querySelectorAll('.pill');
   const btnPrice = document.querySelector('.btn-price');
   const addBtn   = document.getElementById('addToCart');
+  const payBtn   = document.getElementById('rzp-button1'); // NEW: Get the Pay button
 
+  // Initial values for product selection
   let currentPrice = 999;
   let currentLabel = '1 scoop';
   let currentItems = '5+ items';
+  // -------------------------------------------------------------
 
-  // Function to handle the pill clicks
+  // 1. Function to handle the pill clicks (Updates price on BOTH buttons)
   pills.forEach(p => {
     p.addEventListener('click', () => {
       pills.forEach(x => x.classList.remove('active'));
@@ -90,16 +93,69 @@
       currentPrice = Number(p.dataset.price);
       currentLabel = p.dataset.label;
       currentItems = p.dataset.items;
-      // CORRECTED LINE: Using backticks for template literal
+      
+      // Update Add to Cart button price
       btnPrice.textContent = `₹${currentPrice.toLocaleString('en-IN')}`;
+      
+      // Update Pay button text
+      payBtn.innerHTML = <i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${currentPrice.toLocaleString('en-IN')} (Razorpay);
     });
   });
 
-  // Function to handle the Add to Cart click
+  // 2. Function to handle the Add to Cart click (Still shows Demo Cart)
   addBtn.addEventListener('click', () => {
-    // CORRECTED LINE: Using backticks for template literal
     alert(`Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')}`);
   });
+  
+  // 3. RAZORPAY PAYMENT LOGIC (Modified from your code)
+  // We define the Razorpay function after the initial price is set
+  payBtn.onclick = function(e){
+      e.preventDefault(); // Prevents default button action
+
+      var options = {
+          // ⚠️ CRITICAL: Replace 'YOUR_KEY_ID' with your actual Razorpay Key ID
+          "key": "YOUR_KEY_ID", 
+          
+          // DYNAMIC AMOUNT: Converts Rupees to Paise (multiplies by 100)
+          "amount": (currentPrice * 100).toString(), 
+          "currency": "INR", // Set to Indian Rupee
+          "name": "BerryCuteNCo",
+          "description": ${currentLabel} - Mystery Scoop,
+          "image": "https://i.ibb.co/DH8LcRWf/logo.png", // Use your logo image
+          
+          // ⚠️ CRITICAL: This MUST be generated on your SERVER for security.
+          // You CANNOT use a static order ID in production.
+          "order_id": "ORDER_ID_GENERATED_ON_SERVER", 
+          
+          "handler": function (response){
+              // After successful payment, send these details to your server for verification
+              alert("Payment Success! ID: " + response.razorpay_payment_id);
+              // window.location.href = "/payment-success.html?id=" + response.razorpay_payment_id;
+          },
+          "prefill": { 
+              "name": "Customer Name", // Replace with actual customer data
+              "email": "customer@example.com", 
+              "contact": "9999999999"  
+          },
+          "notes": {
+              "address": "Customer Shipping Address"
+          },
+          "theme": {
+              "color": "#e0788d" // Berry Cute theme color
+          }
+      };
+      
+      var rzp1 = new Razorpay(options);
+      
+      rzp1.on('payment.failed', function (response){
+              alert("Payment Failed: " + response.error.description);
+      });
+      
+      rzp1.open(); // Open the payment modal
+  };
+</script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js">
 </script>
 </body>
 </html>
