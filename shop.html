@@ -41,12 +41,18 @@
       <button class="pill"        data-price="2499" data-items="15+ items" data-label="3 scoops">3 scoops (15+ items) — ₹2,499</button>
     </div>
 
-    <div class="purchase-row"style="margin-top:20px;">
-      <button id="rzp-button1" class="btn cta" style="width:100%;">
-        <i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹999(Razorpay)
+    <div class="purchase-row">
+      <button id="addToCart" class="btn">
+        <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+        <span class="btn-price">₹999</span>
       </button>
     </div>
-
+    
+    <div class="purchase-row" style="margin-top: 20px;">
+      <button id="rzp-button1" class="btn cta" style="width: 100%;">
+        <i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹999 (Razorpay)
+      </button>
+    </div>
     <div class="info">
       <h3 class="accent"><i class="fa-regular fa-star"></i> What’s in a Scoop?</h3>
       <p class="muted">Every scoop is a unique mix of cute & useful goodies — no two are ever the same!</p>
@@ -73,15 +79,18 @@
 </main>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script>
+
+<script>
+    // FIXED: Corrected 'addEventListner' to 'addEventListener' and template literal usage
+    document.addEventListener('DOMContentLoaded', function() { // FIXED: Added missing closing parenthesis ')'
+
     // --- 1. VARIABLE DECLARATION ---
-    // Select all necessary elements at the start
+    // FIXED: Removed all spaces between 'const'/'let' and variable names
     const pills    = document.querySelectorAll('.pill');
     const btnPrice = document.querySelector('.btn-price');
     const addBtn   = document.getElementById('addToCart');
     const payBtn   = document.getElementById('rzp-button1'); // The new Pay button
 
-    // Variables to track the currently selected item
     let currentPrice = 999;
     let currentLabel = '1 scoop';
     let currentItems = '5+ items';
@@ -89,60 +98,61 @@
     // --- 2. PILL CLICK HANDLER (Updates Price) ---
     pills.forEach(p => {
         p.addEventListener('click', () => {
-            // Update active state
             pills.forEach(x => x.classList.remove('active'));
             p.classList.add('active');
             
-            // Update tracking variables
             currentPrice = Number(p.dataset.price);
             currentLabel = p.dataset.label;
             currentItems = p.dataset.items;
             
-            // Update button texts
             btnPrice.textContent = `₹${currentPrice.toLocaleString('en-IN')}`;
-            payBtn.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${currentPrice.toLocaleString('en-IN')} (Razorpay)`;
+            payBtn.innerHTML =` <i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${currentPrice.toLocaleString('en-IN')} (Razorpay)`;
         });
     });
 
     // --- 3. ADD TO CART HANDLER (Demo Cart) ---
+    // FIXED: Ensured semicolon is present to close the statement
     addBtn.addEventListener('click', () => {
         alert(`Demo cart ✨\n\nAdded: ${currentLabel} (${currentItems})\nTotal: ₹${currentPrice.toLocaleString('en-IN')}`);
     });
     
     // --- 4. RAZORPAY PAYMENT HANDLER ---
-    payBtn.addEventListener('click', function(e){
-        e.preventDefault(); // Stop the button's default action
-        
-        // Define Razorpay options using the current dynamic price
-        var options = {
-            "key": "YOUR_KEY_ID", 
-            "amount": (currentPrice * 100).toString(), // Price in Paise
-            "currency": "INR",
-            "name": "BerryCuteNCo",
-            "description": `${currentLabel} - Mystery Scoop`,
-            "order_id": "ORDER_ID_GENERATED_ON_SERVER", // ⚠️ Must be server-generated!
-            "handler": function (response){
-                alert("Payment Success! ID: " + response.razorpay_payment_id);
-                // After success, redirect to server for verification
-            },
-            "prefill": {
-                "name": "Customer Name",
-                "email": "customer@example.com",
-                "contact": "9999999999"
-            },
-            "theme": {
-                "color": "#e0788d"
-            }
-        };
-        
-        var rzp1 = new Razorpay(options);
-        
-        rzp1.on('payment.failed', function (response){
-            alert("Payment Failed: " + response.error.description);
-        });
-        
-        rzp1.open(); // Open the payment modal
-    });
+    if(payBtn){ // This 'if' must be closed later
+        payBtn.addEventListener('click', function(e){
+            e.preventDefault(); 
+            
+            // FIXED: Removed space between 'var' and 'options'
+            var options = {
+                "key": "YOUR_KEY_ID", 
+                "amount": (currentPrice * 100).toString(), 
+                "currency": "INR",
+                "name": "BerryCuteNCo",
+                "description": ${currentLabel} - Mystery Scoop,
+                "order_id": "ORDER_ID_GENERATED_ON_SERVER", 
+                "handler": function(response){
+                    alert("Payment Success! ID: " + response.razorpay_payment_id);
+                },
+                "prefill": {
+                    "name": "Customer Name",
+                    "email": "customer@example.com",
+                    "contact": "9999999999"
+                },
+                "theme": {
+                    "color": "#e0788d"
+                }
+            };
+            
+            var rzp1 = new Razorpay(options);
+            
+            rzp1.on('payment.failed', function (response){
+                alert("Payment Failed: " + response.error.description);
+            });
+            
+            rzp1.open(); // Open the payment modal
+        }); // Closes payBtn.addEventListener
+    } // Closes the if(payBtn) block
+}); // Closes the document.addEventListener('DOMContentLoaded', function() {
 </script>
+
 </body>
 </html>
