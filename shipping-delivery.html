@@ -4,86 +4,122 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BerryCuteNCo — Shipping & Delivery Policy</title>
-
-  <!-- Using the same stylesheet and fonts as your contact.html -->
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'berry-pink': '#FF5C8D', // Custom pink
+            'berry-blue': '#6C7BFF', // Custom blue
+            'berry-green': '#4CAF50', // Custom green
+          },
+          fontFamily: {
+            // Using Inter as the default, but can be customized further
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
 </head>
 
-<body>
-<header class="nav">
-  <div class="nav-inner">
-    <a class="logo" href="/index.html">
-      <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
-      <span class="brand">BerryCuteNCo</span>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+<!-- Header (Navigation) - REVISED FOR DESKTOP CONSISTENCY -->
+<header class="shadow-md bg-white sticky top-0 z-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center flex-wrap">
+    <a class="flex items-center space-x-2 shrink-0" href="/index.html">
+      <!-- Placeholder logo image -->
+      <img src="https://placehold.co/40x40/FF5C8D/ffffff?text=B" alt="BerryCuteNCo logo" class="h-10 w-10 rounded-full border-2 border-berry-pink p-1"/>
+      <span class="text-xl font-bold text-gray-800 tracking-wide">BerryCuteNCo</span>
     </a>
-    <div class="spacer"></div>
-    <nav class="menu">
-      <a href="/index.html">Home</a>
-      <a href="/shop.html">Shop</a>
-       <a href="/contact.html">Contact</a>
-      <a href="/refund&cancellation.html">Refund&Cancellation</a>
-      <a class="cta active" href="/shipping-delivery.html">Shipping-Delivery</a>
-      <a href="/terms.html">Terms</a>
+    
+    <!-- Menu - Always visible from 'sm' breakpoint (around 640px) -->
+    <nav class="w-full sm:w-auto mt-3 sm:mt-0 flex flex-wrap justify-center sm:justify-end space-x-2 sm:space-x-4 text-xs sm:text-sm font-semibold">
+      <a href="/index.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Home</a>
+      <a href="/shop.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Shop</a>
+      <!-- Contact is now a regular link here for consistency -->
+      <a href="/contact.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Contact</a>
+      <a href="/refund&cancellation.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Refund&Cancellation</a>
+      <!-- Active link styled differently -->
+      <a href="/shipping-delivery.html" class="text-berry-blue border-b-2 border-berry-blue pb-1 p-2 sm:p-0">Shipping-Delivery</a>
+      <a href="/terms.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Terms</a>
     </nav>
   </div>
 </header>
 
-<!-- Using the exact same structure as your contact.html for consistent card styling -->
-<main class="contact-page">
-  <section class="card contact">
-    <h1 style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
-    <p>We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
+<!-- Main Policy Content -->
+<main class="p-4 sm:p-8 flex justify-center">
+  <section class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-6 sm:p-8 lg:p-10 border-t-8 border-berry-blue">
+    
+    <!-- Title - Icon is already correctly visible here -->
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-2 flex items-center">
+      <i class="fa-solid fa-truck-fast mr-3 text-berry-blue"></i> Shipping & Delivery Policy
+    </h1>
+    <p class="text-gray-600 mb-6 border-b pb-4">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
     <!-- 1. Processing Time -->
-    <div class="info-block">
-      <p>
-        <strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong>
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-blue flex items-center">
+          <i class="fa-solid fa-box mr-2"></i> 1. Order Processing Time
+        </strong>
       </p>
-      <div style="margin-left: 20px;">
+      <div class="pl-4 space-y-3 text-gray-700">
         <p>
             Every scoop is lovingly customized and packed just for you!
             <br>
-            Our current order processing time is *<strong style="color: #FF5C8D;">5 to 7 business days</strong>* from the date your order is successfully placed.
+            Our current order processing time is <strong class="text-berry-pink font-semibold">5 to 7 business days</strong> from the date your order is successfully placed.
         </p>
-        <p><small>Business days are Monday – Saturday, excluding public holidays.</small></p>
+        <p><small class="text-gray-500">Business days are Monday – Saturday, excluding public holidays.</small></p>
       </div>
     </div>
 
     <!-- 2. Shipping & Delivery -->
-    <div class="info-block">
-      <p>
-        <strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong>
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-green flex items-center">
+          <i class="fa-solid fa-envelope-open-text mr-2"></i> 2. Shipping Timeframes
+        </strong>
       </p>
-      <div style="margin-left: 20px;">
+      <div class="pl-4 space-y-3 text-gray-700">
         <p>Once your order has been processed and dispatched, the estimated delivery time is:</p>
-        <ul>
-          <li><i class="fa-solid fa-star" style="color: #FFC0CB;"></i> *Local (Within State/Region):* 2 – 4 days</li>
-          <li><i class="fa-solid fa-star" style="color: #FFC0CB;"></i> *National (Other States):* 5 – 8 days</li>
+        <ul class="list-none pl-2 space-y-2">
+          <li class="flex items-center"><i class="fa-solid fa-star mr-2" style="color: #FFC0CB;"></i> Local (Within State/Region): *2 – 4 days*</li>
+          <li class="flex items-center"><i class="fa-solid fa-star mr-2" style="color: #FFC0CB;"></i> National (Other States): *5 – 8 days*</li>
         </ul>
-        <p>
-            <strong style="color: #FF5C8D;">Total Timeframe:</strong> Please allow a total of *<strong style="color: #FF5C8D;">7 to 15 business days</strong>* from the date of order for your cute package to arrive.
+        <p class="pt-2">
+            <strong class="text-berry-pink font-semibold">Total Timeframe:</strong> Please allow a total of <strong class="text-berry-pink font-extrabold">7 to 15 business days</strong> from the date of order for your cute package to arrive.
         </p>
       </div>
     </div>
 
     <!-- 3. Tracking and Notes -->
-    <div class="info-block">
-      <p>
-        <strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Important Notes</strong>
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-pink flex items-center">
+          <i class="fa-solid fa-map-pin mr-2"></i> 3. Tracking & Important Notes
+        </strong>
       </p>
-      <div style="margin-left: 20px;">
-        <p><strong style="color: #6C7BFF;">Tracking:</strong> Once your order is shipped, you will receive a tracking link via email to monitor your package’s journey.</p>
-        <p><strong style="color: #6C7BFF;">Delivery Address:</strong> Please ensure your delivery address is *complete and accurate* at checkout, as we cannot redirect packages once they have been shipped.</p>
-        <p><strong style="color: #6C7BFF;">P.O. Boxes:</strong> Unfortunately, we *do not ship* to P.O. Box addresses.</p>
+      <div class="pl-4 space-y-3 text-gray-700">
+        <p><strong class="text-berry-blue font-semibold">Tracking:</strong> Once your order is shipped, you will receive a tracking link via email to monitor your package’s journey.</p>
+        <p><strong class="text-berry-blue font-semibold">Delivery Address:</strong> Please ensure your delivery address is <em class="font-bold">complete and accurate</em> at checkout, as we cannot redirect packages once they have been shipped.</p>
+        <p><strong class="text-berry-blue font-semibold">P.O. Boxes:</strong> Unfortunately, we <em class="font-bold">do not ship</em> to P.O. Box addresses.</p>
       </div>
     </div>
 
-    <div class="cute-footer">
-      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+    <!-- Cute Footer -->
+    <div class="cute-footer text-center mt-8 pt-4 border-t border-pink-200">
+      <p class="text-lg text-gray-700">
+        🌸 Thank you for supporting <strong class="text-berry-pink">BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!
+      </p>
     </div>
   </section>
 </main>
+
 </body>
 </html>
