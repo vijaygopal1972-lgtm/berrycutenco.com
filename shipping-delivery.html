@@ -5,78 +5,129 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BerryCuteNCo — Shipping & Delivery Policy</title>
 
-  <!-- Using the same stylesheet and fonts as your contact.html -->
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* --- MOBILE NAV EXTRA (works with your existing style.css) --- */
+    .hamburger {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #ff5c8d;
+    }
+
+    @media (max-width: 768px) {
+      .menu {
+        display: none;
+      }
+      .hamburger {
+        display: block;
+      }
+      .mobile-menu {
+        display: none;
+        flex-direction: column;
+        background: white;
+        width: 100%;
+        padding: 15px 20px;
+        border-top: 2px solid #ffb6c9;
+      }
+      .mobile-menu a {
+        padding: 10px 0;
+        font-size: 18px;
+      }
+      .mobile-menu.show {
+        display: flex;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
+
+<!-- HEADER -->
 <header class="nav">
   <div class="nav-inner">
+
     <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
       <span class="brand">BerryCuteNCo</span>
     </a>
+
+    <!-- HAMBURGER FOR MOBILE -->
+    <div class="hamburger" onclick="toggleMenu()">
+      <i class="fa-solid fa-bars"></i>
+    </div>
+
     <div class="spacer"></div>
+
+    <!-- DESKTOP MENU -->
     <nav class="menu">
       <a href="/index.html">Home</a>
       <a href="/shop.html">Shop</a>
       <a href="/contact.html">Contact</a>
       <a href="/refund&cancellation.html">Refund&Cancellation</a>
-      <a class="cta active" href="/shipping-delivery.html">Shipping-Delivery</a>
+      <a class="active" href="/shipping-delivery.html">Shipping-Delivery</a>
       <a href="/terms.html">Terms</a>
     </nav>
+
   </div>
+
+  <!-- MOBILE MENU DROPDOWN -->
+  <nav class="mobile-menu" id="mobileMenu">
+    <a href="/index.html">Home</a>
+    <a href="/shop.html">Shop</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/refund&cancellation.html">Refund&Cancellation</a>
+    <a class="active" href="/shipping-delivery.html">Shipping-Delivery</a>
+    <a href="/terms.html">Terms</a>
+  </nav>
 </header>
 
-<!-- Using the exact same structure as your contact.html for consistent card styling -->
+<!-- JAVASCRIPT FOR MENU -->
+<script>
+  function toggleMenu() {
+    document.getElementById("mobileMenu").classList.toggle("show");
+  }
+</script>
+
+<!-- MAIN CONTENT -->
 <main class="contact-page">
   <section class="card contact">
     <h1 style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
     <p>We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
-    <!-- 1. Processing Time -->
+    <!-- 1. Processing -->
     <div class="info-block">
-      <p>
-        <strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong>
-      </p>
+      <p><strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
       <div style="margin-left: 20px;">
-        <p>
-            Every scoop is lovingly customized and packed just for you!
-            <br>
-            Our current order processing time is <strong style="color: #FF5C8D;">5 to 7 business days</strong> from the date your order is successfully placed.
-        </p>
-        <p><small>Business days are Monday – Saturday, excluding public holidays.</small></p>
+        <p>Every scoop is lovingly customized and packed just for you!<br>
+        Processing time: <strong style="color: #FF5C8D;">5 to 7 business days</strong>.</p>
+        <p><small>Business days: Mon–Sat, excluding holidays.</small></p>
       </div>
     </div>
 
-    <!-- 2. Shipping & Delivery -->
+    <!-- 2. Shipping -->
     <div class="info-block">
-      <p>
-        <strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong>
-      </p>
+      <p><strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
       <div style="margin-left: 20px;">
-        <p>Once your order has been processed and dispatched, the estimated delivery time is:</p>
         <ul>
-          <li><i class="fa-solid fa-star" style="color: #FFC0CB;"></i> Local (Within State/Region): 2 – 4 days</li>
-          <li><i class="fa-solid fa-star" style="color: #FFC0CB;"></i> National (Other States): 5 – 8 days</li>
+          <li>Local: 2–4 days</li>
+          <li>National: 5–8 days</li>
         </ul>
-        <p>
-            <strong style="color: #FF5C8D;">Total Timeframe:</strong> Please allow a total of <strong style="color: #FF5C8D;">7 to 15 business days</strong> from the date of order for your cute package to arrive.
-        </p>
+        <p><strong style="color: #FF5C8D;">Total: 7–15 business days.</strong></p>
       </div>
     </div>
 
-    <!-- 3. Tracking and Notes -->
+    <!-- 3. Tracking -->
     <div class="info-block">
-      <p>
-        <strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Important Notes</strong>
-      </p>
+      <p><strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
       <div style="margin-left: 20px;">
-        <p><strong style="color: #6C7BFF;">Tracking:</strong> Once your order is shipped, you will receive a tracking link via email to monitor your package’s journey.</p>
-        <p><strong style="color: #6C7BFF;">Delivery Address:</strong> Please ensure your delivery address is complete and accurate at checkout, as we cannot redirect packages once they have been shipped.</p>
-        <p><strong style="color: #6C7BFF;">P.O. Boxes:</strong> Unfortunately, we do not ship to P.O. Box addresses.</p>
+        <p><strong>Tracking:</strong> Sent via email after dispatch.</p>
+        <p><strong>Address:</strong> Must be accurate—cannot be changed later.</p>
+        <p><strong>No P.O. Boxes.</strong></p>
       </div>
     </div>
 
@@ -86,20 +137,11 @@
   </section>
 </main>
 
-  <footer style="
-    background-color: #ffe6f0; 
-    padding: 20px 0; 
-    text-align: center; 
-    border-top: 1px solid #ffb3c1;
-    font-family: 'Baloo 2', cursive;
-">
-  <div class="footer-links" style="margin-bottom: 10px;"></div>
-    <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
-        &copy; 2025 BerryCuteNCo. All Rights Reserved.
-    </p>
-    <p style="font-size: 14px; color: #884a62; margin: 0;">
-        Email: berrycutenco@gmail.com | WhatsApp: 9391669874
-    </p>
-  </footer>
+<!-- FOOTER -->
+<footer style="background:#ffe6f0; padding:20px 0; text-align:center; border-top:1px solid #ffb3c1; font-family:'Baloo 2', cursive;">
+  <p style="font-size:14px; color:#884a62;">© 2025 BerryCuteNCo. All Rights Reserved.</p>
+  <p style="font-size:14px; color:#884a62;">Email: berrycutenco@gmail.com | WhatsApp: 9391669874</p>
+</footer>
+
 </body>
 </html>
