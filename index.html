@@ -9,6 +9,82 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- START OF MOBILE MENU FIX: INLINE CSS -->
+  <style>
+    /* ---------------------------------- */
+    /* Mobile Navigation Specific Styles */
+    /* ---------------------------------- */
+    
+    /* Ensure the header uses flexbox for spacing */
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Ensures logo and toggle are spaced */
+      padding: 10px 20px;
+    }
+
+    /* Mobile Menu Toggle Button: Hidden by default (desktop) */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #ff69b4;
+      padding: 5px;
+    }
+    
+    /* Menu Container Styling */
+    .menu {
+      display: flex; /* Default to horizontal flex for desktop */
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* Set the 'active' link styling */
+    .nav-link.active {
+      font-weight: 700;
+      color: #ff69b4; /* Highlight the current page */
+    }
+    
+    /* ---------------------------------- */
+    /* MEDIA QUERY FOR MOBILE DEVICES (<= 768px) */
+    /* ---------------------------------- */
+    @media (max-width: 768px) {
+      /* 1. FORCE THE WIDE DESKTOP MENU TO BE HIDDEN */
+      .menu {
+        display: none !important; /* Overrides any conflicting external CSS */
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Position menu under the header */
+        left: 0;
+        width: 100%;
+        background-color: #fff; 
+        border-top: 1px solid #ffb3c1;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 100;
+        text-align: left;
+      }
+
+      /* 2. FORCE THE HAMBURGER ICON TO BE VISIBLE */
+      .menu-toggle {
+        display: block !important;
+      }
+
+      /* 3. SHOW THE MENU WHEN THE 'is-open' CLASS IS ADDED */
+      .menu.is-open {
+        display: flex !important; /* Force vertical visibility when toggled */
+      }
+
+      /* Style for vertical menu links */
+      .menu a {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+      }
+    }
+  </style>
+  <!-- END OF MOBILE MENU FIX: INLINE CSS -->
 </head>
 
 <body>
@@ -19,13 +95,21 @@
       <span class="brand">BerryCuteNCo</span>
     </a>
     <div class="spacer"></div>
-    <nav class="menu">
-      <a href="/index.html" class="active">Home</a>
-      <a href="/shop.html">Shop</a></a>
-      <a href="/contact.html">Contact</a>
-      <a href="/refund&cancellation.html">Refund&Cancellation</a>
-      <a href="/shipping-delivery.html">Shipping-Delivery</a>
-      <a href="/terms.html">Terms</a>
+    
+    <!-- HAMBURGER ICON BUTTON -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    
+    <!-- NAVIGATION MENU (Added ID for JS) -->
+    <nav class="menu" id="navMenu">
+      <a href="/index.html" class="nav-link active">Home</a>
+      <a href="/shop.html" class="nav-link">Shop</a>
+      <a href="/contact.html" class="nav-link">Contact</a>
+      <!-- Fixed text for better readability on mobile -->
+      <a href="/refund&cancellation.html" class="nav-link">Refund & Cancellation</a>
+      <a href="/shipping-delivery.html" class="nav-link">Shipping & Delivery</a>
+      <a href="/terms.html" class="nav-link">Terms</a>
     </nav>
   </div>
 </header>
@@ -54,7 +138,7 @@
     <p>Thanks for stopping by! We hope you find something that makes your heart go <em>aww</em>. 💖</p>
   </section>
 </main>
-  <!-- Add this code just before the closing </body> tag on your homepage and shop page -->
+  
 <footer style="
     background-color: #ffe6f0; 
     padding: 20px 0; 
@@ -75,5 +159,24 @@
         Email: berrycutenco@gmail.com | WhatsApp: 9391669874
     </p>
 </footer>
+
+<!-- START OF MOBILE MENU FIX: JAVASCRIPT -->
+<script>
+  // ======================================================
+  // MOBILE MENU TOGGLE LOGIC
+  // ======================================================
+
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  if (menuToggle && navMenu) {
+      menuToggle.addEventListener('click', () => {
+          // Toggles the 'is-open' class, which the CSS uses to show/hide the menu
+          navMenu.classList.toggle('is-open');
+      });
+  }
+</script>
+<!-- END OF MOBILE MENU FIX: JAVASCRIPT -->
+
 </body>
 </html>
