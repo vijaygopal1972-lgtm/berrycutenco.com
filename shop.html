@@ -9,8 +9,37 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/style.css">
 
-  <!-- INLINE CSS FOR GUARANTEED RESPONSIVENESS AND BUTTON STYLING -->
+  <!-- INLINE CSS FOR GUARANTEED RESPONSIVENESS (The fix is here) -->
   <style>
+    /* ---------------------------------- */
+    /* Mobile Navigation Specific Styles */
+    /* ---------------------------------- */
+    
+    /* Ensure the header uses flexbox for spacing */
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+    }
+
+    /* Mobile Menu Toggle Button: Hidden by default (desktop) */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #ff69b4;
+      padding: 5px;
+    }
+    
+    /* Menu Container Styling */
+    .menu {
+      display: flex; /* Default to horizontal flex for desktop */
+      transition: all 0.3s ease-in-out;
+    }
+
     /* Styling for the dynamic payment link */
     #instamojoPayLink {
       display: block;
@@ -33,37 +62,13 @@
       background-color: #e652a1;
     }
     
-    /* Layout for navigation container */
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between; /* Ensures logo and toggle are spaced */
-      padding: 10px 20px;
-    }
-
-    /* Mobile Menu Toggle Button (Hidden on Desktop) */
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #ff69b4;
-      padding: 5px; /* Added padding for easier tapping */
-    }
-    
     /* ---------------------------------- */
     /* MEDIA QUERY FOR MOBILE DEVICES (<= 768px) */
     /* ---------------------------------- */
     @media (max-width: 768px) {
-      /* 1. FORCE THE HAMBURGER ICON TO BE VISIBLE */
-      .menu-toggle {
-        display: block !important;
-      }
-      
-      /* 2. HIDE THE WIDE DESKTOP MENU */
+      /* 1. FORCE THE WIDE DESKTOP MENU TO BE HIDDEN */
       .menu {
-        display: none;
+        display: none !important; /* Overrides any conflicting display: flex */
         flex-direction: column;
         position: absolute;
         top: 60px; /* Position menu under the header */
@@ -73,12 +78,16 @@
         border-top: 1px solid #ffb3c1;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         z-index: 100;
-        text-align: left;
+      }
+
+      /* 2. FORCE THE HAMBURGER ICON TO BE VISIBLE */
+      .menu-toggle {
+        display: block !important;
       }
 
       /* 3. SHOW THE MENU WHEN THE 'is-open' CLASS IS ADDED */
       .menu.is-open {
-        display: flex !important;
+        display: flex !important; /* Force vertical visibility when toggled */
       }
 
       /* Style for vertical menu links */
@@ -110,12 +119,12 @@
     </a>
     <div class="spacer"></div>
     
-    <!-- MOBILE MENU TOGGLE BUTTON -->
+    <!-- MOBILE MENU TOGGLE BUTTON (Will appear on screens <= 768px) -->
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
         <i class="fa-solid fa-bars"></i>
     </button>
     
-    <!-- Navigation Menu -->
+    <!-- Navigation Menu (Will be hidden on mobile until toggled) -->
     <nav class="menu" id="navMenu">
       <a href="/index.html">Home</a>
       <a class="cta active" href="/shop.html">Shop</a>
