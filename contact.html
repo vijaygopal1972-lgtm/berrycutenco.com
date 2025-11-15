@@ -4,132 +4,199 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BerryCuteNCo — Contact Us</title>
-  <!-- Load Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Load Font Awesome for icons -->
+
+  <!-- CSS & Fonts -->
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'berry-pink': '#FF5C8D', // Custom pink
-            'berry-blue': '#6C7BFF', // Custom blue
-            'berry-green': '#4CAF50', // Custom green
-            'berry-light': '#FFF0F5', // Light background accent
-          },
-          fontFamily: {
-            // Using Inter as the default
-            sans: ['Inter', 'sans-serif'],
-          }
-        }
+  
+  <!-- START OF MOBILE MENU FIX: INLINE CSS -->
+  <style>
+    /* ---------------------------------- */
+    /* Mobile Navigation Specific Styles */
+    /* ---------------------------------- */
+    
+    /* Ensure the header uses flexbox for spacing */
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Ensures logo and toggle are spaced */
+      padding: 10px 20px;
+    }
+
+    /* Mobile Menu Toggle Button: Hidden by default (desktop) */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #ff69b4;
+      padding: 5px;
+    }
+    
+    /* Menu Container Styling */
+    .menu {
+      display: flex; /* Default to horizontal flex for desktop */
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* Set the 'active' link styling */
+    .nav-link.active {
+      font-weight: 700;
+      color: #ff69b4; /* Highlight the current page */
+    }
+    
+    /* Policy/Content Page Styling */
+    .policy-container, .contact-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        background-color: #fff;
+    }
+    .policy-container h1, .contact-container h1 {
+        color: #884a62;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    .policy-container h2 {
+        color: #ff69b4;
+        font-size: 1.5rem;
+        margin-top: 20px;
+    }
+    .policy-container p, .policy-container li {
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    /* ---------------------------------- */
+    /* MEDIA QUERY FOR MOBILE DEVICES (<= 768px) */
+    /* ---------------------------------- */
+    @media (max-width: 768px) {
+      /* 1. FORCE THE WIDE DESKTOP MENU TO BE HIDDEN */
+      .menu {
+        display: none !important; /* Overrides any conflicting external CSS */
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Position menu under the header */
+        left: 0;
+        width: 100%;
+        background-color: #fff; 
+        border-top: 1px solid #ffb3c1;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 100;
+        text-align: left;
+      }
+
+      /* 2. FORCE THE HAMBURGER ICON TO BE VISIBLE */
+      .menu-toggle {
+        display: block !important;
+      }
+
+      /* 3. SHOW THE MENU WHEN THE 'is-open' CLASS IS ADDED */
+      .menu.is-open {
+        display: flex !important; /* Force vertical visibility when toggled */
+      }
+
+      /* Style for vertical menu links */
+      .menu a {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+      }
+      .policy-container, .contact-container {
+        margin: 20px 10px;
+        padding: 20px;
       }
     }
-  </script>
+  </style>
+  <!-- END OF MOBILE MENU FIX: INLINE CSS -->
 </head>
 
-<body class="bg-gray-50 min-h-screen font-sans">
-
-<!-- Header (Navigation) - Fully Responsive with Hamburger Menu -->
-<header class="shadow-md bg-white sticky top-0 z-20">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-    <!-- Logo/Brand -->
-    <a class="flex items-center space-x-2 shrink-0" href="/index.html">
-      <img src="https://placehold.co/40x40/FF5C8D/ffffff?text=B" alt="BerryCuteNCo logo" class="h-10 w-10 rounded-full border-2 border-berry-pink p-1"/>
-      <span class="text-xl font-bold text-gray-800 tracking-wide">BerryCuteNCo</span>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html">
+      <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
+      <span class="brand">BerryCuteNCo</span>
     </a>
+    <div class="spacer"></div>
     
-    <!-- Desktop Menu (Hidden on mobile) -->
-    <nav class="hidden sm:flex space-x-4 text-sm font-semibold">
-      <a href="/index.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Home</a>
-      <a href="/shop.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Shop</a>
-      <!-- Active Link -->
-      <a href="/contact.html" class="text-berry-pink border-b-2 border-berry-pink pb-1">Contact</a> 
-      <a href="/refund&cancellation.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Refund&Cancellation</a>
-      <a href="/shipping-delivery.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Shipping-Delivery</a>
-      <a href="/terms.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Terms</a>
-    </nav>
-    
-    <!-- Mobile Menu Button (Hamburger) -->
-    <button id="mobile-menu-button" class="sm:hidden text-gray-600 hover:text-berry-pink text-xl p-2 rounded-full transition duration-150">
-        <i class="fas fa-bars"></i>
+    <!-- HAMBURGER ICON BUTTON -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+        <i class="fa-solid fa-bars"></i>
     </button>
-  </div>
-
-  <!-- Mobile Menu Links (Toggled by JS) -->
-  <div id="mobile-menu" class="hidden sm:hidden w-full bg-white border-t border-gray-100 pb-3 shadow-inner">
-      <a href="/index.html" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-pink-50">Home</a>
-      <a href="/shop.html" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-pink-50">Shop</a>
-      <a href="/contact.html" class="block px-4 py-2 text-base font-medium text-berry-pink bg-pink-50 border-l-4 border-berry-pink">Contact</a>
-      <a href="/refund&cancellation.html" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-pink-50">Refund&Cancellation</a>
-      <a href="/shipping-delivery.html" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-pink-50">Shipping-Delivery</a>
-      <a href="/terms.html" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-pink-50">Terms</a>
+    
+    <!-- NAVIGATION MENU (Added ID for JS) -->
+    <nav class="menu" id="navMenu">
+      <a href="/index.html" class="nav-link">Home</a>
+      <a href="/shop.html" class="nav-link">Shop</a>
+      <a href="/contact.html" class="nav-link active">Contact</a>
+      <!-- Fixed text for better readability on mobile -->
+      <a href="/refund&cancellation.html" class="nav-link">Refund & Cancellation</a>
+      <a href="/shipping-delivery.html" class="nav-link">Shipping & Delivery</a>
+      <a href="/terms.html" class="nav-link">Terms</a>
+    </nav>
   </div>
 </header>
 
-<!-- Main Contact Content -->
-<main class="p-4 sm:p-8 flex justify-center">
-  <section class="w-full max-w-lg bg-white shadow-xl rounded-2xl p-6 sm:p-8 lg:p-10 border-t-8 border-berry-pink">
-
-    <!-- Title -->
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-2 flex items-center">
-        <i class="fa-solid fa-heart mr-3 text-berry-pink"></i> Get in Touch
-    </h1>
-    <p class="text-gray-600 mb-8 pb-4 border-b border-gray-200">
-        Have a question about your order, need help picking a vibe for your Mystery Scoop, or just want to say hi? We'd love to hear from you!
-    </p>
-
-    <!-- Customer Support Block -->
-    <div class="mb-6 p-4 bg-berry-light rounded-xl border border-pink-200 shadow-sm">
-        <p class="font-bold text-gray-700 mb-1 flex items-center">
-            <i class="fa-solid fa-envelope mr-2 text-berry-pink"></i> Customer Support:
-        </p>
-        <a href="mailto:berrycutenco@gmail.com" class="text-berry-pink hover:text-pink-600 underline transition duration-150 ml-6 font-medium">berrycutenco@gmail.com</a>
-        <p class="text-sm text-gray-500 mt-1 ml-6">(We aim to reply within 1-2 business days!)</p>
+<main>
+  <section class="card contact-container">
+    <h1>Get in Touch with BerryCuteNCo 💖</h1>
+    <p style="text-align: center; color: #a35b75;">We're happy to answer any questions you have about your order, our scoops, or anything else!</p>
+    
+    <div class="contact-info" style="margin-top: 30px;">
+        <p><i class="fa-regular fa-envelope"></i> <strong>Email:</strong> <a href="mailto:berrycutenco@gmail.com" style="color: #ff69b4;">berrycutenco@gmail.com</a></p>
+        <p><i class="fa-brands fa-whatsapp"></i> <strong>WhatsApp:</strong> <a href="https://wa.me/9391669874" target="_blank" style="color: #ff69b4;">+91 9391669874</a> (Please allow up to 24 hours for a response)</p>
+        <p><i class="fa-regular fa-clock"></i> <strong>Support Hours:</strong> Monday - Friday, 10:00 AM to 6:00 PM IST</p>
     </div>
 
-    <!-- Business Hours Block -->
-    <div class="mb-6 p-4 bg-gray-100 rounded-xl border border-gray-200 shadow-sm">
-        <p class="font-bold text-gray-700 mb-2 flex items-center">
-            <i class="fa-solid fa-clock mr-2 text-berry-blue"></i> Business Hours:
-        </p>
-        <p class="text-gray-700 ml-6">Monday – Saturday, 10:00 AM – 6:00 PM (IST)</p>
+    <div style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid #ffb3c1;">
+        <p style="font-style: italic; color: #884a62;">Note: For fastest service regarding an existing order, please include your order number in your message.</p>
     </div>
-
-    <!-- Connect Block -->
-    <div class="mb-8 p-4 bg-berry-light rounded-xl border border-pink-200 shadow-sm">
-        <p class="font-bold text-gray-700 mb-3 flex items-center">
-            <i class="fa-solid fa-link mr-2 text-berry-green"></i> Connect with us:
-        </p>
-        <div class="ml-6 space-y-2">
-            <p class="flex items-center text-gray-700">
-                <i class="fa-brands fa-instagram mr-2 text-berry-pink text-lg w-6 text-center"></i> 
-                <a href="#" class="hover:text-berry-pink transition duration-150 font-medium">@berrycutenco</a> (Instagram)
-            </p>
-            <p class="flex items-center text-gray-700">
-                <i class="fa-brands fa-whatsapp mr-2 text-berry-green text-lg w-6 text-center"></i> 
-                <span class="font-medium">9391669874</span> (WhatsApp)
-            </p>
-        </div>
-    </div>
-
-    <!-- Cute Footer -->
-    <div class="cute-footer text-center mt-8 pt-4 border-t border-pink-200">
-      <p class="text-lg text-gray-700">
-        <i class="fa-solid fa-sparkles mr-1 text-yellow-500"></i> Thank you for supporting <strong class="text-berry-pink">BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!
-      </p>
-    </div>
-
   </section>
 </main>
+  
+<footer style="
+    background-color: #ffe6f0; 
+    padding: 20px 0; 
+    text-align: center; 
+    border-top: 1px solid #ffb3c1;
+    font-family: 'Baloo 2', cursive;
+">
+    <div class="footer-links" style="margin-bottom: 10px;">
+        <a href="/terms.html" style="color: #ff69b4; text-decoration: none; margin: 0 10px;">Terms</a> |
+        <a href="/refund&cancellation.html" style="color: #ff69b4; text-decoration: none; margin: 0 10px;">Refund Policy</a> |
+        <a href="/shipping-delivery.html" style="color: #ff69b4; text-decoration: none; margin: 0 10px;">Shipping Policy</a> |
+        <a href="/contact.html" style="color: #ff69b4; text-decoration: none; margin: 0 10px;">Contact Us</a>
+    </div>
+    <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
+        &copy; 2025 BerryCuteNCo. All Rights Reserved.
+    </p>
+    <p style="font-size: 14px; color: #884a62; margin: 0;">
+        Email: berrycutenco@gmail.com | WhatsApp: 9391669874
+    </p>
+</footer>
 
+<!-- START OF MOBILE MENU FIX: JAVASCRIPT -->
 <script>
-    // JavaScript to handle the mobile menu toggle
-    document.getElementById('mobile-menu-button').addEventListener('click', function() {
-        const menu = document.getElementById('mobile-menu');
-        menu.classList.toggle('hidden');
-    });
+  // ======================================================
+  // MOBILE MENU TOGGLE LOGIC
+  // ======================================================
+
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  if (menuToggle && navMenu) {
+      menuToggle.addEventListener('click', () => {
+          // Toggles the 'is-open' class, which the CSS uses to show/hide the menu
+          navMenu.classList.toggle('is-open');
+      });
+  }
 </script>
+<!-- END OF MOBILE MENU FIX: JAVASCRIPT -->
 
 </body>
 </html>
