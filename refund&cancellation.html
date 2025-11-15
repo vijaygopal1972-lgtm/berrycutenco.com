@@ -3,90 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BerryCuteNCo — Refund & Cancellation</title>
-
-  <!-- Using the same stylesheet and fonts as your contact.html -->
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>BerryCuteNCo — Refund & Cancellation Policy</title>
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'berry-pink': '#FF5C8D', // Custom pink from original code
+            'berry-blue': '#6C7BFF', // Custom blue from original code
+            'berry-green': '#4CAF50', // Custom green from original code
+          },
+          fontFamily: {
+            // Using Inter as the default, but can be customized further
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
 </head>
 
-<body>
-<header class="nav">
-  <div class="nav-inner">
-    <a class="logo" href="/index.html">
-      <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
-      <span class="brand">BerryCuteNCo</span>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+<!-- Header (Navigation) -->
+<header class="shadow-md bg-white sticky top-0 z-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+    <a class="flex items-center space-x-2" href="/index.html">
+      <!-- Placeholder logo image (using a similar style for visual consistency) -->
+      <img src="https://placehold.co/40x40/FF5C8D/ffffff?text=B" alt="BerryCuteNCo logo" class="h-10 w-10 rounded-full border-2 border-berry-pink p-1"/>
+      <span class="text-xl font-bold text-gray-800 tracking-wide">BerryCuteNCo</span>
     </a>
-    <div class="spacer"></div>
-    <nav class="menu">
-      <a href="/index.html">Home</a>
-      <a href="/shop.html">Shop</a>
-       <a class="cta" href="/contact.html">Contact</a>
-      <!-- Refund&Cancellation is active on this page, and is not a CTA button -->
-      <a class="active" href="/refund&cancellation.html">Refund&Cancellation</a>
-      <a href="/shipping-delivery.html">Shipping-Delivery</a>
-      <a href="/terms.html">Terms</a>
+    
+    <!-- Menu (Hidden on mobile, show on larger screens) -->
+    <nav class="hidden sm:flex space-x-6 text-sm font-semibold">
+      <a href="/index.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Home</a>
+      <a href="/shop.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Shop</a>
+      <a href="/contact.html" class="text-white bg-berry-pink hover:bg-pink-600 rounded-full px-4 py-2 transition duration-150 shadow-md">Contact</a>
+      <!-- Active link styled differently -->
+      <a href="/refund&cancellation.html" class="text-berry-pink border-b-2 border-berry-pink pb-1">Refund&Cancellation</a>
+      <a href="/shipping-delivery.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Shipping-Delivery</a>
+      <a href="/terms.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Terms</a>
     </nav>
+
+    <!-- Simple mobile menu placeholder/trigger (if needed) -->
+    <button class="sm:hidden text-gray-600 hover:text-berry-pink text-xl">
+        <i class="fas fa-bars"></i>
+    </button>
   </div>
 </header>
 
-<!-- Using the exact same structure as your contact.html for consistent card styling -->
-<main class="contact-page">
-  <section class="card contact">
-    <h1 style="color: #FF5C8D;"><i class="fa-solid fa-file-invoice"></i> Policy & Kindness</h1>
-    <p>We're here to help you get the cutest items! Here are the rules for refunds and cancellations, kept simple and sweet.</p>
+<!-- Main Policy Content -->
+<main class="p-4 sm:p-8 flex justify-center">
+  <section class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-6 sm:p-8 lg:p-10 border-t-8 border-berry-pink">
+    
+    <!-- Title -->
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-2 flex items-center">
+      <i class="fa-solid fa-file-invoice mr-3 text-berry-pink"></i> Policy & Kindness
+    </h1>
+    <p class="text-gray-600 mb-6 border-b pb-4">We're here to help you get the cutest items! Here are the rules for refunds and cancellations, kept simple and sweet.</p>
+
+    <!-- Contact Info -->
+    <div class="mb-6 p-4 bg-pink-50/70 rounded-xl border border-pink-200">
+      <p class="text-gray-700 font-semibold">
+        <i class="fa-solid fa-envelope mr-2 text-berry-pink"></i>Customer Support: 
+        <a href="mailto:berrycutenco@gmail.com" class="text-berry-pink hover:text-pink-600 underline transition duration-150">berrycutenco@gmail.com</a>
+      </p>
+      <small class="text-gray-500">(We aim to reply within 1-2 business days)</small>
+    </div>
 
     <!-- 1. CANCELLATION POLICY -->
-     <div class="info-block" style="margin-top: 20px;">
-    <p><strong>Customer Support:</strong> <a href="mailto:berrycutenco@gmail.com">berrycutenco@gmail.com</a><br>
-    <small>(We aim to reply within 1-2 business days)</small></p>
-</div>
-
-    <div class="info-block">
-      <p>
-        <strong style="color: #FF5C8D;"><i class="fa-solid fa-ban"></i> 1. Cancellation Policy: All Sales are Final</strong>
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-pink flex items-center">
+          <i class="fa-solid fa-ban mr-2"></i> 1. Cancellation Policy: All Sales are Final
+        </strong>
       </p>
-      <div style="margin-left: 20px;">
-        <p><strong style="color: #4CAF50;">No Cancellation:</strong> Once your payment is processed, we immediately start preparing your Mystery Scoop! Therefore, orders *cannot be cancelled*.</p>
-        <p><strong style="color: #4CAF50;">No Refund:</strong> We maintain a strict "No Refund" policy for change-of-mind or accidental purchases after payment.</p>
+      <div class="pl-4 space-y-3">
+        <p class="text-gray-700">
+          <strong class="text-berry-green font-semibold">No Cancellation:</strong> Once your payment is processed, we immediately start preparing your Mystery Scoop! Therefore, orders <em class="font-bold">cannot be cancelled</em>.
+        </p>
+        <p class="text-gray-700">
+          <strong class="text-berry-green font-semibold">No Refund:</strong> We maintain a strict "No Refund" policy for change-of-mind or accidental purchases after payment.
+        </p>
       </div>
     </div>
 
     <!-- 2. REFUND ELIGIBILITY -->
-    <div class="info-block">
-      <p>
-        <strong style="color: #6C7BFF;"><i class="fa-solid fa-box-open"></i> 2. Refund Eligibility: Damage Only</strong>
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-blue flex items-center">
+          <i class="fa-solid fa-box-open mr-2"></i> 2. Refund Eligibility: Damage Only
+        </strong>
       </p>
-      <div style="margin-left: 20px;">
-        <p>A refund will <strong style="color: #FF5C8D;">ONLY</strong> be processed if the product you receive is <strong style="color: #6C7BFF;">damaged during shipping</strong>. You *MUST* provide the following proof:</p>
+      <div class="pl-4">
+        <p class="text-gray-700 mb-4">
+          A refund will <strong class="text-berry-pink font-semibold">ONLY</strong> be processed if the product you receive is <strong class="text-berry-blue font-semibold">damaged during shipping</strong>. You <em class="font-bold">MUST</em> provide the following proof:
+        </p>
 
-        <p style="margin-top: 15px;"><strong style="color: #333;"><i class="fa-solid fa-video-camera"></i> Mandatory Unboxing Video Proof</strong></p>
-        <ol style="padding-left: 20px;">
-          <li><strong style="color: #FF5C8D;">Report within 48 Hours:</strong> You must report the damage and send proof within *48 hours* of receiving the package.</li>
-          <li><strong style="color: #FF5C8D;">Continuous Recording:</strong> The video must be a single, *uncut, and continuous* recording of the entire unboxing process.</li>
-          <li><strong style="color: #FF5C8D;">Start Sealed:</strong> The video must clearly show the package sealed, with the shipping label visible, before it is opened.</li>
-          <li><strong style="color: #FF5C8D;">Show Damage:</strong> The video must capture the damaged item(s) clearly within the frame.</li>
-          <li><strong style="color: #FF5C8D;">Submission:</strong> The full video must be submitted from your registered WhatsApp number to *berrycutenco’s official WhatsApp number (9391669874)*.</li>
+        <p class="mt-4 text-lg font-bold text-gray-800 flex items-center">
+          <i class="fa-solid fa-video-camera mr-2"></i> Mandatory Unboxing Video Proof
+        </p>
+        
+        <ol class="list-decimal pl-6 mt-3 space-y-2 text-gray-700">
+          <li><strong class="text-berry-pink font-semibold">Report within 48 Hours:</strong> You must report the damage and send proof within <em class="font-bold">48 hours</em> of receiving the package.</li>
+          <li><strong class="text-berry-pink font-semibold">Continuous Recording:</strong> The video must be a single, <em class="font-bold">uncut, and continuous</em> recording of the entire unboxing process.</li>
+          <li><strong class="text-berry-pink font-semibold">Start Sealed:</strong> The video must clearly show the package sealed, with the shipping label visible, before it is opened.</li>
+          <li><strong class="text-berry-pink font-semibold">Show Damage:</strong> The video must capture the damaged item(s) clearly within the frame.</li>
+          <li><strong class="text-berry-pink font-semibold">Submission:</strong> The full video must be submitted from your registered WhatsApp number to <em class="font-bold">berrycutenco’s official WhatsApp number (9391669874)</em>.</li>
         </ol>
       </div>
     </div>
 
     <!-- 3. REFUND PROCESSING -->
-    <div class="info-block">
-      <p>
-        <strong style="color: #4CAF50;"><i class="fa-solid fa-receipt"></i> 3. Refund Processing</strong>
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-green flex items-center">
+          <i class="fa-solid fa-receipt mr-2"></i> 3. Refund Processing
+        </strong>
       </p>
-      <div style="margin-left: 20px;">
-        <p><strong style="color: #6C7BFF;">Review Period:</strong> We will review the video proof within *1 to 2 business days*.</p>
-        <p><strong style="color: #6C7BFF;">Refund Timeline:</strong> If approved, the credited amount will reflect in your original payment method (bank account, etc.) in approximately *5 to 7 business days* (this depends on your bank!).</p>
+      <div class="pl-4 space-y-3">
+        <p class="text-gray-700">
+          <strong class="text-berry-blue font-semibold">Review Period:</strong> We will review the video proof within <em class="font-bold">1 to 2 business days</em>.
+        </p>
+        <p class="text-gray-700">
+          <strong class="text-berry-blue font-semibold">Refund Timeline:</strong> If approved, the credited amount will reflect in your original payment method (bank account, etc.) in approximately <em class="font-bold">5 to 7 business days</em> (this depends on your bank!).
+        </p>
       </div>
     </div>
 
-    <div class="cute-footer">
-      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+    <!-- Cute Footer -->
+    <div class="cute-footer text-center mt-8 pt-4 border-t border-pink-200">
+      <p class="text-lg text-gray-700">
+        🌸 Thank you for supporting <strong class="text-berry-pink">BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!
+      </p>
     </div>
+
   </section>
 </main>
+
 </body>
 </html>
