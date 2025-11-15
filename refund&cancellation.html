@@ -29,30 +29,26 @@
 
 <body class="bg-gray-50 min-h-screen font-sans">
 
-<!-- Header (Navigation) -->
+<!-- Header (Navigation) - REVISED FOR DESKTOP CONSISTENCY -->
 <header class="shadow-md bg-white sticky top-0 z-10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-    <a class="flex items-center space-x-2" href="/index.html">
-      <!-- Placeholder logo image (using a similar style for visual consistency) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center flex-wrap">
+    <a class="flex items-center space-x-2 shrink-0" href="/index.html">
+      <!-- Placeholder logo image -->
       <img src="https://placehold.co/40x40/FF5C8D/ffffff?text=B" alt="BerryCuteNCo logo" class="h-10 w-10 rounded-full border-2 border-berry-pink p-1"/>
       <span class="text-xl font-bold text-gray-800 tracking-wide">BerryCuteNCo</span>
     </a>
     
-    <!-- Menu (Hidden on mobile, show on larger screens) -->
-    <nav class="hidden sm:flex space-x-6 text-sm font-semibold">
-      <a href="/index.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Home</a>
-      <a href="/shop.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Shop</a>
-      <a href="/contact.html" class="text-white bg-berry-pink hover:bg-pink-600 rounded-full px-4 py-2 transition duration-150 shadow-md">Contact</a>
+    <!-- Menu - Always visible from 'sm' breakpoint (around 640px) -->
+    <nav class="w-full sm:w-auto mt-3 sm:mt-0 flex flex-wrap justify-center sm:justify-end space-x-2 sm:space-x-4 text-xs sm:text-sm font-semibold">
+      <a href="/index.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Home</a>
+      <a href="/shop.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Shop</a>
+      <!-- Contact is now a regular link here for consistency -->
+      <a href="/contact.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Contact</a> 
       <!-- Active link styled differently -->
-      <a href="/refund&cancellation.html" class="text-berry-pink border-b-2 border-berry-pink pb-1">Refund&Cancellation</a>
-      <a href="/shipping-delivery.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Shipping-Delivery</a>
-      <a href="/terms.html" class="text-gray-600 hover:text-berry-pink transition duration-150">Terms</a>
+      <a href="/refund&cancellation.html" class="text-berry-pink border-b-2 border-berry-pink pb-1 p-2 sm:p-0">Refund&Cancellation</a>
+      <a href="/shipping-delivery.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Shipping-Delivery</a>
+      <a href="/terms.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Terms</a>
     </nav>
-
-    <!-- Simple mobile menu placeholder/trigger (if needed) -->
-    <button class="sm:hidden text-gray-600 hover:text-berry-pink text-xl">
-        <i class="fas fa-bars"></i>
-    </button>
   </div>
 </header>
 
@@ -60,7 +56,7 @@
 <main class="p-4 sm:p-8 flex justify-center">
   <section class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-6 sm:p-8 lg:p-10 border-t-8 border-berry-pink">
     
-    <!-- Title -->
+    <!-- Title - Icon is already correctly visible here -->
     <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-2 flex items-center">
       <i class="fa-solid fa-file-invoice mr-3 text-berry-pink"></i> Policy & Kindness
     </h1>
