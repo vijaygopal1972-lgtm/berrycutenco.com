@@ -4,73 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BerryCuteNCo — User Agreement</title>
-  <!-- Load Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Load Font Awesome for icons -->
+
+  <!-- Styles & Fonts -->
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'berry-pink': '#FF5C8D', // Custom pink
-            'berry-blue': '#6C7BFF', // Custom blue
-            'berry-green': '#4CAF50', // Custom green
-          },
-          fontFamily: {
-            // Using Inter as the default, but can be customized further
-            sans: ['Inter', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
 </head>
 
-<body class="bg-gray-50 min-h-screen font-sans">
-
-<!-- Header (Navigation) - Consistent Responsive Design -->
-<header class="shadow-md bg-white sticky top-0 z-10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center flex-wrap">
-    <a class="flex items-center space-x-2 shrink-0" href="/index.html">
-      <!-- Placeholder logo image -->
-      <img src="https://placehold.co/40x40/FF5C8D/ffffff?text=B" alt="BerryCuteNCo logo" class="h-10 w-10 rounded-full border-2 border-berry-pink p-1"/>
-      <span class="text-xl font-bold text-gray-800 tracking-wide">BerryCuteNCo</span>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html">
+      <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
+      <span class="brand">BerryCuteNCo</span>
     </a>
-    
-    <!-- Menu - Always visible from 'sm' breakpoint -->
-    <nav class="w-full sm:w-auto mt-3 sm:mt-0 flex flex-wrap justify-center sm:justify-end space-x-2 sm:space-x-4 text-xs sm:text-sm font-semibold">
-      <a href="/index.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Home</a>
-      <a href="/shop.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Shop</a>
-      <a href="/contact.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Contact</a>
-      <a href="/refund&cancellation.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Refund&Cancellation</a>
-      <a href="/shipping-delivery.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Shipping-Delivery</a>
-      <!-- Active link styled differently -->
-      <a href="/terms.html" class="text-berry-blue border-b-2 border-berry-blue pb-1 p-2 sm:p-0">Terms</a>
+    <div class="spacer"></div>
+    <nav class="menu">
+      <a href="/index.html">Home</a>
+      <a href="/shop.html">Shop</a>
+      <a href="/refund&cancellation.html">Refund&Cancellation</a>
+      <a href="/shipping-delivery.html">Shipping-Delivery</a>
+      <a class="cta active" href="/user-agreement.html">User Agreement</a>
     </nav>
   </div>
 </header>
 
-<!-- Main Terms Content -->
-<main class="p-4 sm:p-8 flex justify-center">
-  <section class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-6 sm:p-8 lg:p-10 border-t-8 border-berry-blue">
+<main class="contact-page">
+  <section class="card contact">
 
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-2 flex items-center">
-        <i class="fa-solid fa-file-contract mr-3 text-berry-blue"></i> Our Friendly User Agreement
-    </h1>
+    <h1 style="color:#6C7BFF;">🐻 Our Friendly User Agreement</h1>
 
-    <p class="text-gray-600 mb-8 border-b pb-4">Welcome to <strong class="text-berry-pink">BerryCuteNCo</strong>! We're thrilled to have you here. This is a quick and easy guide to how we work together. By using our app, you’re agreeing to these friendly rules.</p>
+    <p>Welcome to <strong>BerryCuteNCo</strong>! We're thrilled to have you here. This is a quick and easy guide to how we work together. By using our app, you’re agreeing to these friendly rules.</p>
 
     <!-- 1. Be Nice & Play Fair -->
-    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
-      <p class="mb-4">
-        <strong class="text-xl font-bold text-berry-pink flex items-center">
-            <i class="fa-solid fa-heart mr-2"></i> 1. Be Nice & Play Fair
-        </strong>
-      </p>
+    <div class="info-block">
+      <p><strong style="color:#FF5C8D;"><i class="fa-solid fa-heart"></i> 1. Be Nice & Play Fair</strong></p>
 
-      <div class="pl-4 space-y-3 text-gray-700">
-        <ul class="list-disc pl-5 space-y-2">
+      <div style="margin-left:20px;">
+        <ul>
           <li><strong>Your Account:</strong> Keep your login details safe and secure. You're responsible for everything that happens under your account.</li>
 
           <li><strong>No Nastiness:</strong> Please don’t use our app to be mean, spread bad vibes, or break any laws.</li>
@@ -81,30 +52,22 @@
     </div>
 
     <!-- 2. What’s Ours & What’s Yours -->
-    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
-      <p class="mb-4">
-        <strong class="text-xl font-bold text-berry-green flex items-center">
-            <i class="fa-solid fa-leaf mr-2"></i> 2. What’s Ours and What’s Yours
-        </strong>
-      </p>
+    <div class="info-block">
+      <p><strong style="color:#4CAF50;"><i class="fa-solid fa-leaf"></i> 2. What’s Ours and What’s Yours</strong></p>
 
-      <div class="pl-4 space-y-3 text-gray-700">
-        <ul class="list-disc pl-5 space-y-2">
+      <div style="margin-left:20px;">
+        <ul>
           <li><strong>Our App is Ours:</strong> The code, design, logos, and features belong to BerryCuteNCo and its creators. Please don't copy them.</li>
         </ul>
       </div>
     </div>
 
     <!-- 3. If Things Go Wrong -->
-    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
-      <p class="mb-4">
-        <strong class="text-xl font-bold text-berry-blue flex items-center">
-            <i class="fa-solid fa-circle-exclamation mr-2"></i> 3. If Things Go Wrong (Oops!)
-        </strong>
-      </p>
+    <div class="info-block">
+      <p><strong style="color:#6C7BFF;"><i class="fa-solid fa-circle-exclamation"></i> 3. If Things Go Wrong (Oops!)</strong></p>
 
-      <div class="pl-4 space-y-3 text-gray-700">
-        <ul class="list-disc pl-5 space-y-2">
+      <div style="margin-left:20px;">
+        <ul>
           <li><strong>We Do Our Best:</strong> We try to make sure everything works perfectly, but sometimes bugs happen. We can't promise the app will be error-free 24/7, but we promise to fix things fast!</li>
 
           <li><strong>Changes:</strong> We might update these terms or the app’s features from time to time. We'll try to give you a heads-up if the changes are major.</li>
@@ -115,9 +78,9 @@
     </div>
 
     <!-- Ending -->
-    <div class="cute-footer text-center mt-8 pt-4 border-t border-pink-200">
-      <p class="text-lg text-gray-700 font-bold mb-2">💖 That’s It!</p>
-      <p class="text-gray-600">These rules help keep <strong class="text-berry-pink">BerryCuteNCo</strong> fun, safe, and awesome for everyone. Have a wonderful time using the app!</p>
+    <div class="cute-footer">
+      <p>💖 <strong>That’s It!</strong></p>
+      <p>These rules help keep <strong>BerryCuteNCo</strong> fun, safe, and awesome for everyone. Have a wonderful time using the app!</p>
     </div>
 
   </section>
