@@ -4,201 +4,142 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BerryCuteNCo — Refund & Cancellation Policy</title>
-
-  <!-- CSS & Fonts -->
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
-  <!-- START OF MOBILE MENU FIX: INLINE CSS -->
-  <style>
-    /* ---------------------------------- */
-    /* Mobile Navigation Specific Styles */
-    /* ---------------------------------- */
-    
-    /* Ensure the header uses flexbox for spacing */
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between; /* Ensures logo and toggle are spaced */
-      padding: 10px 20px;
-    }
-
-    /* Mobile Menu Toggle Button: Hidden by default (desktop) */
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #ff69b4;
-      padding: 5px;
-    }
-    
-    /* Menu Container Styling */
-    .menu {
-      display: flex; /* Default to horizontal flex for desktop */
-      transition: all 0.3s ease-in-out;
-    }
-
-    /* Set the 'active' link styling */
-    .nav-link.active {
-      font-weight: 700;
-      color: #ff69b4; /* Highlight the current page */
-    }
-    
-    /* Policy/Content Page Styling */
-    .policy-container, .contact-container {
-        max-width: 800px;
-        margin: 40px auto;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        background-color: #fff;
-    }
-    .policy-container h1, .contact-container h1 {
-        color: #884a62;
-        text-align: center;
-        margin-bottom: 25px;
-    }
-    .policy-container h2 {
-        color: #ff69b4;
-        font-size: 1.5rem;
-        margin-top: 20px;
-    }
-    .policy-container p, .policy-container li {
-        color: #333;
-        line-height: 1.6;
-    }
-    
-    /* ---------------------------------- */
-    /* MEDIA QUERY FOR MOBILE DEVICES (<= 768px) */
-    /* ---------------------------------- */
-    @media (max-width: 768px) {
-      /* 1. FORCE THE WIDE DESKTOP MENU TO BE HIDDEN */
-      .menu {
-        display: none !important; /* Overrides any conflicting external CSS */
-        flex-direction: column;
-        position: absolute;
-        top: 60px; /* Position menu under the header */
-        left: 0;
-        width: 100%;
-        background-color: #fff; 
-        border-top: 1px solid #ffb3c1;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        z-index: 100;
-        text-align: left;
-      }
-
-      /* 2. FORCE THE HAMBURGER ICON TO BE VISIBLE */
-      .menu-toggle {
-        display: block !important;
-      }
-
-      /* 3. SHOW THE MENU WHEN THE 'is-open' CLASS IS ADDED */
-      .menu.is-open {
-        display: flex !important; /* Force vertical visibility when toggled */
-      }
-
-      /* Style for vertical menu links */
-      .menu a {
-        padding: 15px 20px;
-        border-bottom: 1px solid #f0f0f0;
-        width: 100%;
-      }
-      .policy-container, .contact-container {
-        margin: 20px 10px;
-        padding: 20px;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'berry-pink': '#FF5C8D', // Custom pink from original code
+            'berry-blue': '#6C7BFF', // Custom blue from original code
+            'berry-green': '#4CAF50', // Custom green from original code
+          },
+          fontFamily: {
+            // Using Inter as the default, but can be customized further
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
       }
     }
-  </style>
-  <!-- END OF MOBILE MENU FIX: INLINE CSS -->
+  </script>
 </head>
 
-<body>
-<header class="nav">
-  <div class="nav-inner">
-    <a class="logo" href="/index.html">
-      <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
-      <span class="brand">BerryCuteNCo</span>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+<!-- Header (Navigation) - REVISED FOR DESKTOP CONSISTENCY -->
+<header class="shadow-md bg-white sticky top-0 z-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center flex-wrap">
+    <a class="flex items-center space-x-2 shrink-0" href="/index.html">
+      <!-- Placeholder logo image -->
+      <img src="https://placehold.co/40x40/FF5C8D/ffffff?text=B" alt="BerryCuteNCo logo" class="h-10 w-10 rounded-full border-2 border-berry-pink p-1"/>
+      <span class="text-xl font-bold text-gray-800 tracking-wide">BerryCuteNCo</span>
     </a>
-    <div class="spacer"></div>
     
-    <!-- HAMBURGER ICON BUTTON -->
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-    
-    <!-- NAVIGATION MENU (Added ID for JS) -->
-    <nav class="menu" id="navMenu">
-      <a href="/index.html" class="nav-link">Home</a>
-      <a href="/shop.html" class="nav-link">Shop</a>
-      <a href="/contact.html" class="nav-link">Contact</a>
-      <!-- Set active class here -->
-      <a href="/refund&cancellation.html" class="nav-link active">Refund & Cancellation</a>
-      <a href="/shipping-delivery.html" class="nav-link">Shipping & Delivery</a>
-      <a href="/terms.html" class="nav-link">Terms</a>
+    <!-- Menu - Always visible from 'sm' breakpoint (around 640px) -->
+    <nav class="w-full sm:w-auto mt-3 sm:mt-0 flex flex-wrap justify-center sm:justify-end space-x-2 sm:space-x-4 text-xs sm:text-sm font-semibold">
+      <a href="/index.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Home</a>
+      <a href="/shop.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Shop</a>
+      <!-- Contact is now a regular link here for consistency -->
+      <a href="/contact.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Contact</a> 
+      <!-- Active link styled differently -->
+      <a href="/refund&cancellation.html" class="text-berry-pink border-b-2 border-berry-pink pb-1 p-2 sm:p-0">Refund&Cancellation</a>
+      <a href="/shipping-delivery.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Shipping-Delivery</a>
+      <a href="/terms.html" class="text-gray-600 hover:text-berry-pink transition duration-150 p-2 sm:p-0">Terms</a>
     </nav>
   </div>
 </header>
 
-<main>
-  <section class="card policy-container">
-    <h1>Refund & Cancellation Policy</h1>
-    <p>Last updated: November 16, 2025</p>
-
-    <h2>Cancellation Policy</h2>
-    <p>Orders can only be canceled within *12 hours* of placement. Since all our Mystery Scoops are prepared quickly to ensure timely dispatch, we cannot guarantee cancellation requests submitted after this window. To request a cancellation, please contact us immediately via WhatsApp or email with your Order ID.</p>
-
-    <h2>Refund Policy</h2>
-    <p>Due to the nature of our *Mystery Scoop* product, which involves randomized items, *all sales are considered final and non-refundable.* We do not offer refunds or exchanges simply if you do not like the items received.</p>
+<!-- Main Policy Content -->
+<main class="p-4 sm:p-8 flex justify-center">
+  <section class="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-6 sm:p-8 lg:p-10 border-t-8 border-berry-pink">
     
-    <h3>Exceptions (Damaged or Incorrect Items)</h3>
-    <p>We take extreme care in packaging, but if you receive an item that is damaged or incorrect (i.e., not a Mystery Scoop item), please follow these steps:</p>
-    <ul>
-        <li>You must notify us within *48 hours* of delivery.</li>
-        <li>Provide clear, unboxing video evidence of the damaged or incorrect item.</li>
-        <li>We will assess the damage and, if approved, offer a replacement for the specific damaged item or a store credit equivalent to its value. We do not offer full refunds for the entire scoop in these cases.</li>
-    </ul>
-    
-    <h3>Refund Processing</h3>
-    <p>Approved store credits or refunds (in the rare event one is issued) will be processed within 7-10 business days.</p>
+    <!-- Title - Icon is already correctly visible here -->
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-2 flex items-center">
+      <i class="fa-solid fa-file-invoice mr-3 text-berry-pink"></i> Policy & Kindness
+    </h1>
+    <p class="text-gray-600 mb-6 border-b pb-4">We're here to help you get the cutest items! Here are the rules for refunds and cancellations, kept simple and sweet.</p>
+
+    <!-- Contact Info -->
+    <div class="mb-6 p-4 bg-pink-50/70 rounded-xl border border-pink-200">
+      <p class="text-gray-700 font-semibold">
+        <i class="fa-solid fa-envelope mr-2 text-berry-pink"></i>Customer Support: 
+        <a href="mailto:berrycutenco@gmail.com" class="text-berry-pink hover:text-pink-600 underline transition duration-150">berrycutenco@gmail.com</a>
+      </p>
+      <small class="text-gray-500">(We aim to reply within 1-2 business days)</small>
+    </div>
+
+    <!-- 1. CANCELLATION POLICY -->
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-pink flex items-center">
+          <i class="fa-solid fa-ban mr-2"></i> 1. Cancellation Policy: All Sales are Final
+        </strong>
+      </p>
+      <div class="pl-4 space-y-3">
+        <p class="text-gray-700">
+          <strong class="text-berry-green font-semibold">No Cancellation:</strong> Once your payment is processed, we immediately start preparing your Mystery Scoop! Therefore, orders <em class="font-bold">cannot be cancelled</em>.
+        </p>
+        <p class="text-gray-700">
+          <strong class="text-berry-green font-semibold">No Refund:</strong> We maintain a strict "No Refund" policy for change-of-mind or accidental purchases after payment.
+        </p>
+      </div>
+    </div>
+
+    <!-- 2. REFUND ELIGIBILITY -->
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-blue flex items-center">
+          <i class="fa-solid fa-box-open mr-2"></i> 2. Refund Eligibility: Damage Only
+        </strong>
+      </p>
+      <div class="pl-4">
+        <p class="text-gray-700 mb-4">
+          A refund will <strong class="text-berry-pink font-semibold">ONLY</strong> be processed if the product you receive is <strong class="text-berry-blue font-semibold">damaged during shipping</strong>. You <em class="font-bold">MUST</em> provide the following proof:
+        </p>
+
+        <p class="mt-4 text-lg font-bold text-gray-800 flex items-center">
+          <i class="fa-solid fa-video-camera mr-2"></i> Mandatory Unboxing Video Proof
+        </p>
+        
+        <ol class="list-decimal pl-6 mt-3 space-y-2 text-gray-700">
+          <li><strong class="text-berry-pink font-semibold">Report within 48 Hours:</strong> You must report the damage and send proof within <em class="font-bold">48 hours</em> of receiving the package.</li>
+          <li><strong class="text-berry-pink font-semibold">Continuous Recording:</strong> The video must be a single, <em class="font-bold">uncut, and continuous</em> recording of the entire unboxing process.</li>
+          <li><strong class="text-berry-pink font-semibold">Start Sealed:</strong> The video must clearly show the package sealed, with the shipping label visible, before it is opened.</li>
+          <li><strong class="text-berry-pink font-semibold">Show Damage:</strong> The video must capture the damaged item(s) clearly within the frame.</li>
+          <li><strong class="text-berry-pink font-semibold">Submission:</strong> The full video must be submitted from your registered WhatsApp number to <em class="font-bold">berrycutenco’s official WhatsApp number (9391669874)</em>.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 3. REFUND PROCESSING -->
+    <div class="mb-8 p-4 rounded-xl border-l-4 border-gray-300">
+      <p class="mb-4">
+        <strong class="text-xl font-bold text-berry-green flex items-center">
+          <i class="fa-solid fa-receipt mr-2"></i> 3. Refund Processing
+        </strong>
+      </p>
+      <div class="pl-4 space-y-3">
+        <p class="text-gray-700">
+          <strong class="text-berry-blue font-semibold">Review Period:</strong> We will review the video proof within <em class="font-bold">1 to 2 business days</em>.
+        </p>
+        <p class="text-gray-700">
+          <strong class="text-berry-blue font-semibold">Refund Timeline:</strong> If approved, the credited amount will reflect in your original payment method (bank account, etc.) in approximately <em class="font-bold">5 to 7 business days</em> (this depends on your bank!).
+        </p>
+      </div>
+    </div>
+
+    <!-- Cute Footer -->
+    <div class="cute-footer text-center mt-8 pt-4 border-t border-pink-200">
+      <p class="text-lg text-gray-700">
+        🌸 Thank you for supporting <strong class="text-berry-pink">BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!
+      </p>
+    </div>
+
   </section>
 </main>
-  
-<footer style="
-    background-color: #ffe6f0; 
-    padding: 20px 0; 
-    text-align: center; 
-    border-top: 1px solid #ffb3c1;
-    font-family: 'Baloo 2', cursive;
-">
-    
-    <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
-        &copy; 2025 BerryCuteNCo. All Rights Reserved.
-    </p>
-    <p style="font-size: 14px; color: #884a62; margin: 0;">
-        Email: berrycutenco@gmail.com | WhatsApp: 9391669874
-    </p>
-</footer>
-
-<!-- START OF MOBILE MENU FIX: JAVASCRIPT -->
-<script>
-  // ======================================================
-  // MOBILE MENU TOGGLE LOGIC
-  // ======================================================
-
-  const menuToggle = document.getElementById('menuToggle');
-  const navMenu = document.getElementById('navMenu');
-
-  if (menuToggle && navMenu) {
-      menuToggle.addEventListener('click', () => {
-          // Toggles the 'is-open' class, which the CSS uses to show/hide the menu
-          navMenu.classList.toggle('is-open');
-      });
-  }
-</script>
-<!-- END OF MOBILE MENU FIX: JAVASCRIPT -->
 
 </body>
 </html>
