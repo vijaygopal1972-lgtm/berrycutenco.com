@@ -8,6 +8,65 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Page-local styles to match Contact hamburger + fix left alignment -->
+  <style>
+    /* ---- Policy card: hard-left alignment (desktop + mobile) ---- */
+    .policy-card, .policy-card * { text-align: left !important; }
+    .policy-card ul, .policy-card ol { padding-left: 1.2rem; margin-left: 0; }
+    .policy-card li { margin: 0.25rem 0; }
+
+    /* ---- Mobile drawer hamburger (same color/size behavior as Contact) ---- */
+    .nav { position: sticky; top: 0; z-index: 1000; }
+    .nav-inner { display: flex; align-items: center; gap: 12px; }
+
+    /* Replace font-awesome bars with 3-span icon for animation */
+    .hamburger {
+      width: 28px; height: 22px; position: relative;
+      border: 0; background: none; padding: 0; cursor: pointer;
+    }
+    .hamburger span {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: #7A276C; /* icon color to match Contact */
+      border-radius: 2px; transition: transform .2s ease, top .2s ease, opacity .2s ease;
+    }
+    .hamburger span:nth-child(1){ top: 0; }
+    .hamburger span:nth-child(2){ top: 10px; }
+    .hamburger span:nth-child(3){ top: 20px; }
+
+    /* Drawer + backdrop */
+    .mobile-drawer{
+      position: fixed; top:0; right:0; height:100dvh; width:260px;
+      background:#ffd8e8; /* pastel panel like Contact */
+      padding:80px 24px 24px; box-shadow:-8px 0 24px rgba(0,0,0,.15);
+      transform:translateX(100%); transition:transform .25s ease-in-out; z-index:1001;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .mobile-drawer a{
+      display:block; padding:12px 10px; font-weight:600; color:#5b2a5a; text-decoration:none;
+      border-radius: 14px;
+    }
+    .mobile-drawer a.active{ color:#7A276C; background: rgba(122,39,108,0.08); }
+
+    .backdrop{
+      position: fixed; inset:0; background:rgba(0,0,0,.25);
+      opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:1000;
+    }
+
+    /* Open state */
+    body.menu-open .mobile-drawer{ transform:translateX(0); }
+    body.menu-open .backdrop{ opacity:1; pointer-events:auto; }
+
+    /* Hamburger -> X animation */
+    body.menu-open .hamburger span:nth-child(1){ top:10px; transform:rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
+    body.menu-open .hamburger span:nth-child(3){ top:10px; transform:rotate(-45deg); }
+
+    /* Hide desktop menu on small screens if your global CSS doesn't already */
+    @media (max-width: 900px){
+      .menu { display: none; }
+    }
+  </style>
 </head>
 
 <body>
@@ -31,25 +90,26 @@
       <a href="/terms.html">Terms</a>
     </nav>
 
-    <!-- MOBILE HAMBURGER -->
-    <div class="hamburger">
-      <i class="fa-solid fa-bars"></i>
-    </div>
+    <!-- MOBILE HAMBURGER (animated) -->
+    <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
 
-    <!-- MOBILE DROPDOWN MENU -->
-    <nav class="mobile-menu">
+    <!-- MOBILE DRAWER MENU (like Contact page) -->
+    <nav class="mobile-drawer" id="drawer">
       <a href="/index.html">Home</a>
       <a href="/shop.html">Shop</a>
       <a href="/contact.html">Contact</a>
-      <a href="/refund&cancellation.html">Refund & Cancellation</a>
+      <a href="/refund&cancellation.html" class="active">Refund & Cancellation</a>
       <a href="/shipping-delivery.html">Shipping & Delivery</a>
       <a href="/terms.html">Terms</a>
     </nav>
+    <div class="backdrop" id="backdrop"></div>
   </div>
 </header>
 
 <main class="contact-page">
-  <section class="card contact">
+  <section class="card contact policy-card">
 
     <h1 style="color:#FF5C8D;"><i class="fa-solid fa-file-lines"></i> Policy & Kindness</h1>
 
@@ -116,14 +176,24 @@
   </p>
 </footer>
 
-<!-- MOBILE MENU TOGGLE JS -->
+<!-- MOBILE MENU TOGGLE JS (drawer behavior like Contact) -->
 <script>
-  const ham = document.querySelector(".hamburger");
-  const mob = document.querySelector(".mobile-menu");
+  (function(){
+    const btn = document.querySelector(".hamburger");
+    const backdrop = document.getElementById("backdrop");
+    const links = document.querySelectorAll(".mobile-drawer a");
 
-  ham.addEventListener("click", () => {
-    mob.style.display = mob.style.display === "flex" ? "none" : "flex";
-  });
+    function toggleMenu(){
+      document.body.classList.toggle("menu-open");
+      btn.setAttribute("aria-expanded", document.body.classList.contains("menu-open"));
+    }
+
+    btn.addEventListener("click", toggleMenu);
+    backdrop.addEventListener("click", toggleMenu);
+    links.forEach(a => a.addEventListener("click", () => {
+      if (document.body.classList.contains("menu-open")) toggleMenu();
+    }));
+  })();
 </script>
 
 </body>
