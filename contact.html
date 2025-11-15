@@ -5,99 +5,180 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BerryCuteNCo — Contact</title>
 
+  <!-- CSS & Fonts (same as index) -->
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Inline mobile-nav fixes (keeps behaviour identical to index.html) -->
+  <style>
+    /* ---------------------------------- */
+    /* Mobile Navigation Specific Styles  */
+    /* ---------------------------------- */
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #ff69b4;
+      padding: 5px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .nav-link.active {
+      font-weight: 700;
+      color: #ff69b4;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .menu {
+        display: none !important; /* hide desktop menu on mobile */
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        border-top: 1px solid #ffb3c1;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.06);
+        z-index: 100;
+        text-align: left;
+      }
+
+      .menu-toggle {
+        display: block !important;
+      }
+
+      .menu.is-open {
+        display: flex !important;
+      }
+
+      .menu a {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+      }
+    }
+
+    /* Ensure hamburger never shows on large desktops */
+    @media (min-width: 769px) {
+      .menu-toggle { display: none !important; }
+    }
+  </style>
 </head>
 
 <body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="/index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+        <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" style="height:38px; width:auto;" />
+        <span class="brand" style="font-family:'Baloo 2',cursive; color:#884a62; font-weight:700;">BerryCuteNCo</span>
+      </a>
 
-<header class="nav">
-  <div class="nav-inner">
-    <a class="logo" href="/index.html">
-      <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
-      <span class="brand">BerryCuteNCo</span>
-    </a>
+      <div class="spacer" style="flex:1;"></div>
 
-    <div class="spacer"></div>
+      <!-- Hamburger toggle (mobile) -->
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
 
-    <!-- DESKTOP MENU -->
-    <nav class="menu desktop-menu">
-      <a href="/index.html">Home</a>
-      <a href="/shop.html">Shop</a>
-      <a class="cta active" href="/contact.html">Contact</a>
-      <a href="/refund&cancellation.html">Refund&Cancellation</a>
-      <a href="/shipping-delivery.html">Shipping-Delivery</a>
-      <a href="/terms.html">Terms</a>
-    </nav>
-
-    <!-- HAMBURGER ICON (Mobile) -->
-    <div class="hamburger" onclick="toggleMobileMenu()">
-      <i class="fa-solid fa-bars"></i>
+      <!-- Primary nav (desktop & mobile; mobile toggles 'is-open') -->
+      <nav class="menu" id="navMenu" aria-label="Primary navigation">
+        <a href="/index.html" class="nav-link">Home</a>
+        <a href="/shop.html" class="nav-link">Shop</a>
+        <a href="/contact.html" class="nav-link active">Contact</a>
+        <a href="/refund&cancellation.html" class="nav-link">Refund & Cancellation</a>
+        <a href="/shipping-delivery.html" class="nav-link">Shipping & Delivery</a>
+        <a href="/terms.html" class="nav-link">Terms</a>
+      </nav>
     </div>
-  </div>
+  </header>
 
-  <!-- MOBILE MENU -->
-  <nav id="mobileMenu" class="mobile-menu">
-    <a href="/index.html">Home</a>
-    <a href="/shop.html">Shop</a>
-    <a href="/contact.html" class="active">Contact</a>
-    <a href="/refund&cancellation.html">Refund&Cancellation</a>
-    <a href="/shipping-delivery.html">Shipping-Delivery</a>
-    <a href="/terms.html">Terms</a>
-  </nav>
-</header>
-
-<main class="contact-page">
-  <section class="card contact">
-    <h1>💌 Get in Touch</h1>
-    <p>Have a question about your order, need help picking a vibe for your Mystery Scoop, or just want to say hi?<br>We'd love to hear from you!</p>
-
-    <div class="info-block">
-      <p><strong>📧 Customer Support:</strong> 
-        <a href="mailto:berrycutenco@gmail.com">berrycutenco@gmail.com</a><br>
-        <small>(We aim to reply within 1–2 business days!)</small>
+  <main class="contact-page" style="padding: 28px;">
+    <section class="card contact" style="max-width:920px; margin: 0 auto; background:#fff9fc; padding:28px; border-radius:12px; border:1px solid #ffe6f0;">
+      <h1 style="text-align:center; margin-top:0;">💌 Get in Touch</h1>
+      <p style="text-align:center; color:#6b5563;">
+        Have a question about your order, need help picking a vibe for your Mystery Scoop, or just want to say hi?<br>
+        We'd love to hear from you!
       </p>
 
-      <p><strong>🕓 Business Hours:</strong><br>
-        Monday – Saturday, 10:00 AM – 6:00 PM
-      </p>
+      <div class="info-block" style="margin-top:18px; color:#5d4350; line-height:1.6;">
+        <p><strong>📧 Customer Support:</strong>
+          <a href="mailto:berrycutenco@gmail.com">berrycutenco@gmail.com</a><br>
+          <small style="color:#7a5a6b;">(We aim to reply within 1–2 business days!)</small>
+        </p>
 
-      <p><strong>💖 Connect with us:</strong><br>
-        <i class="fa-brands fa-instagram"></i> 
-        <a href="https://www.instagram.com/berrycutenco" target="_blank">@berrycutenco</a><br>
-        <i class="fa-brands fa-whatsapp"></i> 
-        <a href="https://wa.me/9391669874" target="_blank">9391669874</a>
-      </p>
+        <p><strong>🕓 Business Hours:</strong><br>
+          Monday – Saturday, 10:00 AM – 6:00 PM
+        </p>
+
+        <p><strong>💖 Connect with us:</strong><br>
+          <i class="fa-brands fa-instagram"></i>
+          <a href="https://www.instagram.com/berrycutenco" target="_blank" rel="noopener"> @berrycutenco</a><br>
+          <i class="fa-brands fa-whatsapp"></i>
+          <a href="https://wa.me/9391669874" target="_blank" rel="noopener"> 9391669874</a>
+        </p>
+      </div>
+
+      <div class="cute-footer" style="margin-top:18px; text-align:center; color:#8b5a6d;">
+        <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+      </div>
+    </section>
+  </main>
+
+  <footer style="
+      background-color: #ffe6f0;
+      padding: 20px 0;
+      text-align: center;
+      border-top: 1px solid #ffb3c1;
+      font-family: 'Baloo 2', cursive;
+  ">
+    <div class="footer-links" style="margin-bottom: 10px;">
+      <a href="/terms.html" style="color: #ff69b4; text-decoration: none; margin: 0 10px;">Terms</a> |
+      <a href="/refund&cancellation.html" style="color: #ff69b4; text-decoration: none; margin: 0 10px;">Refund Policy</a> |
+      <a href="/shipping-delivery.html" style="color: #ff69b4; text-decoration: none; margin: 0 10px;">Shipping Policy</a> |
+      <a href="/contact.html" style="color: #ff69b4; text-decoration: none; margin: 0 10px;">Contact Us</a>
     </div>
+    <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
+        &copy; 2025 BerryCuteNCo. All Rights Reserved.
+    </p>
+    <p style="font-size: 14px; color: #884a62; margin: 0;">
+        Email: berrycutenco@gmail.com | WhatsApp: 9391669874
+    </p>
+  </footer>
 
-    <div class="cute-footer">
-      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
-    </div>
-  </section>
-</main>
+  <!-- Mobile menu toggle script (same logic as your index) -->
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
 
-<footer style="
-    background-color: #ffe6f0; 
-    padding: 20px 0; 
-    text-align: center; 
-    border-top: 1px solid #ffb3c1;
-    font-family: 'Baloo 2', cursive;
-">
-  <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
-      &copy; 2025 BerryCuteNCo. All Rights Reserved.
-  </p>
-  <p style="font-size: 14px; color: #884a62; margin: 0;">
-      Email: berrycutenco@gmail.com | WhatsApp: 9391669874
-  </p>
-</footer>
+    if (menuToggle && navMenu) {
+      menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('is-open');
+      });
 
-<script>
-function toggleMobileMenu() {
-  const menu = document.getElementById("mobileMenu");
-  menu.classList.toggle("open");
-}
-</script>
-
+      // ensure menu closes when resizing to desktop widths
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && navMenu.classList.contains('is-open')) {
+          navMenu.classList.remove('is-open');
+        }
+      });
+    }
+  </script>
 </body>
-</html>   
+</html>
