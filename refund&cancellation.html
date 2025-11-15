@@ -8,151 +8,106 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- MOBILE MENU FIX (same as index.html) -->
-  <style>
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 20px;
-    }
-
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #ff69b4;
-      padding: 5px;
-    }
-
-    .menu {
-      display: flex;
-      transition: all 0.3s ease;
-    }
-
-    .nav-link.active {
-      font-weight: 700;
-      color: #ff69b4;
-    }
-
-    @media (max-width: 768px) {
-      .menu {
-        display: none !important;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        background: white;
-        border-top: 1px solid #ffb3c1;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        z-index: 100;
-      }
-
-      .menu.is-open {
-        display: flex !important;
-      }
-
-      .menu-toggle {
-        display: block !important;
-      }
-
-      .menu a {
-        padding: 15px 20px;
-        border-bottom: 1px solid #f0f0f0;
-        width: 100%;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
-<!-- HEADER (copied exactly from index.html – only "active" changed) -->
 <header class="nav">
   <div class="nav-inner">
-
     <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
       <span class="brand">BerryCuteNCo</span>
     </a>
 
-    <button class="menu-toggle" id="menuToggle">
-      <i class="fa-solid fa-bars"></i>
-    </button>
+    <div class="spacer"></div>
 
-    <nav class="menu" id="navMenu">
-      <a href="/index.html" class="nav-link">Home</a>
-      <a href="/shop.html" class="nav-link">Shop</a>
-      <a href="/contact.html" class="nav-link">Contact</a>
-      <a href="/refund&cancellation.html" class="nav-link active">Refund & Cancellation</a>
-      <a href="/shipping-delivery.html" class="nav-link">Shipping & Delivery</a>
-      <a href="/terms.html" class="nav-link">Terms</a>
+    <!-- DESKTOP MENU -->
+    <nav class="menu">
+      <a href="/index.html">Home</a>
+      <a href="/shop.html">Shop</a>
+      <a href="/contact.html">Contact</a>
+      <a class="cta active" href="/refund&cancellation.html">Refund & Cancellation</a>
+      <a href="/shipping-delivery.html">Shipping & Delivery</a>
+      <a href="/terms.html">Terms</a>
     </nav>
 
+    <!-- MOBILE HAMBURGER -->
+    <div class="hamburger">
+      <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <!-- MOBILE DROPDOWN MENU -->
+    <nav class="mobile-menu">
+      <a href="/index.html">Home</a>
+      <a href="/shop.html">Shop</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/refund&cancellation.html">Refund & Cancellation</a>
+      <a href="/shipping-delivery.html">Shipping & Delivery</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
   </div>
 </header>
 
-<!-- MAIN CONTENT (your original content untouched) -->
 <main class="contact-page">
   <section class="card contact">
 
-    <h1 style="color: #FF5C8D;"><i class="fa-solid fa-file-invoice"></i> Policy & Kindness</h1>
-    <p>We're here to help you get the cutest items! Here are the rules for refunds and cancellations, kept simple and sweet.</p>
+    <h1 style="color:#FF5C8D;"><i class="fa-solid fa-file-lines"></i> Policy & Kindness</h1>
 
-    <!-- 1. CANCELLATION POLICY -->
+    <p>We’re here to help you get the cutest items! Here are the rules for refunds and cancellations, kept simple and sweet.</p>
+
+    <!-- 1. Cancellation Policy -->
     <div class="info-block">
-      <p><strong style="color: #FF5C8D;"><i class="fa-solid fa-ban"></i> 1. Cancellation Policy: All Sales are Final</strong></p>
-      <div style="margin-left: 20px;">
-        <p><strong style="color: #4CAF50;">No Cancellation:</strong> Once your payment is processed, we immediately start preparing your Mystery Scoop! Therefore, orders cannot be cancelled.</p>
-        <p><strong style="color: #4CAF50;">No Refund:</strong> We maintain a strict "No Refund" policy for change-of-mind or accidental purchases after payment.</p>
+      <p><strong style="color:#FF5C8D;"><i class="fa-solid fa-ban"></i> 1. Cancellation Policy: All Sales are Final</strong></p>
+
+      <div style="margin-left:20px;">
+        <p><strong>No Cancellation:</strong> Once your payment is processed, we immediately start preparing your Mystery Scoop! Therefore, orders cannot be cancelled.</p>
+
+        <p><strong>No Refund:</strong> We maintain a strict “No Refund” policy for change-of-mind or accidental purchases after payment.</p>
       </div>
     </div>
 
-    <!-- 2. REFUND ELIGIBILITY -->
+    <!-- 2. Refund Eligibility -->
     <div class="info-block">
-      <p><strong style="color: #6C7BFF;"><i class="fa-solid fa-box-open"></i> 2. Refund Eligibility: Damage Only</strong></p>
-      <div style="margin-left: 20px;">
-        <p>A refund will <strong style="color: #FF5C8D;">ONLY</strong> be processed if the product you receive is <strong style="color: #6C7BFF;">damaged during shipping</strong>. You MUST provide:</p>
+      <p><strong style="color:#6C7BFF;"><i class="fa-solid fa-box-open"></i> 2. Refund Eligibility: Damage Only</strong></p>
 
-        <p style="margin-top: 15px;"><strong><i class="fa-solid fa-video-camera"></i> Mandatory Unboxing Video Proof</strong></p>
-        <ol style="padding-left: 20px;">
-          <li><strong style="color: #FF5C8D;">Report within 48 Hours:</strong> Must send proof within 48 hours of delivery.</li>
-          <li><strong style="color: #FF5C8D;">Continuous Recording:</strong> Single, uncut video required.</li>
-          <li><strong style="color: #FF5C8D;">Start Sealed:</strong> Show package sealed with label visible.</li>
-          <li><strong style="color: #FF5C8D;">Show Damage:</strong> Clearly show damaged item.</li>
-          <li><strong style="color: #FF5C8D;">Submission:</strong> Send to WhatsApp: <strong>9391669874</strong>.</li>
-        </ol>
+      <div style="margin-left:20px;">
+        <p>A refund will <strong>ONLY</strong> be processed if the product you receive is <strong>damaged during shipping</strong>. You MUST provide:</p>
+
+        <ul>
+          <li><strong>1. Mandatory Unboxing Video Proof</strong></li>
+          <li><strong>Continuous Recording:</strong> Single, uncut video required.</li>
+          <li><strong>Start Sealed:</strong> Show package sealed with label visible.</li>
+          <li><strong>Show Damage:</strong> Clearly show damaged item.</li>
+          <li><strong>Submission:</strong> Send to WhatsApp: <strong>9391669874</strong></li>
+        </ul>
       </div>
     </div>
 
-    <!-- 3. REFUND PROCESS -->
+    <!-- 3. Refund Processing -->
     <div class="info-block">
-      <p><strong style="color: #4CAF50;"><i class="fa-solid fa-receipt"></i> 3. Refund Processing</strong></p>
-      <div style="margin-left: 20px;">
-        <p><strong style="color: #6C7BFF;">Review Period:</strong> 1–2 business days.</p>
-        <p><strong style="color: #6C7BFF;">Refund Timeline:</strong> 5–7 days after approval (bank dependent).</p>
+      <p><strong style="color:#4CAF50;"><i class="fa-solid fa-rotate-left"></i> 3. Refund Processing</strong></p>
+
+      <div style="margin-left:20px;">
+        <ul>
+          <li><strong>Review Period:</strong> 1–2 business days.</li>
+          <li><strong>Refund Timeline:</strong> 5–7 days after approval (bank dependent).</li>
+        </ul>
       </div>
     </div>
 
     <div class="cute-footer">
-      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+      <p>💖 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
 
   </section>
 </main>
 
-<!-- FOOTER -->
 <footer style="
-    background-color: #ffe6f0;
-    padding: 20px 0;
-    text-align: center;
+    background-color: #ffe6f0; 
+    padding: 20px 0; 
+    text-align: center; 
     border-top: 1px solid #ffb3c1;
-    font-family: 'Baloo 2', cursive;
-">
+    font-family: 'Baloo 2', cursive;">
   <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
     &copy; 2025 BerryCuteNCo. All Rights Reserved.
   </p>
@@ -161,13 +116,13 @@
   </p>
 </footer>
 
-<!-- MOBILE MENU SCRIPT (same as index.html) -->
+<!-- MOBILE MENU TOGGLE JS -->
 <script>
-  const menuToggle = document.getElementById("menuToggle");
-  const navMenu = document.getElementById("navMenu");
+  const ham = document.querySelector(".hamburger");
+  const mob = document.querySelector(".mobile-menu");
 
-  menuToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("is-open");
+  ham.addEventListener("click", () => {
+    mob.style.display = mob.style.display === "flex" ? "none" : "flex";
   });
 </script>
 
