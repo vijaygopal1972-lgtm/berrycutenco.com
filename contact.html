@@ -11,22 +11,41 @@
 </head>
 
 <body>
+
 <header class="nav">
   <div class="nav-inner">
     <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
       <span class="brand">BerryCuteNCo</span>
     </a>
+
     <div class="spacer"></div>
-    <nav class="menu">
+
+    <!-- DESKTOP MENU -->
+    <nav class="menu desktop-menu">
       <a href="/index.html">Home</a>
       <a href="/shop.html">Shop</a>
-       <a class="cta active" href="/contact.html">Contact</a>
+      <a class="cta active" href="/contact.html">Contact</a>
       <a href="/refund&cancellation.html">Refund&Cancellation</a>
       <a href="/shipping-delivery.html">Shipping-Delivery</a>
       <a href="/terms.html">Terms</a>
     </nav>
+
+    <!-- HAMBURGER ICON (Mobile) -->
+    <div class="hamburger" onclick="toggleMobileMenu()">
+      <i class="fa-solid fa-bars"></i>
+    </div>
   </div>
+
+  <!-- MOBILE MENU -->
+  <nav id="mobileMenu" class="mobile-menu">
+    <a href="/index.html">Home</a>
+    <a href="/shop.html">Shop</a>
+    <a href="/contact.html" class="active">Contact</a>
+    <a href="/refund&cancellation.html">Refund&Cancellation</a>
+    <a href="/shipping-delivery.html">Shipping-Delivery</a>
+    <a href="/terms.html">Terms</a>
+  </nav>
 </header>
 
 <main class="contact-page">
@@ -46,7 +65,7 @@
 
       <p><strong>💖 Connect with us:</strong><br>
         <i class="fa-brands fa-instagram"></i> 
-        <a href="https://www.instagram.com/berrycutenco?igsh=NDIybGEwaTE1YXAy&utm_source=qr" target="_blank">@berrycutenco</a><br>
+        <a href="https://www.instagram.com/berrycutenco" target="_blank">@berrycutenco</a><br>
         <i class="fa-brands fa-whatsapp"></i> 
         <a href="https://wa.me/9391669874" target="_blank">9391669874</a>
       </p>
@@ -58,20 +77,27 @@
   </section>
 </main>
 
-  <footer style="
+<footer style="
     background-color: #ffe6f0; 
     padding: 20px 0; 
     text-align: center; 
     border-top: 1px solid #ffb3c1;
     font-family: 'Baloo 2', cursive;
 ">
-  <div class="footer-links" style="margin-bottom: 10px;"></div>
-    <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
-        &copy; 2025 BerryCuteNCo. All Rights Reserved.
-    </p>
-    <p style="font-size: 14px; color: #884a62; margin: 0;">
-        Email: berrycutenco@gmail.com | WhatsApp: 9391669874
-    </p>
-  </footer>
+  <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
+      &copy; 2025 BerryCuteNCo. All Rights Reserved.
+  </p>
+  <p style="font-size: 14px; color: #884a62; margin: 0;">
+      Email: berrycutenco@gmail.com | WhatsApp: 9391669874
+  </p>
+</footer>
+
+<script>
+function toggleMobileMenu() {
+  const menu = document.getElementById("mobileMenu");
+  menu.classList.toggle("open");
+}
+</script>
+
 </body>
-</html>
+</html>   
