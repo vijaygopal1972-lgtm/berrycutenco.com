@@ -8,6 +8,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/style.css">
+
+  <!-- A small style block for better visual clarity on the button links -->
+  <style>
+    /* Styling the dynamic link for better UX */
+    #instamojoPayLink {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    .cta {
+      background-color: #ff69b4; /* Pink */
+      color: white !important;
+    }
+    .cta:hover {
+      background-color: #e652a1;
+    }
+  </style>
 </head>
 <body>
 
@@ -38,24 +63,22 @@
     <h1>Mystery Scoop</h1>
     <div class="price-range">₹999 – ₹2,999</div>
 
+    <!-- The data-price attribute will be used to map to the Instamojo link -->
     <div class="option-group" role="group" aria-label="Scoop size">
       <button class="pill active" data-price="999"  data-items="5+ items"  data-label="1 scoop">1 scoop (5+ items) — ₹999</button>
       <button class="pill"        data-price="1999" data-items="10+ items" data-label="2 scoops">2 scoops (10+ items) — ₹1,999</button>
       <button class="pill"        data-price="2999" data-items="15+ items" data-label="3 scoops">3 scoops (15+ items) — ₹2,999</button>
     </div>
 
-    <div class="purchase-row">
-      <button id="addToCart" class="btn">
-        <i class="fa-solid fa-bag-shopping"></i> Add to Cart
-        <span class="btn-price">₹999</span>
-      </button>
-    </div>
+    <!-- Removed "Add to Cart" row as Instamojo links go directly to checkout -->
     
     <div class="purchase-row" style="margin-top: 20px;">
-      <button id="rzp-button1" class="btn cta" style="width: 100%;">
+      <!-- This is the main payment button which will dynamically change its URL -->
+      <a id="instamojoPayLink" href="https://imjo.in/WXCaWg" class="cta" target="_blank" rel="noopener noreferrer">
         <i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹999 
-      </button>
+      </a>
     </div>
+
     <div class="info">
       <h3 class="accent"><i class="fa-regular fa-star"></i> What’s in a Scoop?</h3>
       <p class="muted">Every scoop is a unique mix of cute & useful goodies — no two are ever the same!</p>
@@ -81,7 +104,6 @@
   </div>
 </main>
 
-  <!-- Add this code just before the closing </body> tag on your homepage and shop page -->
 <footer style="
     background-color: #ffe6f0; 
     padding: 20px 0; 
@@ -103,5 +125,52 @@
     </p>
 </footer>
 
+<script>
+  // Instamojo links dictionary (Map)
+  const instamojoLinks = {
+    '999': 'https://imjo.in/WXCaWg',
+    '1999': 'https://imjo.in/kyPr56',
+    '2999': 'https://imjo.in/uy5W5d'
+  };
+
+  // Get references to elements
+  const pillButtons = document.querySelectorAll('.pill');
+  const payLink = document.getElementById('instamojoPayLink');
+
+  // Function to handle the change when a pill button is clicked
+  function updatePaymentLink(event) {
+    // 1. Remove 'active' class from all buttons
+    pillButtons.forEach(btn => btn.classList.remove('active'));
+
+    // 2. Add 'active' class to the clicked button
+    event.target.classList.add('active');
+
+    // 3. Get the selected price
+    const selectedPrice = event.target.getAttribute('data-price');
+    
+    // 4. Get the corresponding Instamojo URL
+    const selectedLink = instamojoLinks[selectedPrice];
+
+    // 5. Update the payment button's link (href) and text
+    if (selectedLink) {
+      payLink.href = selectedLink;
+      payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${new Intl.NumberFormat('en-IN').format(selectedPrice)}`;
+    } else {
+      // Fallback if link is missing (shouldn't happen with the dictionary above)
+      payLink.href = '#';
+      payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Error: Select a Scoop`;
+    }
+  }
+
+  // Attach event listeners to all pill buttons
+  pillButtons.forEach(button => {
+    button.addEventListener('click', updatePaymentLink);
+  });
+  
+  // Set initial state (since the 999 button is active by default)
+  payLink.href = instamojoLinks['999'];
+  payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹999`;
+
+</script>
 </body>
-</html>
+</html
