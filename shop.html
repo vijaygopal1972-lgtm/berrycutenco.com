@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/style.css">
 
-  <!-- A small style block for better visual clarity on the button links -->
+  <!-- INLINE CSS FOR GUARANTEED RESPONSIVENESS AND BUTTON STYLING -->
   <style>
-    /* Styling the dynamic link for better UX */
+    /* Styling for the dynamic payment link */
     #instamojoPayLink {
       display: block;
       width: 100%;
@@ -32,6 +32,72 @@
     .cta:hover {
       background-color: #e652a1;
     }
+    
+    /* Layout for navigation container */
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Ensures logo and toggle are spaced */
+      padding: 10px 20px;
+    }
+
+    /* Mobile Menu Toggle Button (Hidden on Desktop) */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #ff69b4;
+      padding: 5px; /* Added padding for easier tapping */
+    }
+    
+    /* ---------------------------------- */
+    /* MEDIA QUERY FOR MOBILE DEVICES (<= 768px) */
+    /* ---------------------------------- */
+    @media (max-width: 768px) {
+      /* 1. FORCE THE HAMBURGER ICON TO BE VISIBLE */
+      .menu-toggle {
+        display: block !important;
+      }
+      
+      /* 2. HIDE THE WIDE DESKTOP MENU */
+      .menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Position menu under the header */
+        left: 0;
+        width: 100%;
+        background-color: #fff; 
+        border-top: 1px solid #ffb3c1;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 100;
+        text-align: left;
+      }
+
+      /* 3. SHOW THE MENU WHEN THE 'is-open' CLASS IS ADDED */
+      .menu.is-open {
+        display: flex !important;
+      }
+
+      /* Style for vertical menu links */
+      .menu a {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+      }
+      
+      /* Mobile layout adjustments for product page */
+      main.product {
+        flex-direction: column;
+        padding: 10px;
+      }
+      .gallery, .details {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -43,12 +109,19 @@
       <span class="brand">BerryCuteNCo</span>
     </a>
     <div class="spacer"></div>
-    <nav class="menu">
+    
+    <!-- MOBILE MENU TOGGLE BUTTON -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    
+    <!-- Navigation Menu -->
+    <nav class="menu" id="navMenu">
       <a href="/index.html">Home</a>
       <a class="cta active" href="/shop.html">Shop</a>
       <a href="/contact.html">Contact</a>
-      <a href="/refund&cancellation.html">Refund&Cancellation</a>
-      <a href="/shipping-delivery.html">Shipping-Delivery</a>
+      <a href="/refund&cancellation.html">Refund & Cancellation</a>
+      <a href="/shipping-delivery.html">Shipping & Delivery</a>
       <a href="/terms.html">Terms</a>
     </nav>
   </div>
@@ -70,8 +143,6 @@
       <button class="pill"        data-price="2999" data-items="15+ items" data-label="3 scoops">3 scoops (15+ items) — ₹2,999</button>
     </div>
 
-    <!-- Removed "Add to Cart" row as Instamojo links go directly to checkout -->
-    
     <div class="purchase-row" style="margin-top: 20px;">
       <!-- This is the main payment button which will dynamically change its URL -->
       <a id="instamojoPayLink" href="https://imjo.in/WXCaWg" class="cta" target="_blank" rel="noopener noreferrer">
@@ -126,51 +197,56 @@
 </footer>
 
 <script>
-  // Instamojo links dictionary (Map)
+  // ======================================================
+  // 1. DYNAMIC INSTAMOJO PAYMENT LINK LOGIC
+  // ======================================================
+
   const instamojoLinks = {
     '999': 'https://imjo.in/WXCaWg',
     '1999': 'https://imjo.in/kyPr56',
     '2999': 'https://imjo.in/uy5W5d'
   };
 
-  // Get references to elements
   const pillButtons = document.querySelectorAll('.pill');
   const payLink = document.getElementById('instamojoPayLink');
 
-  // Function to handle the change when a pill button is clicked
   function updatePaymentLink(event) {
-    // 1. Remove 'active' class from all buttons
     pillButtons.forEach(btn => btn.classList.remove('active'));
-
-    // 2. Add 'active' class to the clicked button
     event.target.classList.add('active');
 
-    // 3. Get the selected price
     const selectedPrice = event.target.getAttribute('data-price');
-    
-    // 4. Get the corresponding Instamojo URL
     const selectedLink = instamojoLinks[selectedPrice];
 
-    // 5. Update the payment button's link (href) and text
     if (selectedLink) {
       payLink.href = selectedLink;
       payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${new Intl.NumberFormat('en-IN').format(selectedPrice)}`;
     } else {
-      // Fallback if link is missing (shouldn't happen with the dictionary above)
       payLink.href = '#';
       payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Error: Select a Scoop`;
     }
   }
 
-  // Attach event listeners to all pill buttons
   pillButtons.forEach(button => {
     button.addEventListener('click', updatePaymentLink);
   });
   
-  // Set initial state (since the 999 button is active by default)
+  // Set initial state
   payLink.href = instamojoLinks['999'];
   payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹999`;
 
+
+  // ======================================================
+  // 2. MOBILE MENU TOGGLE LOGIC
+  // ======================================================
+
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  menuToggle.addEventListener('click', () => {
+      // Toggles the 'is-open' class on the navigation menu
+      navMenu.classList.toggle('is-open');
+  });
+
 </script>
 </body>
-</html
+</html>
