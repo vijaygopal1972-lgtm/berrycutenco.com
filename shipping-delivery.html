@@ -10,22 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    
-  /* existing styles ... */
-
-  /* Strong, scoped alignment fix */
-  .align-scope, .align-scope * { 
-    text-align: left !important; 
-  }
-
-  /* Re-center ONLY the pieces you want centered */
-  .align-scope h1,
-  .align-scope .subtitle,
-  .align-scope .cute-footer p {
-    text-align: center !important;
-  }
-
-    /* keep your hamburger as-is */
+    /* --- MOBILE NAV EXTRA (kept from your original) --- */
     .hamburger {
       display: none;
       font-size: 28px;
@@ -33,32 +18,15 @@
       color: #ff5c8d;
     }
 
-    /* ---- Alignment: simple & safe ----
-       1) Make the card left-aligned by default
-       2) Center ONLY: h1, .subtitle, .cute-footer p
+    /* ==== SAME AS REFUND PAGE ====
+       Force everything inside the policy card to align left,
+       then re-center only the three requested elements.
     */
-    .contact-page .card.contact { text-align: left !important; }
+    .policy-card, .policy-card * { text-align: left !important; }
+    .policy-card ul, .policy-card ol { padding-left: 1.2rem; margin-left: 0; }
+    .policy-card li { margin: 0.25rem 0; }
 
-    .contact-page .card.contact h1,
-    .contact-page .card.contact .subtitle,
-    .contact-page .card.contact .cute-footer p {
-      text-align: center !important;
-    }
-
-    /* Ensure paragraphs and lists inside info sections are left */
-    .contact-page .card.contact .info-block p,
-    .contact-page .card.contact .info-block ul,
-    .contact-page .card.contact .info-block li,
-    .contact-page .card.contact .info-block div {
-      text-align: left !important;
-    }
-
-    /* tidy bullets */
-    .contact-page .card.contact .info-block ul {
-      list-style-position: inside;
-      padding-left: 0;
-      margin-left: 0;
-    }
+    .center-override { text-align: center !important; }
 
     @media (max-width: 768px) {
       .menu { display: none; }
@@ -85,6 +53,7 @@
 <!-- HEADER -->
 <header class="nav">
   <div class="nav-inner">
+
     <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
       <span class="brand">BerryCuteNCo</span>
@@ -106,6 +75,7 @@
       <a class="active" href="/shipping-delivery.html">Shipping-Delivery</a>
       <a href="/terms.html">Terms</a>
     </nav>
+
   </div>
 
   <!-- MOBILE MENU DROPDOWN -->
@@ -128,13 +98,16 @@
 
 <!-- MAIN CONTENT -->
 <main class="contact-page">
-  <section class="card contact align-scope">
-
-    <!-- HEADING (centered) -->
-    <h1 style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
+  <!-- ✅ Add policy-card wrapper class (same as refund page) -->
+  <section class="card contact policy-card">
     
-    <!-- SUBTITLE (centered) -->
-    <p class="subtitle">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
+    <!-- HEADING (centered with .center-override) -->
+    <h1 class="center-override" style="color: #6C7BFF;">
+      <i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy
+    </h1>
+    
+    <!-- SUBTITLE (centered with .center-override) -->
+    <p class="center-override">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
     <!-- 1. Processing (left) -->
     <div class="info-block">
@@ -168,11 +141,10 @@
       </div>
     </div>
 
-    <!-- CUTE FOOTER (centered) -->
+    <!-- CUTE FOOTER (centered with .center-override) -->
     <div class="cute-footer">
-      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+      <p class="center-override">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
-
   </section>
 </main>
 
