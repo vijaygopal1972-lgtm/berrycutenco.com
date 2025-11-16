@@ -10,6 +10,21 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
+    
+  /* existing styles ... */
+
+  /* Strong, scoped alignment fix */
+  .align-scope, .align-scope * { 
+    text-align: left !important; 
+  }
+
+  /* Re-center ONLY the pieces you want centered */
+  .align-scope h1,
+  .align-scope .subtitle,
+  .align-scope .cute-footer p {
+    text-align: center !important;
+  }
+
     /* keep your hamburger as-is */
     .hamburger {
       display: none;
@@ -113,7 +128,7 @@
 
 <!-- MAIN CONTENT -->
 <main class="contact-page">
-  <section class="card contact">
+  <section class="card contact align-scope">
 
     <!-- HEADING (centered) -->
     <h1 style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
