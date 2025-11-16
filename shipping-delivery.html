@@ -62,6 +62,21 @@
       .menu { display: none; }
       .hamburger { display: inline-block; }
     }
+    /* Fix: ensure all info-block titles align flush left (1, 2, 3) */
+.info-block > p{
+  text-align: left !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  display: block !important;
+  list-style: none !important;
+}
+
+/* Remove any accidental markers applied to <p> */
+.info-block > p::marker { content: none; }
+
+/* Keep the little icon then text nicely spaced */
+.info-block > p i { margin-right: 6px; vertical-align: -1px; }
+
   </style>
 </head>
 
