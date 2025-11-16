@@ -77,6 +77,51 @@
 /* Keep the little icon then text nicely spaced */
 .info-block > p i { margin-right: 6px; vertical-align: -1px; }
 
+    /* === Emergency local alignment normalize (shipping-delivery only) === */
+
+/* 1) Make the whole card left by default */
+.contact-page .card.contact { text-align: left !important; }
+
+/* 2) Keep only these centered */
+.contact-page .card.contact h1,
+.contact-page .card.contact .subtitle,
+.contact-page .card.contact .cute-footer p {
+  text-align: center !important;
+}
+
+/* 3) Flush-left everything inside info sections */
+.contact-page .card.contact .info-block,
+.contact-page .card.contact .info-block * {
+  text-align: left !important;
+  text-indent: 0 !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* 4) Kill any theme “pseudo bullets” or numbering on the header lines */
+.contact-page .card.contact .info-block > p,
+.contact-page .card.contact .info-block > p::before,
+.contact-page .card.contact .info-block > p::after,
+.contact-page .card.contact .info-block > p strong,
+.contact-page .card.contact .info-block > p strong::before,
+.contact-page .card.contact .info-block > p strong::after {
+  list-style: none !important;
+  content: none !important;
+  display: inline !important;
+}
+
+/* 5) Tidy the icon spacing */
+.contact-page .card.contact .info-block > p i { margin-right: 6px; vertical-align: -1px; }
+
+/* 6) Lists: proper bullets and left alignment */
+.contact-page .card.contact .info-block ul {
+  list-style: disc outside !important;
+  padding-left: 1.2rem !important;
+  margin-left: 0 !important;
+  text-align: left !important;
+}
+.contact-page .card.contact .info-block li { margin: 0.25rem 0 !important; }
+
   </style>
 </head>
 
