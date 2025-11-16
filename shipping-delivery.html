@@ -5,147 +5,194 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BerryCuteNCo — Shipping & Delivery Policy</title>
 
+  <!-- Using the same stylesheet and fonts as your contact.html -->
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+  <!-- Mobile drawer styles (non-intrusive; do not change your page alignment) -->
   <style>
-    /* Keep hamburger as-is */
-    .hamburger { display: none; font-size: 28px; cursor: pointer; color: #ff5c8d; }
+    .nav { position: sticky; top: 0; z-index: 1000; }
+    .nav-inner { display: flex; align-items: center; gap: 12px; }
 
-    /* ===== ID-SCOPED ALIGNMENT FIX (beats global class rules) ===== */
-    /* 1) Default EVERYTHING in the policy area to LEFT */
-    #shippingPolicy, 
-    #shippingPolicy * {
-      text-align: left !important;
+    /* Hamburger button (hidden on desktop) */
+    .hamburger {
+      display: none;
+      width: 28px; height: 22px; position: relative;
+      border: 0; background: none; padding: 0; cursor: pointer;
+      margin-left: 8px;
+    }
+    .hamburger span {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: #7A276C; /* same as contact page */
+      border-radius: 2px; transition: transform .2s ease, top .2s ease, opacity .2s ease;
+    }
+    .hamburger span:nth-child(1){ top: 0; }
+    .hamburger span:nth-child(2){ top: 10px; }
+    .hamburger span:nth-child(3){ top: 20px; }
+
+    /* Drawer + backdrop */
+    .mobile-drawer{
+      position: fixed; top:0; right:0; height:100dvh; width:260px;
+      background:#ffd8e8; /* pastel */
+      padding:80px 24px 24px; box-shadow:-8px 0 24px rgba(0,0,0,.15);
+      transform:translateX(100%); transition:transform .25s ease-in-out; z-index:1001;
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .mobile-drawer a{
+      display:block; padding:12px 10px; font-weight:600; color:#5b2a5a; text-decoration:none;
+      border-radius:14px;
+    }
+    .mobile-drawer a.active{ color:#7A276C; background:rgba(122,39,108,0.08); }
+
+    .backdrop{
+      position: fixed; inset:0; background:rgba(0,0,0,.25);
+      opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:1000;
     }
 
-    /* 2) Re-center ONLY the title, subtitle, and cute footer text */
-    #shippingPolicy > h1.center-override,
-    #shippingPolicy > p.center-override,
-    #shippingPolicy .cute-footer p.center-override {
-      text-align: center !important;
-    }
+    /* Open state */
+    body.menu-open .mobile-drawer{ transform:translateX(0); }
+    body.menu-open .backdrop{ opacity:1; pointer-events:auto; }
+    body.menu-open .hamburger span:nth-child(1){ top:10px; transform:rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
+    body.menu-open .hamburger span:nth-child(3){ top:10px; transform:rotate(-45deg); }
 
-    /* List spacing tidy (unchanged visuals) */
-    #shippingPolicy ul { padding-left: 1.2rem; margin-left: 0; list-style-position: outside; }
-    #shippingPolicy li { margin: 0.25rem 0; }
-
-    @media (max-width: 768px) {
+    /* Responsive visibility: show hamburger, hide desktop menu on small screens */
+    @media (max-width: 900px){
       .menu { display: none; }
-      .hamburger { display: block; }
-      .mobile-menu {
-        display: none;
-        flex-direction: column;
-        background: white;
-        width: 100%;
-        padding: 15px 20px;
-        border-top: 2px solid #ffb6c9;
-      }
-      .mobile-menu a { padding: 10px 0; font-size: 18px; }
-      .mobile-menu.show { display: flex; }
+      .hamburger { display: inline-block; }
     }
   </style>
 </head>
 
 <body>
-
-<!-- HEADER -->
 <header class="nav">
   <div class="nav-inner">
     <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
       <span class="brand">BerryCuteNCo</span>
     </a>
-
-    <div class="hamburger" onclick="toggleMenu()">
-      <i class="fa-solid fa-bars"></i>
-    </div>
-
     <div class="spacer"></div>
 
+    <!-- Desktop menu (untouched) -->
     <nav class="menu">
       <a href="/index.html">Home</a>
       <a href="/shop.html">Shop</a>
       <a href="/contact.html">Contact</a>
       <a href="/refund&cancellation.html">Refund&Cancellation</a>
-      <a class="active" href="/shipping-delivery.html">Shipping-Delivery</a>
+      <a class="cta active" href="/shipping-delivery.html">Shipping-Delivery</a>
       <a href="/terms.html">Terms</a>
     </nav>
+
+    <!-- Mobile hamburger (new) -->
+    <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 
-  <nav class="mobile-menu" id="mobileMenu">
+  <!-- Mobile drawer menu (new) -->
+  <nav class="mobile-drawer" id="drawer">
     <a href="/index.html">Home</a>
     <a href="/shop.html">Shop</a>
     <a href="/contact.html">Contact</a>
-    <a href="/refund&cancellation.html">Refund&Cancellation</a>
-    <a class="active" href="/shipping-delivery.html">Shipping-Delivery</a>
+    <a href="/refund&cancellation.html">Refund & Cancellation</a>
+    <a href="/shipping-delivery.html" class="active">Shipping & Delivery</a>
     <a href="/terms.html">Terms</a>
   </nav>
+  <div class="backdrop" id="backdrop"></div>
 </header>
 
-<script>
-  function toggleMenu(){ document.getElementById("mobileMenu").classList.toggle("show"); }
-</script>
-
-<!-- MAIN CONTENT -->
+<!-- Using the exact same structure as your contact.html for consistent card styling -->
 <main class="contact-page">
-  <!-- ✅ Added id="shippingPolicy" to outrank global styles -->
-  <section class="card contact policy-card" id="shippingPolicy">
-    
-    <!-- HEADING (centered) -->
-    <h1 class="center-override" style="color:#6C7BFF;">
-      <i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy
-    </h1>
-    
-    <!-- SUBTITLE (centered) -->
-    <p class="center-override">
-      We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.
-    </p>
+  <section class="card contact">
+    <h1 style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
+    <p>We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
-    <!-- 1. Processing (left) -->
+    <!-- 1. Processing Time -->
     <div class="info-block">
-      <p><strong style="color:#6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
-      <div style="margin-left:20px;">
-        <p>Every scoop is lovingly customized and packed just for you!<br>
-        Processing time: <strong style="color:#FF5C8D;">5 to 7 business days</strong>.</p>
-        <p><small>Business days: Mon–Sat, excluding holidays.</small></p>
+      <p>
+        <strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong>
+      </p>
+      <div style="margin-left: 20px;">
+        <p>
+            Every scoop is lovingly customized and packed just for you!
+            <br>
+            Our current order processing time is <strong style="color: #FF5C8D;">5 to 7 business days</strong> from the date your order is successfully placed.
+        </p>
+        <p><small>Business days are Monday – Saturday, excluding public holidays.</small></p>
       </div>
     </div>
 
-    <!-- 2. Shipping (left) -->
+    <!-- 2. Shipping & Delivery -->
     <div class="info-block">
-      <p><strong style="color:#4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
-      <div style="margin-left:20px;">
+      <p>
+        <strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong>
+      </p>
+      <div style="margin-left: 20px;">
+        <p>Once your order has been processed and dispatched, the estimated delivery time is:</p>
         <ul>
-          <li>Local: 2–4 days</li>
-          <li>National: 5–8 days</li>
+          <li><i class="fa-solid fa-star" style="color: #FFC0CB;"></i> Local (Within State/Region): 2 – 4 days</li>
+          <li><i class="fa-solid fa-star" style="color: #FFC0CB;"></i> National (Other States): 5 – 8 days</li>
         </ul>
-        <p><strong style="color:#FF5C8D;">Total: 7–15 business days.</strong></p>
+        <p>
+            <strong style="color: #FF5C8D;">Total Timeframe:</strong> Please allow a total of <strong style="color: #FF5C8D;">7 to 15 business days</strong> from the date of order for your cute package to arrive.
+        </p>
       </div>
     </div>
 
-    <!-- 3. Tracking (left) -->
+    <!-- 3. Tracking and Notes -->
     <div class="info-block">
-      <p><strong style="color:#FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
-      <div style="margin-left:20px;">
-        <p><strong>Tracking:</strong> Sent via email after dispatch.</p>
-        <p><strong>Address:</strong> Must be accurate—cannot be changed later.</p>
-        <p><strong>No P.O. Boxes.</strong></p>
+      <p>
+        <strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Important Notes</strong>
+      </p>
+      <div style="margin-left: 20px;">
+        <p><strong style="color: #6C7BFF;">Tracking:</strong> Once your order is shipped, you will receive a tracking link via email to monitor your package’s journey.</p>
+        <p><strong style="color: #6C7BFF;">Delivery Address:</strong> Please ensure your delivery address is complete and accurate at checkout, as we cannot redirect packages once they have been shipped.</p>
+        <p><strong style="color: #6C7BFF;">P.O. Boxes:</strong> Unfortunately, we do not ship to P.O. Box addresses.</p>
       </div>
     </div>
 
-    <!-- CUTE FOOTER (centered) -->
     <div class="cute-footer">
-      <p class="center-override">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
   </section>
 </main>
 
-<footer style="background:#ffe6f0; padding:20px 0; text-align:center; border-top:1px solid #ffb3c1; font-family:'Baloo 2', cursive;">
-  <p style="font-size:14px; color:#884a62;">©️ 2025 BerryCuteNCo. All Rights Reserved.</p>
-  <p style="font-size:14px; color:#884a62;">Email: berrycutenco@gmail.com | WhatsApp: 9391669874</p>
+<footer style="
+    background-color: #ffe6f0; 
+    padding: 20px 0; 
+    text-align: center; 
+    border-top: 1px solid #ffb3c1;
+    font-family: 'Baloo 2', cursive;
+">
+  <div class="footer-links" style="margin-bottom: 10px;"></div>
+  <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
+      &copy; 2025 BerryCuteNCo. All Rights Reserved.
+  </p>
+  <p style="font-size: 14px; color: #884a62; margin: 0;">
+      Email: berrycutenco@gmail.com | WhatsApp: 9391669874
+  </p>
 </footer>
 
+<!-- Drawer JS (non-invasive; doesn’t touch content/alignment) -->
+<script>
+  (function(){
+    const btn = document.querySelector('.hamburger');
+    const backdrop = document.getElementById('backdrop');
+    const drawer = document.getElementById('drawer');
+    const links = drawer.querySelectorAll('a');
+
+    function toggleMenu(){
+      document.body.classList.toggle('menu-open');
+      if (btn) btn.setAttribute('aria-expanded', document.body.classList.contains('menu-open'));
+    }
+
+    if (btn) btn.addEventListener('click', toggleMenu);
+    if (backdrop) backdrop.addEventListener('click', toggleMenu);
+    links.forEach(a => a.addEventListener('click', () => {
+      if (document.body.classList.contains('menu-open')) toggleMenu();
+    }));
+  })();
+</script>
 </body>
 </html>
