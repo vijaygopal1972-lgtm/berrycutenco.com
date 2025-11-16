@@ -18,7 +18,7 @@
       color: #ff5c8d;
     }
 
-    /* --- ALIGNMENT FIX: ALL CONTENT TO THE LEFT --- */
+    /* --- ALIGNMENT FIX: ALL CONTENT TO THE LEFT (User's original strict rule) --- */
     .card.contact,
     .card.contact h1,
     .card.contact p,
@@ -33,6 +33,15 @@
     .info-block ul {
         list-style-position: inside;
         padding-left: 0;
+    }
+
+    /* --- CENTERING OVERRIDE for specific elements (Header, Subtitle, Footer) --- */
+    /* This rule is highly specific (using the .center-override class) to force centering */
+    /* for the requested elements, overriding the general 'text-align: left !important'. */
+    .card.contact h1.center-override,
+    .card.contact p.center-override,
+    .cute-footer p.center-override {
+        text-align: center !important;
     }
 
 
@@ -114,10 +123,14 @@
 <!-- MAIN CONTENT -->
 <main class="contact-page">
   <section class="card contact">
-    <h1 style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
-    <p>We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
+    
+    <!-- HEADING: CENTERED -->
+    <h1 class="center-override" style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
+    
+    <!-- SUBTITLE: CENTERED -->
+    <p class="center-override">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
-    <!-- 1. Processing -->
+    <!-- 1. Processing (LEFT ALIGNED) -->
     <div class="info-block">
       <p><strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
       <div style="margin-left: 20px;">
@@ -127,7 +140,7 @@
       </div>
     </div>
 
-    <!-- 2. Shipping -->
+    <!-- 2. Shipping (LEFT ALIGNED) -->
     <div class="info-block">
       <p><strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
       <div style="margin-left: 20px;">
@@ -139,7 +152,7 @@
       </div>
     </div>
 
-    <!-- 3. Tracking -->
+    <!-- 3. Tracking (LEFT ALIGNED) -->
     <div class="info-block">
       <p><strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
       <div style="margin-left: 20px;">
@@ -150,7 +163,8 @@
     </div>
 
     <div class="cute-footer">
-      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+      <!-- CUTE FOOTER: CENTERED -->
+      <p class="center-override">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
   </section>
 </main>
@@ -162,4 +176,4 @@
 </footer>
 
 </body>
-</html>
+</html
