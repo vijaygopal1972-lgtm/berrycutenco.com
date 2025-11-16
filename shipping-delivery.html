@@ -19,7 +19,7 @@
     }
 
     /* --- ALIGNMENT FIX: ALL CONTENT TO THE LEFT (User's original strict rule) --- */
-    /* This rule is kept to ensure the three policy sections remain left-aligned */
+    /* This rule is kept to ensure the policy sections remain left-aligned by default */
     .card.contact,
     .card.contact h1,
     .card.contact p,
@@ -35,10 +35,6 @@
         list-style-position: inside;
         padding-left: 0;
     }
-    
-    /* --- REMOVED: Center override CSS classes are no longer needed here, 
-           as we are using inline styles for maximum priority. */
-
 
     @media (max-width: 768px) {
       .menu {
@@ -125,8 +121,8 @@
     <!-- SUBTITLE: FORCED CENTERED WITH INLINE STYLE -->
     <p style="text-align: center !important;">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
-    <!-- 1. Processing (LEFT ALIGNED) -->
-    <div class="info-block">
+    <!-- 1. Processing (FORCED LEFT ALIGNED) -->
+    <div class="info-block" style="text-align: left !important;">
       <p><strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
       <div style="margin-left: 20px;">
         <p>Every scoop is lovingly customized and packed just for you!<br>
@@ -135,8 +131,8 @@
       </div>
     </div>
 
-    <!-- 2. Shipping (LEFT ALIGNED) -->
-    <div class="info-block">
+    <!-- 2. Shipping (FORCED LEFT ALIGNED) -->
+    <div class="info-block" style="text-align: left !important;">
       <p><strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
       <div style="margin-left: 20px;">
         <ul>
@@ -147,8 +143,8 @@
       </div>
     </div>
 
-    <!-- 3. Tracking (LEFT ALIGNED) -->
-    <div class="info-block">
+    <!-- 3. Tracking (FORCED LEFT ALIGNED) -->
+    <div class="info-block" style="text-align: left !important;">
       <p><strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
       <div style="margin-left: 20px;">
         <p><strong>Tracking:</strong> Sent via email after dispatch.</p>
