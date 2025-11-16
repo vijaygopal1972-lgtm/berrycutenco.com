@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    /* --- MOBILE NAV EXTRA (works with your existing style.css) --- */
+    /* Keep hamburger behavior as-is */
     .hamburger {
       display: none;
       font-size: 28px;
@@ -18,20 +18,26 @@
       color: #ff5c8d;
     }
 
-    /* * CRITICAL FIX: Re-inserting the left-align rule, but scoped only to the policy content sections
-    to override the external stylesheet's centering effect on these specific blocks. * */
+    /* --- TEXT ALIGNMENT RULES (requested) --- */
+    /* All inner content paragraphs and lists left-aligned */
     .info-block p,
     .info-block ul,
-    .info-block strong,
+    .info-block li,
     .info-block div {
-        /* This forces the policy text within sections 1, 2, and 3 to the left */
-        text-align: left !important;
+      text-align: left !important;
     }
 
-    /* Ensure list items are indented correctly */
+    /* Center heading, subtitle, and cute footer */
+    h1, 
+    .subtitle, 
+    .cute-footer p {
+      text-align: center !important;
+    }
+
+    /* Indentation for list items */
     .info-block ul {
-        list-style-position: inside;
-        padding-left: 0;
+      list-style-position: inside;
+      padding-left: 0;
     }
 
     @media (max-width: 768px) {
@@ -66,7 +72,6 @@
 <!-- HEADER -->
 <header class="nav">
   <div class="nav-inner">
-
     <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
       <span class="brand">BerryCuteNCo</span>
@@ -88,7 +93,6 @@
       <a class="active" href="/shipping-delivery.html">Shipping-Delivery</a>
       <a href="/terms.html">Terms</a>
     </nav>
-
   </div>
 
   <!-- MOBILE MENU DROPDOWN -->
@@ -112,14 +116,14 @@
 <!-- MAIN CONTENT -->
 <main class="contact-page">
   <section class="card contact">
-    
-    <!-- HEADING: CENTERED VIA INLINE STYLE -->
-    <h1 style="color: #6C7BFF; text-align: center;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
-    
-    <!-- SUBTITLE: CENTERED VIA INLINE STYLE -->
-    <p style="text-align: center;">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
-    <!-- 1. Processing: LEFT ALIGNED (Forced by the style block above) -->
+    <!-- HEADING: CENTERED -->
+    <h1 style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
+    
+    <!-- SUBTITLE: CENTERED -->
+    <p class="subtitle">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
+
+    <!-- 1. Processing -->
     <div class="info-block">
       <p><strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
       <div style="margin-left: 20px;">
@@ -129,7 +133,7 @@
       </div>
     </div>
 
-    <!-- 2. Shipping: LEFT ALIGNED (Forced by the style block above) -->
+    <!-- 2. Shipping -->
     <div class="info-block">
       <p><strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
       <div style="margin-left: 20px;">
@@ -141,7 +145,7 @@
       </div>
     </div>
 
-    <!-- 3. Tracking: LEFT ALIGNED (Forced by the style block above) -->
+    <!-- 3. Tracking -->
     <div class="info-block">
       <p><strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
       <div style="margin-left: 20px;">
@@ -151,10 +155,11 @@
       </div>
     </div>
 
+    <!-- CUTE FOOTER: CENTERED -->
     <div class="cute-footer">
-      <!-- CUTE FOOTER: CENTERED VIA INLINE STYLE -->
-      <p style="text-align: center;">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
+
   </section>
 </main>
 
