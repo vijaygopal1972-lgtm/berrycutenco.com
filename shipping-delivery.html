@@ -19,6 +19,7 @@
     }
 
     /* --- ALIGNMENT FIX: ALL CONTENT TO THE LEFT (User's original strict rule) --- */
+    /* This rule is kept to ensure the three policy sections remain left-aligned */
     .card.contact,
     .card.contact h1,
     .card.contact p,
@@ -34,15 +35,9 @@
         list-style-position: inside;
         padding-left: 0;
     }
-
-    /* --- CENTERING OVERRIDE for specific elements (Header, Subtitle, Footer) --- */
-    /* This rule is highly specific (using the .center-override class) to force centering */
-    /* for the requested elements, overriding the general 'text-align: left !important'. */
-    .card.contact h1.center-override,
-    .card.contact p.center-override,
-    .cute-footer p.center-override {
-        text-align: center !important;
-    }
+    
+    /* --- REMOVED: Center override CSS classes are no longer needed here, 
+           as we are using inline styles for maximum priority. */
 
 
     @media (max-width: 768px) {
@@ -124,11 +119,11 @@
 <main class="contact-page">
   <section class="card contact">
     
-    <!-- HEADING: CENTERED -->
-    <h1 class="center-override" style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
+    <!-- HEADING: FORCED CENTERED WITH INLINE STYLE -->
+    <h1 style="color: #6C7BFF; text-align: center !important;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
     
-    <!-- SUBTITLE: CENTERED -->
-    <p class="center-override">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
+    <!-- SUBTITLE: FORCED CENTERED WITH INLINE STYLE -->
+    <p style="text-align: center !important;">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
     <!-- 1. Processing (LEFT ALIGNED) -->
     <div class="info-block">
@@ -163,8 +158,8 @@
     </div>
 
     <div class="cute-footer">
-      <!-- CUTE FOOTER: CENTERED -->
-      <p class="center-override">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+      <!-- CUTE FOOTER: FORCED CENTERED WITH INLINE STYLE -->
+      <p style="text-align: center !important;">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
   </section>
 </main>
@@ -176,4 +171,4 @@
 </footer>
 
 </body>
-</html
+</html>
