@@ -18,11 +18,17 @@
       color: #ff5c8d;
     }
 
-    /* * CRITICAL FIX: The previously aggressive text-align: left !important; 
-    * rule has been removed from this block to allow inline centering to work. 
-    */
-    
-    /* Ensure list items are indented correctly, if needed */
+    /* * CRITICAL FIX: Re-inserting the left-align rule, but scoped only to the policy content sections
+    to override the external stylesheet's centering effect on these specific blocks. * */
+    .info-block p,
+    .info-block ul,
+    .info-block strong,
+    .info-block div {
+        /* This forces the policy text within sections 1, 2, and 3 to the left */
+        text-align: left !important;
+    }
+
+    /* Ensure list items are indented correctly */
     .info-block ul {
         list-style-position: inside;
         padding-left: 0;
@@ -107,46 +113,46 @@
 <main class="contact-page">
   <section class="card contact">
     
-    <!-- HEADING: CENTERED -->
+    <!-- HEADING: CENTERED VIA INLINE STYLE -->
     <h1 style="color: #6C7BFF; text-align: center;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
     
-    <!-- SUBTITLE: CENTERED -->
+    <!-- SUBTITLE: CENTERED VIA INLINE STYLE -->
     <p style="text-align: center;">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
-    <!-- 1. Processing: LEFT ALIGNED -->
-    <div class="info-block" style="text-align: left;">
-      <p style="text-align: left;"><strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
-      <div style="margin-left: 20px; text-align: left;">
-        <p style="text-align: left;">Every scoop is lovingly customized and packed just for you!<br>
+    <!-- 1. Processing: LEFT ALIGNED (Forced by the style block above) -->
+    <div class="info-block">
+      <p><strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
+      <div style="margin-left: 20px;">
+        <p>Every scoop is lovingly customized and packed just for you!<br>
         Processing time: <strong style="color: #FF5C8D;">5 to 7 business days</strong>.</p>
-        <p style="text-align: left;"><small>Business days: Mon–Sat, excluding holidays.</small></p>
+        <p><small>Business days: Mon–Sat, excluding holidays.</small></p>
       </div>
     </div>
 
-    <!-- 2. Shipping: LEFT ALIGNED -->
-    <div class="info-block" style="text-align: left;">
-      <p style="text-align: left;"><strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
-      <div style="margin-left: 20px; text-align: left;">
-        <ul style="text-align: left;">
+    <!-- 2. Shipping: LEFT ALIGNED (Forced by the style block above) -->
+    <div class="info-block">
+      <p><strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
+      <div style="margin-left: 20px;">
+        <ul>
           <li>Local: 2–4 days</li>
           <li>National: 5–8 days</li>
         </ul>
-        <p style="text-align: left;"><strong style="color: #FF5C8D;">Total: 7–15 business days.</strong></p>
+        <p><strong style="color: #FF5C8D;">Total: 7–15 business days.</strong></p>
       </div>
     </div>
 
-    <!-- 3. Tracking: LEFT ALIGNED -->
-    <div class="info-block" style="text-align: left;">
-      <p style="text-align: left;"><strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
-      <div style="margin-left: 20px; text-align: left;">
-        <p style="text-align: left;"><strong>Tracking:</strong> Sent via email after dispatch.</p>
-        <p style="text-align: left;"><strong>Address:</strong> Must be accurate—cannot be changed later.</p>
-        <p style="text-align: left;"><strong>No P.O. Boxes.</strong></p>
+    <!-- 3. Tracking: LEFT ALIGNED (Forced by the style block above) -->
+    <div class="info-block">
+      <p><strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
+      <div style="margin-left: 20px;">
+        <p><strong>Tracking:</strong> Sent via email after dispatch.</p>
+        <p><strong>Address:</strong> Must be accurate—cannot be changed later.</p>
+        <p><strong>No P.O. Boxes.</strong></p>
       </div>
     </div>
 
     <div class="cute-footer">
-      <!-- CUTE FOOTER: CENTERED -->
+      <!-- CUTE FOOTER: CENTERED VIA INLINE STYLE -->
       <p style="text-align: center;">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
   </section>
