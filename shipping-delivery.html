@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    /* --- MOBILE NAV --- */
+    /* keep your hamburger as-is */
     .hamburger {
       display: none;
       font-size: 28px;
@@ -18,30 +18,28 @@
       color: #ff5c8d;
     }
 
-    /* --- TEXT ALIGNMENT FIX --- */
-    /* Make sure the entire card stays left-aligned by default */
-    .contact-page .card.contact {
-      text-align: left !important;
-    }
+    /* ---- Alignment: simple & safe ----
+       1) Make the card left-aligned by default
+       2) Center ONLY: h1, .subtitle, .cute-footer p
+    */
+    .contact-page .card.contact { text-align: left !important; }
 
-    /* Center only these specific elements */
     .contact-page .card.contact h1,
     .contact-page .card.contact .subtitle,
     .contact-page .card.contact .cute-footer p {
       text-align: center !important;
     }
 
-    /* Restore left alignment for info content */
-    .info-block, 
-    .info-block p, 
-    .info-block ul, 
-    .info-block li, 
-    .info-block div {
+    /* Ensure paragraphs and lists inside info sections are left */
+    .contact-page .card.contact .info-block p,
+    .contact-page .card.contact .info-block ul,
+    .contact-page .card.contact .info-block li,
+    .contact-page .card.contact .info-block div {
       text-align: left !important;
     }
 
-    /* Make lists neatly indented */
-    .info-block ul {
+    /* tidy bullets */
+    .contact-page .card.contact .info-block ul {
       list-style-position: inside;
       padding-left: 0;
       margin-left: 0;
@@ -65,7 +63,6 @@
       .mobile-menu.show { display: flex; }
     }
   </style>
-
 </head>
 
 <body>
@@ -118,13 +115,13 @@
 <main class="contact-page">
   <section class="card contact">
 
-    <!-- HEADING -->
+    <!-- HEADING (centered) -->
     <h1 style="color: #6C7BFF;"><i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy</h1>
     
-    <!-- SUBTITLE -->
+    <!-- SUBTITLE (centered) -->
     <p class="subtitle">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
 
-    <!-- 1. Processing -->
+    <!-- 1. Processing (left) -->
     <div class="info-block">
       <p><strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
       <div style="margin-left: 20px;">
@@ -134,6 +131,41 @@
       </div>
     </div>
 
-    <!-- 2. Shipping -->
+    <!-- 2. Shipping (left) -->
     <div class="info-block">
-      <p><strong style="color: #4CAF50;"><i class="fa-
+      <p><strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
+      <div style="margin-left: 20px;">
+        <ul>
+          <li>Local: 2–4 days</li>
+          <li>National: 5–8 days</li>
+        </ul>
+        <p><strong style="color: #FF5C8D;">Total: 7–15 business days.</strong></p>
+      </div>
+    </div>
+
+    <!-- 3. Tracking (left) -->
+    <div class="info-block">
+      <p><strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
+      <div style="margin-left: 20px;">
+        <p><strong>Tracking:</strong> Sent via email after dispatch.</p>
+        <p><strong>Address:</strong> Must be accurate—cannot be changed later.</p>
+        <p><strong>No P.O. Boxes.</strong></p>
+      </div>
+    </div>
+
+    <!-- CUTE FOOTER (centered) -->
+    <div class="cute-footer">
+      <p>🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
+    </div>
+
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer style="background:#ffe6f0; padding:20px 0; text-align:center; border-top:1px solid #ffb3c1; font-family:'Baloo 2', cursive;">
+  <p style="font-size:14px; color:#884a62;">©️ 2025 BerryCuteNCo. All Rights Reserved.</p>
+  <p style="font-size:14px; color:#884a62;">Email: berrycutenco@gmail.com | WhatsApp: 9391669874</p>
+</footer>
+
+</body>
+</html>
