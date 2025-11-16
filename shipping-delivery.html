@@ -10,40 +10,39 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    /* --- MOBILE NAV EXTRA (kept from your original) --- */
-    .hamburger {
-      display: none;
-      font-size: 28px;
-      cursor: pointer;
-      color: #ff5c8d;
+    /* --- keep your hamburger as-is --- */
+    .hamburger { display:none; font-size:28px; cursor:pointer; color:#ff5c8d; }
+
+    /* ================== ALIGNMENT FIX (HIGH SPECIFICITY) ==================
+       Beat any ".contact-page .contact p {text-align:center !important}" type rules.
+       We target the exact path: main.contact-page > section.card.contact.policy-card
+    */
+    main.contact-page section.card.contact.policy-card,
+    main.contact-page section.card.contact.policy-card * {
+      text-align: left !important;
     }
 
-    /* ==== SAME AS REFUND PAGE ====
-       Force everything inside the policy card to align left,
-       then re-center only the three requested elements.
-    */
-    .policy-card, .policy-card * { text-align: left !important; }
-    .policy-card ul, .policy-card ol { padding-left: 1.2rem; margin-left: 0; }
+    /* Re-center ONLY: heading, subtitle, cute footer text.
+       (Placed AFTER the left rule so these win where both use !important.) */
+    main.contact-page section.card.contact.policy-card > h1.center-override,
+    main.contact-page section.card.contact.policy-card > p.center-override,
+    main.contact-page section.card.contact.policy-card .cute-footer p.center-override {
+      text-align: center !important;
+    }
+
+    /* Tidy lists (like your refund page) */
+    .policy-card ul { padding-left: 1.2rem; margin-left: 0; list-style-position: outside; }
     .policy-card li { margin: 0.25rem 0; }
 
-    .center-override { text-align: center !important; }
-
-    @media (max-width: 768px) {
-      .menu { display: none; }
-      .hamburger { display: block; }
-      .mobile-menu {
-        display: none;
-        flex-direction: column;
-        background: white;
-        width: 100%;
-        padding: 15px 20px;
-        border-top: 2px solid #ffb6c9;
+    @media (max-width:768px){
+      .menu{ display:none; }
+      .hamburger{ display:block; }
+      .mobile-menu{
+        display:none; flex-direction:column; background:#fff; width:100%;
+        padding:15px 20px; border-top:2px solid #ffb6c9;
       }
-      .mobile-menu a {
-        padding: 10px 0;
-        font-size: 18px;
-      }
-      .mobile-menu.show { display: flex; }
+      .mobile-menu a{ padding:10px 0; font-size:18px; }
+      .mobile-menu.show{ display:flex; }
     }
   </style>
 </head>
@@ -53,20 +52,17 @@
 <!-- HEADER -->
 <header class="nav">
   <div class="nav-inner">
-
     <a class="logo" href="/index.html">
       <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
       <span class="brand">BerryCuteNCo</span>
     </a>
 
-    <!-- HAMBURGER FOR MOBILE -->
     <div class="hamburger" onclick="toggleMenu()">
       <i class="fa-solid fa-bars"></i>
     </div>
 
     <div class="spacer"></div>
 
-    <!-- DESKTOP MENU -->
     <nav class="menu">
       <a href="/index.html">Home</a>
       <a href="/shop.html">Shop</a>
@@ -75,10 +71,8 @@
       <a class="active" href="/shipping-delivery.html">Shipping-Delivery</a>
       <a href="/terms.html">Terms</a>
     </nav>
-
   </div>
 
-  <!-- MOBILE MENU DROPDOWN -->
   <nav class="mobile-menu" id="mobileMenu">
     <a href="/index.html">Home</a>
     <a href="/shop.html">Shop</a>
@@ -89,66 +83,65 @@
   </nav>
 </header>
 
-<!-- JAVASCRIPT FOR MENU -->
 <script>
-  function toggleMenu() {
-    document.getElementById("mobileMenu").classList.toggle("show");
-  }
+  function toggleMenu(){ document.getElementById("mobileMenu").classList.toggle("show"); }
 </script>
 
 <!-- MAIN CONTENT -->
 <main class="contact-page">
-  <!-- ✅ Add policy-card wrapper class (same as refund page) -->
+  <!-- ✅ policy-card used same as refund page -->
   <section class="card contact policy-card">
-    
-    <!-- HEADING (centered with .center-override) -->
-    <h1 class="center-override" style="color: #6C7BFF;">
+
+    <!-- HEADING (centered) -->
+    <h1 class="center-override" style="color:#6C7BFF;">
       <i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy
     </h1>
-    
-    <!-- SUBTITLE (centered with .center-override) -->
-    <p class="center-override">We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.</p>
+
+    <!-- SUBTITLE (centered) -->
+    <p class="center-override">
+      We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.
+    </p>
 
     <!-- 1. Processing (left) -->
     <div class="info-block">
-      <p><strong style="color: #6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
-      <div style="margin-left: 20px;">
+      <p><strong style="color:#6C7BFF;"><i class="fa-solid fa-box"></i> 1. Order Processing Time</strong></p>
+      <div style="margin-left:20px;">
         <p>Every scoop is lovingly customized and packed just for you!<br>
-        Processing time: <strong style="color: #FF5C8D;">5 to 7 business days</strong>.</p>
+        Processing time: <strong style="color:#FF5C8D;">5 to 7 business days</strong>.</p>
         <p><small>Business days: Mon–Sat, excluding holidays.</small></p>
       </div>
     </div>
 
     <!-- 2. Shipping (left) -->
     <div class="info-block">
-      <p><strong style="color: #4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
-      <div style="margin-left: 20px;">
+      <p><strong style="color:#4CAF50;"><i class="fa-solid fa-envelope-open-text"></i> 2. Shipping Timeframes</strong></p>
+      <div style="margin-left:20px;">
         <ul>
           <li>Local: 2–4 days</li>
           <li>National: 5–8 days</li>
         </ul>
-        <p><strong style="color: #FF5C8D;">Total: 7–15 business days.</strong></p>
+        <p><strong style="color:#FF5C8D;">Total: 7–15 business days.</strong></p>
       </div>
     </div>
 
     <!-- 3. Tracking (left) -->
     <div class="info-block">
-      <p><strong style="color: #FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
-      <div style="margin-left: 20px;">
+      <p><strong style="color:#FF5C8D;"><i class="fa-solid fa-map-pin"></i> 3. Tracking & Notes</strong></p>
+      <div style="margin-left:20px;">
         <p><strong>Tracking:</strong> Sent via email after dispatch.</p>
         <p><strong>Address:</strong> Must be accurate—cannot be changed later.</p>
         <p><strong>No P.O. Boxes.</strong></p>
       </div>
     </div>
 
-    <!-- CUTE FOOTER (centered with .center-override) -->
+    <!-- CUTE FOOTER (centered) -->
     <div class="cute-footer">
       <p class="center-override">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
+
   </section>
 </main>
 
-<!-- FOOTER -->
 <footer style="background:#ffe6f0; padding:20px 0; text-align:center; border-top:1px solid #ffb3c1; font-family:'Baloo 2', cursive;">
   <p style="font-size:14px; color:#884a62;">©️ 2025 BerryCuteNCo. All Rights Reserved.</p>
   <p style="font-size:14px; color:#884a62;">Email: berrycutenco@gmail.com | WhatsApp: 9391669874</p>
