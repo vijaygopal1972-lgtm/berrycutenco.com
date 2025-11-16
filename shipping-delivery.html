@@ -10,39 +10,40 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    /* --- keep your hamburger as-is --- */
-    .hamburger { display:none; font-size:28px; cursor:pointer; color:#ff5c8d; }
+    /* Keep hamburger as-is */
+    .hamburger { display: none; font-size: 28px; cursor: pointer; color: #ff5c8d; }
 
-    /* ================== ALIGNMENT FIX (HIGH SPECIFICITY) ==================
-       Beat any ".contact-page .contact p {text-align:center !important}" type rules.
-       We target the exact path: main.contact-page > section.card.contact.policy-card
-    */
-    main.contact-page section.card.contact.policy-card,
-    main.contact-page section.card.contact.policy-card * {
+    /* ===== ID-SCOPED ALIGNMENT FIX (beats global class rules) ===== */
+    /* 1) Default EVERYTHING in the policy area to LEFT */
+    #shippingPolicy, 
+    #shippingPolicy * {
       text-align: left !important;
     }
 
-    /* Re-center ONLY: heading, subtitle, cute footer text.
-       (Placed AFTER the left rule so these win where both use !important.) */
-    main.contact-page section.card.contact.policy-card > h1.center-override,
-    main.contact-page section.card.contact.policy-card > p.center-override,
-    main.contact-page section.card.contact.policy-card .cute-footer p.center-override {
+    /* 2) Re-center ONLY the title, subtitle, and cute footer text */
+    #shippingPolicy > h1.center-override,
+    #shippingPolicy > p.center-override,
+    #shippingPolicy .cute-footer p.center-override {
       text-align: center !important;
     }
 
-    /* Tidy lists (like your refund page) */
-    .policy-card ul { padding-left: 1.2rem; margin-left: 0; list-style-position: outside; }
-    .policy-card li { margin: 0.25rem 0; }
+    /* List spacing tidy (unchanged visuals) */
+    #shippingPolicy ul { padding-left: 1.2rem; margin-left: 0; list-style-position: outside; }
+    #shippingPolicy li { margin: 0.25rem 0; }
 
-    @media (max-width:768px){
-      .menu{ display:none; }
-      .hamburger{ display:block; }
-      .mobile-menu{
-        display:none; flex-direction:column; background:#fff; width:100%;
-        padding:15px 20px; border-top:2px solid #ffb6c9;
+    @media (max-width: 768px) {
+      .menu { display: none; }
+      .hamburger { display: block; }
+      .mobile-menu {
+        display: none;
+        flex-direction: column;
+        background: white;
+        width: 100%;
+        padding: 15px 20px;
+        border-top: 2px solid #ffb6c9;
       }
-      .mobile-menu a{ padding:10px 0; font-size:18px; }
-      .mobile-menu.show{ display:flex; }
+      .mobile-menu a { padding: 10px 0; font-size: 18px; }
+      .mobile-menu.show { display: flex; }
     }
   </style>
 </head>
@@ -89,14 +90,14 @@
 
 <!-- MAIN CONTENT -->
 <main class="contact-page">
-  <!-- ✅ policy-card used same as refund page -->
-  <section class="card contact policy-card">
-
+  <!-- ✅ Added id="shippingPolicy" to outrank global styles -->
+  <section class="card contact policy-card" id="shippingPolicy">
+    
     <!-- HEADING (centered) -->
     <h1 class="center-override" style="color:#6C7BFF;">
       <i class="fa-solid fa-truck-fast"></i> Shipping & Delivery Policy
     </h1>
-
+    
     <!-- SUBTITLE (centered) -->
     <p class="center-override">
       We're thrilled to get your Mystery Scoop packed and shipped! Here’s all the info you need about when your goodies will arrive.
@@ -138,7 +139,6 @@
     <div class="cute-footer">
       <p class="center-override">🌸 Thank you for supporting <strong>BerryCuteNCo</strong> — spreading joy, one surprise scoop at a time!</p>
     </div>
-
   </section>
 </main>
 
