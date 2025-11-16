@@ -18,6 +18,24 @@
       color: #ff5c8d;
     }
 
+    /* --- ALIGNMENT FIX: ALL CONTENT TO THE LEFT --- */
+    .card.contact,
+    .card.contact h1,
+    .card.contact p,
+    .card.contact ul,
+    .info-block p,
+    .cute-footer {
+      /* Force all text content and containers to align left */
+      text-align: left !important;
+    }
+    
+    /* Ensure list items are indented correctly, if needed */
+    .info-block ul {
+        list-style-position: inside;
+        padding-left: 0;
+    }
+
+
     @media (max-width: 768px) {
       .menu {
         display: none;
@@ -139,7 +157,7 @@
 
 <!-- FOOTER -->
 <footer style="background:#ffe6f0; padding:20px 0; text-align:center; border-top:1px solid #ffb3c1; font-family:'Baloo 2', cursive;">
-  <p style="font-size:14px; color:#884a62;">© 2025 BerryCuteNCo. All Rights Reserved.</p>
+  <p style="font-size:14px; color:#884a62;">©️ 2025 BerryCuteNCo. All Rights Reserved.</p>
   <p style="font-size:14px; color:#884a62;">Email: berrycutenco@gmail.com | WhatsApp: 9391669874</p>
 </footer>
 
