@@ -41,6 +41,28 @@
         display: flex;
       }
     }
+
+    /* ✅ Force 1, 2, 3 sections to left align (same working fix as shipping-delivery.html) */
+    .contact-page .card.contact .info-block,
+    .contact-page .card.contact .info-block * {
+      text-align: left !important;
+      text-indent: 0 !important;
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+    }
+    .contact-page .card.contact .info-block > p i {
+      margin-right: 6px;
+      vertical-align: -1px;
+    }
+    .contact-page .card.contact .info-block ul {
+      list-style: disc outside !important;
+      padding-left: 1.2rem !important;
+      margin-left: 0 !important;
+      text-align: left !important;
+    }
+    .contact-page .card.contact .info-block li {
+      margin: 0.25rem 0 !important;
+    }
   </style>
 </head>
 
