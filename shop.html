@@ -5,7 +5,200 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BerryCuteNCo — Order Details</title>
 
-  <!-- Global styles & fonts -->
+  <!-- Load Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    setLogLevel('Debug');
+
+    // =================================================================
+    // !!! CONFIGURATION REQUIRED !!!
+    // You MUST update these variables for data saving to work.
+    // 1. Google Form Submission Endpoint (Change 'YOUR_ENDPOINT_HERE')
+    const GOOGLE_FORM_ACTION_URL = 'YOUR_GOOGLE_FORM_SUBMISSION_ENDPOINT_HERE'; 
+    // 2. Google Form Field Map (Change the entry.XXXXXXXXXX IDs to match your Google Form)
+    const GOOGLE_FIELD_MAP = {
+      'entry.123456789': 'orderId',         // Instamojo Payment ID
+      'entry.100000001': 'name',          // Full Name
+      'entry.100000002': 'phone',         // Phone Number
+      'entry.100000003': 'email',         // Email ID
+      'entry.100000004': 'address',       // Full Address Line 1
+      'entry.100000005': 'city',          // City
+      'entry.100000006': 'pincode',       // Pincode
+      'entry.100000007': 'alternateNumber' // Alternate Phone (Optional)
+      // Scoop Size and Notes removed from map
+    };
+    // =================================================================
+
+    // Global Firebase vars
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = typeof _firebase_config !== 'undefined' ? JSON.parse(_firebase_config) : null;
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+    let db;
+    let auth;
+    let userId;
+
+    if (firebaseConfig) {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+    }
+
+    // --- Authentication Setup ---
+    async function setupAuth() {
+        if (!auth) return;
+        try {
+            if (initialAuthToken) {
+                await signInWithCustomToken(auth, initialAuthToken);
+            } else {
+                await signInAnonymously(auth);
+            }
+            userId = auth.currentUser?.uid || crypto.randomUUID();
+        } catch (error) {
+            console.error("Authentication error:", error);
+        }
+    }
+
+    // --- Data Submission Logic ---
+    window.submitOrderDetails = async function(event) {
+        event.preventDefault();
+
+        // 1. Collect and Validate Data
+        const form = document.querySelector('.order-form');
+        const formData = new FormData(form);
+        
+        const instamojoPaymentId = formData.get('orderId');
+        const name = formData.get('name');
+        const phone = formData.get('phone');
+        const email = formData.get('email');
+        const address = formData.get('address');
+        const city = formData.get('city');
+        const pincode = formData.get('pincode');
+        const alternateNumber = formData.get('alternateNumber');
+        
+        // Scoop Size and Notes are now collected but not required fields
+        
+        if (!form.checkValidity()) {
+             // Browser will handle basic required field alerts
+             return; 
+        }
+
+        const submitButton = document.getElementById('submitBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        submitButton.disabled = true;
+        loadingSpinner.classList.remove('hidden');
+
+        try {
+            if (!db || !userId) await setupAuth();
+            
+            const fullAddress = ${address}, ${city}, ${pincode};
+
+            // 2. SAVE TO FIRESTORE (Primary Order Tracking)
+            const ordersCollectionRef = collection(db, artifacts/${appId}/public/data/orders);
+            const orderData = {
+                paymentId: instamojoPaymentId,
+                customerName: name,
+                phone: phone,
+                email: email,
+                fullAddress: fullAddress, // Combined for simplicity
+                alternateNumber: alternateNumber || '',
+                // Scoop size and notes fields removed from data structure
+                status: 'Payment & Details Confirmed',
+                createdAt: new Date(),
+                customer_uid: userId
+            };
+            await addDoc(ordersCollectionRef, orderData);
+            console.log("Order saved to Firestore successfully.");
+
+            // 3. SAVE TO GOOGLE SHEET (External Backup/Data Source)
+            if (GOOGLE_FORM_ACTION_URL !== 'YOUR_GOOGLE_FORM_SUBMISSION_ENDPOINT_HERE') {
+                const sheetFormData = new FormData();
+                // Map local form element values to Google Form entry fields
+                for (const entryId in GOOGLE_FIELD_MAP) {
+                    const elementId = GOOGLE_FIELD_MAP[entryId];
+                    const value = formData.get(elementId);
+                    sheetFormData.append(entryId, value);
+                }
+
+                await fetch(GOOGLE_FORM_ACTION_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Essential for Google Form submission
+                    body: sheetFormData
+                });
+                console.log("Data submitted to Google Sheet.");
+            } else {
+                console.warn("Google Form URL not configured. Skipping Google Sheet submission.");
+            }
+
+
+            // 4. SHOW SUCCESS MESSAGE AND REDIRECT
+            window.showCustomAlert('🎉 Details Submitted, Thank Thank You!', 'Your order details have been successfully saved. We will now prepare your Mystery Scoop! Redirecting to home page...', true);
+
+        } catch (e) {
+            console.error("Critical submission error:", e);
+            window.showCustomAlert('🛑 Submission Error', 'A critical error occurred while saving your details. Please contact us immediately with your Instamojo Payment ID.', false);
+        } finally {
+            submitButton.disabled = false;
+            loadingSpinner.classList.add('hidden');
+        }
+    };
+    
+    // --- Initial Setup and Conditional Rendering ---
+    function initializeForm() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id');
+        const successStatus = urlParams.get('payment_status');
+        const buyerName = urlParams.get('buyer_name') || '';
+
+        // Check if we are redirected from a successful Instamojo payment
+        if (paymentId && successStatus === 'Credit') {
+            document.getElementById('orderId').value = paymentId;
+            document.getElementById('name').value = buyerName;
+        } else {
+            // Optional: If no payment ID is present, you might warn the user or assume they manually copied the ID.
+            console.warn("No payment_id found in URL. User must manually enter it.");
+        }
+
+        setupAuth();
+    }
+
+    // Custom Alert/Modal Box (Replaces alert() and confirm())
+    window.showCustomAlert = function(title, message, isSuccess = true) {
+        const modal = document.getElementById('customAlertModal');
+        document.getElementById('alertTitle').textContent = title;
+        document.getElementById('alertMessage').textContent = message;
+        
+        const icon = document.getElementById('alertIcon');
+        icon.className = 'modal-icon';
+        if (isSuccess) {
+            icon.classList.add('fa-solid', 'fa-heart', 'text-pink');
+        } else {
+            icon.classList.add('fa-solid', 'fa-triangle-exclamation', 'text-red');
+        }
+
+        modal.classList.remove('hidden');
+        
+        // Handle redirect only for success
+        if (isSuccess) {
+            setTimeout(() => {
+                window.location.href = '/index.html'; // Redirect to home page
+            }, 3000); // 3 second delay
+        }
+    }
+    
+    window.closeModal = function() {
+        document.getElementById('customAlertModal').classList.add('hidden');
+    }
+
+    // Initialize the page logic
+    window.addEventListener('load', initializeForm);
+  </script>
+  
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -70,7 +263,7 @@
     }
 
     /* ============================
-       Order Form Styling
+       Order Form Styling (Slightly adjusted for required fields)
        ============================ */
     .order-wrapper {
       max-width: 960px;
@@ -119,6 +312,11 @@
       font-size: 0.9rem;
       color:#5b2145;
     }
+    
+    .order-form-group .required-star {
+      color: #FF5C8D;
+      margin-left: 4px;
+    }
 
     .order-form-group small {
       font-size: 0.78rem;
@@ -137,6 +335,13 @@
       background:#ffffff;
       transition: box-shadow 0.15s ease, border-color 0.15s ease;
     }
+    
+    #orderId {
+        background-color: #fce4ec; /* Light pink background for auto-filled ID */
+        font-weight: 600;
+        color: #5b2145;
+    }
+
 
     .order-form input:focus,
     .order-form select:focus,
@@ -152,8 +357,13 @@
 
     .order-form-row {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
+    }
+    
+    /* Alternate number group needs full width */
+    #alternateNumberGroup {
+        grid-column: 1 / -1;
     }
 
     @media (max-width: 600px){
@@ -178,10 +388,17 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      transition: transform 0.1s, opacity 0.2s;
     }
 
-    .order-form button:hover {
+    .order-form button:hover:not(:disabled) {
       transform: translateY(-1px);
+    }
+    
+    .order-form button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .order-note {
@@ -190,6 +407,59 @@
       font-size: 0.8rem;
       color:#8b5a6d;
     }
+
+    /* --- Custom Modal Styling (Pop-up) --- */
+    #customAlertModal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        backdrop-filter: blur(3px);
+    }
+    .modal-content {
+        max-width: 400px;
+        padding: 40px 30px;
+        text-align: center;
+        border: 3px solid #ff69b4;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(122, 39, 108, 0.2);
+        color: #5b2a5a;
+        font-family: 'Quicksand', sans-serif;
+        position: relative;
+    }
+    .modal-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+    .text-pink { color: #ff69b4; }
+    .text-red { color: #dc3545; }
+    #alertTitle {
+        font-family: 'Baloo 2', cursive;
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #7A276C;
+    }
+    #alertMessage {
+        margin-bottom: 20px;
+    }
+    .hidden { display: none !important; }
+
+    /* Loading Spinner */
+    .loading-spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 3px solid rgba(91, 33, 69, .3); /* Border color matching text */
+        border-radius: 50%;
+        border-top-color: #5b2145; /* Spinner color */
+        animation: spin 1s ease-in-out infinite;
+        vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 
@@ -232,76 +502,63 @@
 
 <main class="order-wrapper">
   <section class="order-card">
-    <h1><i class="fa-solid fa-clipboard-list"></i> Order Details</h1>
+    <h1><i class="fa-solid fa-clipboard-list"></i> Finalize Your Order</h1>
     <p class="subtitle">
-      Thank you for your purchase! 💖 Please fill in your details below so we can ship your
-      <strong>Mystery Scoop</strong> safely to you.
+      Thank you for your successful payment! 💖 Please provide your details below so we can ship your order
+      safely to you. All fields marked with (*) are required.
     </p>
 
-    <!-- You can set action="" later (Formspree, Google Forms backend, etc.) -->
-    <form class="order-form" method="post" action="#">
+    <!-- Form action is removed and handled by JavaScript -->
+    <form class="order-form" onsubmit="submitOrderDetails(event)">
       <div class="order-form-group">
-        <label for="orderId">Payment / Order ID</label>
-        <input type="text" id="orderId" name="orderId" placeholder="e.g. IM-12345 or Instamojo Payment ID" required>
-        <small>Copy this from your Instamojo payment confirmation page or email.</small>
+        <label for="orderId">Instamojo Payment ID<span class="required-star">*</span></label>
+        <input type="text" id="orderId" name="orderId" placeholder="e.g. IM-12345 (Should auto-fill)" required readonly>
+        <small>This ID confirms your payment and is filled automatically from the payment link.</small>
       </div>
 
       <div class="order-form-row">
         <div class="order-form-group">
-          <label for="name">Full Name</label>
+          <label for="name">Full Name<span class="required-star">*</span></label>
           <input type="text" id="name" name="name" placeholder="Your full name" required>
         </div>
 
         <div class="order-form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" placeholder="10-digit WhatsApp / mobile" required>
+          <label for="phone">Phone Number<span class="required-star">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="10-digit mobile number" required pattern="[0-9]{10}">
         </div>
       </div>
 
       <div class="order-form-group">
-        <label for="email">Email (optional)</label>
-        <input type="email" id="email" name="email" placeholder="For updates & tracking (optional)">
+        <label for="email">Email ID<span class="required-star">*</span></label>
+        <input type="email" id="email" name="email" placeholder="For updates & tracking" required>
       </div>
 
       <div class="order-form-group">
-        <label for="address">Full Address</label>
-        <textarea id="address" name="address" placeholder="House no., street, area" required></textarea>
+        <label for="address">Full Address Details (Street, Area, Landmark)<span class="required-star">*</span></label>
+        <textarea id="address" name="address" placeholder="House no., street, area, nearest landmark" required></textarea>
       </div>
 
       <div class="order-form-row">
         <div class="order-form-group">
-          <label for="city">City</label>
+          <label for="city">City<span class="required-star">*</span></label>
           <input type="text" id="city" name="city" placeholder="City" required>
         </div>
         <div class="order-form-group">
-          <label for="pincode">Pincode</label>
-          <input type="text" id="pincode" name="pincode" placeholder="e.g. 560001" required>
+          <label for="pincode">Pincode<span class="required-star">*</span></label>
+          <input type="text" id="pincode" name="pincode" placeholder="e.g. 560001" required pattern="[0-9]{6}">
         </div>
       </div>
-
-      <div class="order-form-group">
-        <label for="landmark">Landmark (optional)</label>
-        <input type="text" id="landmark" name="landmark" placeholder="Nearby landmark to help the courier">
+      
+      <!-- Alternate number group needs full width -->
+      <div class="order-form-group" id="alternateNumberGroup">
+        <label for="alternateNumber">Alternate Phone Number (Optional)</label>
+        <input type="tel" id="alternateNumber" name="alternateNumber" placeholder="Another number for contact">
       </div>
 
-      <div class="order-form-group">
-        <label for="scoopSize">Scoop Size</label>
-        <select id="scoopSize" name="scoopSize" required>
-          <option value="">Select your Mystery Scoop</option>
-          <option value="1 scoop (₹999)">1 scoop (₹999)</option>
-          <option value="2 scoops (₹1,999)">2 scoops (₹1,999)</option>
-          <option value="3 scoops (₹2,999)">3 scoops (₹2,999)</option>
-        </select>
-      </div>
-
-      <div class="order-form-group">
-        <label for="notes">Notes or Preferences (optional)</label>
-        <textarea id="notes" name="notes" placeholder="Example: I love pink / pastel items, please avoid skincare, etc."></textarea>
-      </div>
-
-      <button type="submit">
+      <button type="submit" id="submitBtn">
         <i class="fa-solid fa-paper-plane"></i>
         Submit Order Details
+        <span id="loadingSpinner" class="loading-spinner hidden"></span>
       </button>
 
       <p class="order-note">
@@ -326,8 +583,22 @@
   </p>
 </footer>
 
+<!-- Custom Alert Modal (Pop-up) -->
+<div id="customAlertModal" class="hidden">
+    <div class="modal-content">
+        <i id="alertIcon" class="modal-icon"></i>
+        <h2 id="alertTitle"></h2>
+        <p id="alertMessage"></p>
+        <!-- The button is only visible for error messages, as success automatically redirects -->
+        <button onclick="closeModal()" class="order-form-button" style="width: auto; padding: 10px 20px;">
+          <i class="fa-solid fa-xmark"></i> Close
+        </button>
+    </div>
+</div>
+
 <!-- Drawer nav script -->
 <script>
+  // Drawer logic kept separate from the module script
   (function(){
     const btn = document.querySelector('.hamburger');
     const backdrop = document.getElementById('backdrop');
