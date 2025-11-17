@@ -10,31 +10,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    /* Keep your existing mobile nav extras untouched */
-    .hamburger-legacy {
-      display: none;
-      font-size: 28px;
-      cursor: pointer;
-      color: #ff5c8d;
-    }
-    @media (max-width: 768px) {
-      .menu { display: none; }
-      .hamburger-legacy { display: block; }
-      .mobile-menu { display: none; flex-direction: column; background: white; width: 100%; padding: 15px 20px; border-top: 2px solid #ffb6c9; }
-      .mobile-menu a { padding: 10px 0; font-size: 18px; }
-      .mobile-menu.show { display: flex; }
-    }
-
-    /* --- Alignment overrides (desktop look preserved) --- */
-    /* Make the card left by default, then re-center only the three items */
+    /* --- Alignment overrides --- */
     .contact-page .card.contact { text-align: left !important; }
-
-    /* Center ONLY: H1, the first paragraph under H1 (subtitle), and cute footer text */
-    .contact-page .card.contact > h1 { text-align: center !important; }
-    .contact-page .card.contact > p:first-of-type { text-align: center !important; }
-    .contact-page .card.contact .cute-footer p { text-align: center !important; }
-
-    /* Ensure info-blocks are truly left-aligned and not centered by inline-block */
+    .contact-page .card.contact > h1,
+    .contact-page .card.contact > p:first-of-type,
+    .contact-page .card.contact .cute-footer p {
+      text-align: center !important;
+    }
     .contact-page .card.contact .info-block {
       display: block !important;
       width: 100% !important;
@@ -53,7 +35,7 @@
     }
     .contact-page .card.contact .info-block li { margin: 0.25rem 0 !important; }
 
-    /* --- New drawer hamburger (mobile) — doesn't affect desktop alignment --- */
+    /* --- Mobile Drawer Hamburger --- */
     .nav { position: sticky; top: 0; z-index: 1000; }
     .hamburger {
       display: none;
@@ -95,7 +77,6 @@
     body.menu-open .hamburger span:nth-child(3){ top:10px; transform:rotate(-45deg); }
 
     @media (max-width: 900px){
-      /* Keep your legacy mobile menu intact; we just add this new drawer */
       .menu { display: none; }
       .hamburger { display: inline-block; }
     }
@@ -113,14 +94,9 @@
       <span class="brand">BerryCuteNCo</span>
     </a>
 
-    <!-- Legacy hamburger kept intact (unchanged) -->
-    <div class="hamburger-legacy" onclick="toggleMenu()">
-      <i class="fa-solid fa-bars"></i>
-    </div>
-
     <div class="spacer"></div>
 
-    <!-- Desktop Menu (unchanged) -->
+    <!-- Desktop Menu -->
     <nav class="menu">
       <a href="/index.html">Home</a>
       <a href="/shop.html">Shop</a>
@@ -130,23 +106,13 @@
       <a class="active" href="/terms.html">Terms</a>
     </nav>
 
-    <!-- New drawer hamburger (added) -->
+    <!-- ✅ Only keep this one hamburger -->
     <button class="hamburger" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 
-  <!-- Legacy simple dropdown (unchanged) -->
-  <nav class="mobile-menu" id="mobileMenu">
-    <a href="/index.html">Home</a>
-    <a href="/shop.html">Shop</a>
-    <a href="/contact.html">Contact</a>
-    <a href="/refund&cancellation.html">Refund&Cancellation</a>
-    <a href="/shipping-delivery.html">Shipping-Delivery</a>
-    <a class="active" href="/terms.html">Terms</a>
-  </nav>
-
-  <!-- New drawer + backdrop (added) -->
+  <!-- Drawer Menu -->
   <nav class="mobile-drawer" id="drawer">
     <a href="/index.html">Home</a>
     <a href="/shop.html">Shop</a>
@@ -158,14 +124,7 @@
   <div class="backdrop" id="backdrop"></div>
 </header>
 
-<!-- JS for legacy mobile toggle (unchanged) -->
-<script>
-  function toggleMenu() {
-    document.getElementById("mobileMenu").classList.toggle("show");
-  }
-</script>
-
-<!-- JS for new drawer (added) -->
+<!-- JS for drawer -->
 <script>
   (function(){
     const btn = document.querySelector('.hamburger');
