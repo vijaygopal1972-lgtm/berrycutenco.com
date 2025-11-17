@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BerryCuteNCo — Order Details</title>
+
+  <!-- Global styles & fonts -->
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* (same CSS as before – unchanged, truncated text-wise) */
+
+    .nav { position: sticky; top: 0; z-index: 1000; background:#ffdbe9cc; border-bottom:2px dashed #ffc1d7; backdrop-filter:blur(6px); }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .hamburger {
+      display: none;
+      width: 28px; height: 22px; position: relative;
+      border: 0; background: none; padding: 0; cursor: pointer;
+      margin-left: 8px;
+    }
+    .hamburger span {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: #7A276C;
+      border-radius: 2px; transition: transform .2s ease, top .2s ease, opacity .2s ease;
+    }
+    .hamburger span:nth-child(1){ top: 0; }
+    .hamburger span:nth-child(2){ top: 10px; }
+    .hamburger span:nth-child(3){ top: 20px; }
+
+    .mobile-drawer{
+      position: fixed; top:0; right:0; height:100dvh; width:260px;
+      background:#ffd8e8;
+      padding:80px 24px 24px; box-shadow:-8px 0 24px rgba(0,0,0,.15);
+      transform:translateX(100%); transition:transform .25s ease-in-out; z-index:1001;
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .mobile-drawer a{
+      display:block; padding:12px 10px; font-weight:600; color:#5b2a5a; text-decoration:none;
+      border-radius:14px;
+    }
+    .mobile-drawer a.active{ color:#7A276C; background:rgba(122,39,108,0.08); }
+
+    .backdrop{
+      position: fixed; inset:0; background:rgba(0,0,0,.25);
+      opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:1000;
+    }
+
+    body.menu-open .mobile-drawer{ transform:translateX(0); }
+    body.menu-open .backdrop{ opacity:1; pointer-events:auto; }
+    body.menu-open .hamburger span:nth-child(1){ top:10px; transform:rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
+    body.menu-open .hamburger span:nth-child(3){ top:10px; transform:rotate(-45deg); }
+
+    @media (max-width: 900px){
+      .menu { display: none; }
+      .hamburger { display: inline-block; }
+    }
+
+    .order-wrapper {
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+    .order-card {
+      background:#fff9fc;
+      border-radius: 20px;
+      border: 2px solid #ffe0ef;
+      box-shadow: 0 6px 18px rgba(255,153,170,0.25);
+      padding: 24px 22px 26px;
+    }
+    .order-card h1 {
+      text-align: center;
+      font-family: "Baloo 2", cursive;
+      color:#5b2145;
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+    .order-card .subtitle {
+      text-align: center;
+      color:#6b5563;
+      margin-bottom: 22px;
+      font-size: 0.98rem;
+    }
+    .order-form {
+      max-width: 520px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+      text-align: left;
+    }
+    .order-form-group { display:flex; flex-direction:column; gap:6px; }
+    .order-form-group label { font-weight:700; font-size:0.9rem; color:#5b2145; }
+    .order-form-group small { font-size:0.78rem; color:#8a6a7e; }
+
+    .order-form input,
+    .order-form select,
+    .order-form textarea {
+      font-family: "Quicksand", sans-serif;
+      border-radius: 10px;
+      border: 1px solid #ffd4e6;
+      padding: 9px 11px;
+      font-size: 0.9rem;
+      outline: none;
+      background:#ffffff;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .order-form input:focus,
+    .order-form select:focus,
+    .order-form textarea:focus {
+      border-color:#ff8fb6;
+      box-shadow: 0 0 0 3px rgba(255,143,182,0.25);
+    }
+    .order-form textarea { min-height: 70px; resize: vertical; }
+    .order-form-row {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 10px;
+    }
+    @media (max-width: 600px){
+      .order-form-row { grid-template-columns: 1fr; }
+    }
+    .order-form button {
+      margin-top: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: linear-gradient(90deg, #ffc1a6, #ff9fbe);
+      color:#5b2145;
+      box-shadow: 0 6px 18px rgba(255,153,170,0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .order-form button:hover { transform: translateY(-1px); }
+    .order-note {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.8rem;
+      color:#8b5a6d;
+    }
+
+    /* Scoop loading overlay */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 2000;
+    }
+    .loading-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .loading-box {
+      background: #fff7fd;
+      border-radius: 18px;
+      padding: 20px 22px 18px;
+      border: 2px solid #ffd4ec;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      text-align: center;
+      max-width: 280px;
+    }
+
+    .scoop-loader {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .scoop-loader .scoop {
+      font-size: 1.9rem;
+      opacity: 0;
+      animation: scoop-pop 1.2s infinite;
+    }
+    .scoop-loader .scoop-1 { animation-delay: 0s; }
+    .scoop-loader .scoop-2 { animation-delay: 0.2s; }
+    .scoop-loader .scoop-3 { animation-delay: 0.4s; }
+
+    @keyframes scoop-pop {
+      0%   { transform: translateY(6px) scale(0.9); opacity: 0; }
+      30%  { transform: translateY(0)   scale(1);   opacity: 1; }
+      70%  { transform: translateY(-4px) scale(1.02); opacity: 1; }
+      100% { transform: translateY(6px) scale(0.9); opacity: 0; }
+    }
+
+    .loading-box p {
+      font-size: 0.9rem;
+      color:#5b2145;
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/index.html">
+      <img src="https://i.ibb.co/DH8LcRWf/logo.png" alt="BerryCuteNCo logo" />
+      <span class="brand">BerryCuteNCo</span>
+    </a>
+    <div class="spacer"></div>
+
+    <nav class="menu">
+      <a href="/index.html">Home</a>
+      <a href="/shop.html">Shop</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/refund&cancellation.html">Refund & Cancellation</a>
+      <a href="/shipping-delivery.html">Shipping & Delivery</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+
+    <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav class="mobile-drawer" id="drawer">
+    <a href="/index.html">Home</a>
+    <a href="/shop.html">Shop</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/refund&cancellation.html">Refund & Cancellation</a>
+    <a href="/shipping-delivery.html">Shipping & Delivery</a>
+    <a href="/terms.html">Terms</a>
+  </nav>
+  <div class="backdrop" id="backdrop"></div>
+</header>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="scoop-loader">
+      <span class="scoop scoop-1">🍨</span>
+      <span class="scoop scoop-2">🍨</span>
+      <span class="scoop scoop-3">🍨</span>
+    </div>
+    <p>Preparing your scoop & saving your details…</p>
+  </div>
+</div>
+
+<main class="order-wrapper">
+  <section class="order-card">
+    <h1><i class="fa-solid fa-clipboard-list"></i> Order Details</h1>
+    <p class="subtitle">
+      Thank you for your purchase! 💖 Please fill in your details below so we can ship your
+      <strong>Mystery Scoop</strong> safely to you.
+    </p>
+
+    <form class="order-form" id="orderForm" method="post">
+      <div class="order-form-group">
+        <label for="orderId">Payment / Order ID</label>
+        <input type="text" id="orderId" name="orderId" placeholder="e.g. IM-12345 or Instamojo Payment ID" required>
+        <small>Copy this from your Instamojo payment confirmation page or email.</small>
+      </div>
+
+      <div class="order-form-row">
+        <div class="order-form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Your full name" required>
+        </div>
+
+        <div class="order-form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="10-digit WhatsApp / mobile" required>
+        </div>
+      </div>
+
+      <div class="order-form-group">
+        <label for="email">Email (optional)</label>
+        <input type="email" id="email" name="email" placeholder="For updates & tracking (optional)">
+      </div>
+
+      <div class="order-form-group">
+        <label for="address">Full Address</label>
+        <textarea id="address" name="address" placeholder="House no., street, area" required></textarea>
+      </div>
+
+      <div class="order-form-row">
+        <div class="order-form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" placeholder="City" required>
+        </div>
+        <div class="order-form-group">
+          <label for="pincode">Pincode</label>
+          <input type="text" id="pincode" name="pincode" placeholder="e.g. 560001" required>
+        </div>
+      </div>
+
+      <div class="order-form-group">
+        <label for="landmark">Landmark (optional)</label>
+        <input type="text" id="landmark" name="landmark" placeholder="Nearby landmark to help the courier">
+      </div>
+
+      <div class="order-form-group">
+        <label for="scoopSize">Scoop Size</label>
+        <select id="scoopSize" name="scoopSize" required>
+          <option value="">Select your Mystery Scoop</option>
+          <option value="1 scoop (₹999)">1 scoop (₹999)</option>
+          <option value="2 scoops (₹1,999)">2 scoops (₹1,999)</option>
+          <option value="3 scoops (₹2,999)">3 scoops (₹2,999)</option>
+        </select>
+      </div>
+
+      <div class="order-form-group">
+        <label for="notes">Notes or Preferences (optional)</label>
+        <textarea id="notes" name="notes" placeholder="Example: I love pink / pastel items, please avoid skincare, etc."></textarea>
+      </div>
+
+      <button type="submit">
+        <i class="fa-solid fa-paper-plane"></i>
+        Submit Order Details
+      </button>
+
+      <p class="order-note">
+        ⏰ Please submit this form <strong>within 24 hours</strong> of payment so we can process your order quickly.
+      </p>
+    </form>
+  </section>
+</main>
+
+<footer style="
+  background-color: #ffe6f0;
+  padding: 20px 0;
+  text-align: center;
+  border-top: 1px solid #ffb3c1;
+  font-family: 'Baloo 2', cursive;
+">
+  <p style="font-size: 14px; color: #884a62; margin-bottom: 5px;">
+    &copy; 2025 BerryCuteNCo. All Rights Reserved.
+  </p>
+  <p style="font-size: 14px; color: #884a62; margin: 0;">
+    Email: berrycutenco@gmail.com | WhatsApp: 9391669874
+  </p>
+</footer>
+
+<script>
+  // Drawer nav
+  (function(){
+    const btn = document.querySelector('.hamburger');
+    const backdrop = document.getElementById('backdrop');
+    const drawer = document.getElementById('drawer');
+    if(!btn || !drawer) return;
+
+    function toggleDrawer(){
+      document.body.classList.toggle('menu-open');
+      btn.setAttribute('aria-expanded', document.body.classList.contains('menu-open'));
+    }
+    btn.addEventListener('click', toggleDrawer);
+    backdrop.addEventListener('click', toggleDrawer);
+    drawer.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        if (document.body.classList.contains('menu-open')) toggleDrawer();
+      });
+    });
+  })();
+
+  // ✅ Prefill Instamojo Payment ID from URL (payment_id or payment_request_id)
+  (function(){
+    const params = new URLSearchParams(window.location.search);
+    const orderInput = document.getElementById('orderId');
+    if (!orderInput) return;
+
+    // Try a few common param names
+    const paymentId = params.get('payment_id') || params.get('payment_request_id') || params.get('order_id');
+
+    if (paymentId) {
+      orderInput.value = paymentId;
+      orderInput.readOnly = true;
+      orderInput.style.backgroundColor = '#fdf2f7';
+      orderInput.nextElementSibling.textContent = 'This has been filled automatically from your payment. 💖';
+    }
+  })();
+
+  // Form submit with scoop loading + Google Apps Script backend
+  (function(){
+    const form = document.getElementById('orderForm');
+    const overlay = document.getElementById('loadingOverlay');
+
+    if(!form) return;
+
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      overlay.classList.add('show');
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('YOUR_SCRIPT_WEB_APP_URL_HERE', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          window.location.href = 'order-success.html';
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      } catch (err) {
+        console.error(err);
+        overlay.classList.remove('show');
+        alert('There was an issue submitting your details. Please try again or contact us on WhatsApp.');
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
