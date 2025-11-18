@@ -197,7 +197,7 @@
         function renderOrders(orders) {
             ordersListEl.innerHTML = '';
             if (orders.length === 0) {
-                ordersListEl.innerHTML = <p class="text-center text-gray-400 p-4 italic">No orders found matching the filter criteria.</p>;
+                ordersListEl.innerHTML = `<p class="text-center text-gray-400 p-4 italic">No orders found matching the filter criteria.</p>`;
                 return;
             }
 
