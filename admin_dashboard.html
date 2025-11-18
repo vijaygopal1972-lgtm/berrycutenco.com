@@ -159,7 +159,7 @@
             loadingIndicator.classList.remove('hidden'); 
 
             // Use the public path for collaborative data
-            const ordersRef = collection(db, artifacts/${appId}/public/data/orders);
+            const ordersRef = collection(db, `artifacts/${appId}/public/data/orders`);
             const q = query(ordersRef); 
 
             onSnapshot(q, (querySnapshot) => {
