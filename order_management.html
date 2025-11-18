@@ -53,7 +53,8 @@
         </header>
 
         <!-- Main Grid Layout (Mobile Stacked, Desktop Side-by-Side) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- The grid structure is now conditional to hide the dashboard column if not admin -->
+        <div id="main-content-grid" class="grid grid-cols-1 gap-8">
             
             <!-- 1. Customer Order Submission Form -->
             <div id="customer-form-section" class="section-card">
@@ -91,10 +92,10 @@
                 </form>
             </div>
 
-            <!-- 2. Admin/Staff Order Tracking Dashboard -->
-            <div id="admin-dashboard-section" class="section-card">
+            <!-- 2. Admin/Staff Order Tracking Dashboard - HIDDEN BY DEFAULT -->
+            <div id="admin-dashboard-section" class="section-card hidden">
                 <h2 class="text-2xl font-bold text-[#8a2be2] mb-4 border-b pb-2 border-purple-100">📦 Order Tracking Dashboard</h2>
-                <p class="text-sm text-gray-500 mb-4">This is the list you and your team use to manage orders.</p>
+                <p class="text-sm text-gray-500 mb-4">This is the list you and your team use to manage orders. Your Admin ID: <span id="admin-id-display" class="font-mono text-xs text-purple-600"></span></p>
                 
                 <!-- FILTER DROPDOWN -->
                 <div class="mb-4">
@@ -130,6 +131,10 @@
 
         // Enable debug logging for Firestore
         setLogLevel('debug');
+        
+        // --- ADMIN ROLE CHECK ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdmin = urlParams.get('role') === 'admin';
 
         // --- GLOBAL VARIABLES (Provided by Canvas) ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -139,8 +144,8 @@
         let db;
         let auth;
         let userId = null;
-        let allOrders = []; // Global array to hold all fetched orders
-        let currentStatusFilter = 'All'; // Default filter state
+        let allOrders = []; 
+        let currentStatusFilter = 'All'; 
 
         // --- DOM Elements ---
         const authStatusEl = document.getElementById('auth-status');
@@ -150,6 +155,9 @@
         const ordersListEl = document.getElementById('orders-list');
         const loadingIndicator = document.getElementById('loading-indicator');
         const statusFilterEl = document.getElementById('status-filter'); 
+        const adminDashboardSection = document.getElementById('admin-dashboard-section');
+        const mainContentGrid = document.getElementById('main-content-grid');
+        const adminIdDisplay = document.getElementById('admin-id-display');
         
         // Form field elements
         const customerNameEl = document.getElementById('customer-name');
@@ -164,6 +172,19 @@
 
         // 1. Firebase Initialization and Authentication
         async function initializeFirebase() {
+            // 1. Handle Admin/Customer View Visibility
+            if (isAdmin) {
+                // Show dashboard and set up two-column layout
+                adminDashboardSection.classList.remove('hidden');
+                mainContentGrid.classList.add('lg:grid-cols-2');
+                adminIdDisplay.textContent = 'Authenticating...'; // Placeholder before auth completes
+            } else {
+                // Hide dashboard and keep single-column layout
+                adminDashboardSection.classList.add('hidden');
+                mainContentGrid.classList.remove('lg:grid-cols-2');
+            }
+
+
             try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
@@ -193,7 +214,15 @@
                         }
                         
                         authStatusEl.textContent = System Ready. User ID: ${userId.substring(0, 8)}...${userId.substring(userId.length - 8)};
-                        setupRealtimeListener();
+                        
+                        // Only set up the dashboard listener if the user is an admin
+                        if (isAdmin) {
+                            adminIdDisplay.textContent = userId;
+                            setupRealtimeListener();
+                        } else {
+                            // If not admin, hide the loading indicator immediately
+                            loadingIndicator.classList.add('hidden');
+                        }
                         resolve();
                     });
                 });
