@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BerryCuteNCo - Order Confirmation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fce4ec; /* Light Pink Background */ }
+        .container-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .section-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        /* Custom "Cute" Button Styling */
+        .cute-button-primary {
+            background-color: #ff69b4; /* Hot Pink */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(255, 105, 180, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cute-button-primary:hover {
+            background-color: #ff85c1;
+            box-shadow: 0 6px 10px rgba(255, 105, 180, 0.6);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-wrapper">
+        <header class="text-center py-8">
+            <h1 class="text-4xl font-extrabold text-[#8a2be2]">BerryCuteNCo Order System</h1>
+            <p id="auth-status" class="text-sm text-gray-500 mt-2">Connecting to secure system...</p>
+        </header>
+
+        <!-- Customer Order Submission Form -->
+        <div id="customer-form-section" class="section-card">
+            <h2 class="text-2xl font-bold text-[#ff69b4] mb-4 border-b pb-2 border-pink-100">🛍️ Finalize Your Order</h2>
+            <p class="text-sm text-gray-500 mb-6">Please enter your contact and shipping details to confirm your purchase.</p>
+            
+            <form id="order-form" class="space-y-4">
+                <!-- Secure Payment Field (Mock-up) -->
+                <div>
+                    <label for="amount-paid" class="block text-sm font-medium text-gray-700">Payment Verified (Amount Paid):</label>
+                    <input type="number" id="amount-paid" placeholder="e.g., 999" required 
+                           class="w-full p-3 border border-pink-300 rounded-lg bg-pink-50 font-bold text-lg"
+                           title="This field represents the amount paid by the customer and cannot be changed.">
+                    <p class="text-xs text-red-500 mt-1">⚠️ *Security Note:* In a real app, this value would be loaded automatically from your payment gateway and would be non-editable.</p>
+                </div>
+
+                <!-- Customer Contact Details -->
+                <input type="text" id="customer-name" placeholder="Full Name (Required)" required 
+                       class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]">
+                <input type="email" id="customer-email" placeholder="Email ID (Required)" required 
+                       class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]">
+                <input type="tel" id="customer-mobile" placeholder="Mobile Number (Required, e.g., 9876543210)" required 
+                       class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]">
+                <input type="tel" id="customer-alt-phone" placeholder="Alternate Phone Number (Optional)"
+                       class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]">
+
+                <!-- Shipping Address -->
+                <textarea id="customer-address" placeholder="Full Shipping Address (Required)" rows="3" required 
+                          class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]"></textarea>
+                
+                <button type="submit" id="submit-btn" class="cute-button-primary w-full mt-4">
+                    Confirm Order Details and Ship
+                </button>
+                <p id="form-message" class="mt-3 text-center text-sm font-semibold"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Imports and Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        setLogLevel('debug');
+        
+        // --- GLOBAL VARIABLES (Provided by Canvas) ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db;
+        let auth;
+        let userId = null;
+
+        // --- DOM Elements ---
+        const authStatusEl = document.getElementById('auth-status');
+        const orderForm = document.getElementById('order-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formMessageEl = document.getElementById('form-message');
+        
+        // Form field elements
+        const customerNameEl = document.getElementById('customer-name');
+        const customerEmailEl = document.getElementById('customer-email');
+        const customerMobileEl = document.getElementById('customer-mobile');
+        const customerAltPhoneEl = document.getElementById('customer-alt-phone');
+        const customerAddressEl = document.getElementById('customer-address');
+        const amountPaidEl = document.getElementById('amount-paid');
+
+
+        // --- CORE FUNCTIONS ---
+
+        // 1. Firebase Initialization and Authentication
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                authStatusEl.textContent = 'Authenticating...';
+
+                await new Promise((resolve) => {
+                    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                        unsubscribe(); 
+                        
+                        if (user) {
+                            userId = user.uid;
+                        } else {
+                            try {
+                                if (initialAuthToken) {
+                                    await signInWithCustomToken(auth, initialAuthToken);
+                                    userId = auth.currentUser.uid;
+                                } else {
+                                    const anonUser = await signInAnonymously(auth);
+                                    userId = anonUser.user.uid;
+                                }
+                            } catch (error) {
+                                console.error("Authentication failed:", error);
+                                userId = 'anonymous-' + crypto.randomUUID();
+                            }
+                        }
+                        
+                        authStatusEl.textContent = System Ready. User ID: ${userId.substring(0, 8)}...${userId.substring(userId.length - 8)};
+                        resolve();
+                    });
+                });
+            } catch (e) {
+                console.error("Error initializing Firebase:", e);
+                authStatusEl.textContent = 'FATAL ERROR: Check console for Firebase setup issue.';
+            }
+        }
+
+        // 2. Handle Order Submission
+        orderForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!db) {
+                formMessageEl.textContent = 'System not ready. Please wait.';
+                formMessageEl.className = 'mt-3 text-center text-red-500 font-semibold';
+                return;
+            }
+            
+            const amount = parseFloat(amountPaidEl.value);
+            if (isNaN(amount) || amount <= 0) {
+                 formMessageEl.textContent = '❌ Please enter a valid amount paid.';
+                 formMessageEl.className = 'mt-3 text-center text-red-500 font-semibold';
+                 amountPaidEl.focus();
+                 return;
+            }
+
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="animate-pulse">Placing Order...</span>';
+
+            const name = customerNameEl.value;
+            const email = customerEmailEl.value;
+            const mobile = customerMobileEl.value;
+            const altPhone = customerAltPhoneEl.value;
+            const address = customerAddressEl.value;
+
+            try {
+                // Public collection for orders
+                const ordersRef = collection(db, artifacts/${appId}/public/data/orders);
+                await addDoc(ordersRef, {
+                    name: name,
+                    email: email,
+                    mobile: mobile,
+                    altPhone: altPhone,
+                    address: address,
+                    amountPaid: amount, 
+                    status: 'New', 
+                    createdAt: serverTimestamp(), 
+                    submittedBy: userId 
+                });
+                
+                // Clear form and show success
+                orderForm.reset();
+                formMessageEl.textContent = '🎉 Order details confirmed successfully! Thank you for your purchase!';
+                formMessageEl.className = 'mt-3 text-center text-green-600 font-semibold';
+            } catch (error) {
+                console.error("Error confirming order details: ", error);
+                formMessageEl.textContent = '❌ Error confirming order. Please try again.';
+                formMessageEl.className = 'mt-3 text-center text-red-500 font-semibold';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Confirm Order Details and Ship';
+            }
+        });
+        
+        window.onload = initializeFirebase;
+
+    </script>
+</body>
+</html>
