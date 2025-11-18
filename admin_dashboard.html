@@ -178,7 +178,7 @@
             }, (error) => {
                 console.error("Firestore error on orders snapshot:", error);
                 loadingIndicator.classList.add('hidden');
-                ordersListEl.innerHTML = <p class="text-red-500 text-center">Error fetching orders: ${error.message}</p>;
+                ordersListEl.innerHTML = `<p class="text-red-500 text-center">Error fetching orders: ${error.message}</p>`;
             });
         }
 
