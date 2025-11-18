@@ -269,13 +269,13 @@
             event.currentTarget.disabled = true;
 
             try {
-                const orderDocRef = doc(db, artifacts/${appId}/public/data/orders, orderId);
+                const orderDocRef = doc(db, `artifacts/${appId}/public/data/orders,${orderId}`);
                 await updateDoc(orderDocRef, {
                     status: newStatus,
                     updatedAt: serverTimestamp()
                 });
             } catch (error) {
-                console.error(Error updating status for ${orderId}:, error);
+                console.error(`Error updating status for ${orderId}:`, error);
                 // If it fails, re-enable the button
                 event.currentTarget.classList.remove('opacity-50');
                 event.currentTarget.disabled = false;
