@@ -101,7 +101,14 @@
         // --- CORE FUNCTIONS ---
         
         // 1. Firebase Initialization and Authentication
+        let db,
+        let auth,
         async function initializeFirebase() {
+            const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+            if (!firebaseConfid.projectId) { 
+                console.error('FATAL ERROR: Firebase project ID not configured.');
+                return Promise.reject(new Error('Firebase configuration missing/'));
+            }
             try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
