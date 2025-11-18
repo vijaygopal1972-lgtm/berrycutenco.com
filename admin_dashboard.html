@@ -213,14 +213,14 @@
                         <span class="status-badge ${statusColor.bg} ${statusColor.text}">
                             ${order.status.toUpperCase()}
                         </span>
-                    `</div>`
+                   + `</div>`
                     
-                    `<p class="text-sm text-gray-600 mb-1"><strong>💰 Amount Paid:</strong> ₹${order.amountPaid}</p>`
-                    `<p class="text-sm text-gray-600 mb-1"><strong>👤 Customer:</strong> ${order.name}</p>`
-                    `<p class="text-sm text-gray-600 mb-1"><strong>📧 Email:</strong> ${order.email}</p>`
-                    `<p class="text-sm text-gray-600 mb-1"><strong>📞 Mobile:</strong> ${order.mobile} ${order.altPhone ? `(Alt: ${order.altPhone})` : ''}</p>`
-                    `<p class="text-sm text-gray-600 mb-3"><strong>📍 Address:</strong> ${order.address}</p>`
-                    `<p class="text-xs text-gray-400 mb-3">Placed: ${date}</p>`
+                   + `<p class="text-sm text-gray-600 mb-1"><strong>💰 Amount Paid:</strong> ₹${order.amountPaid}</p>`
+                   + `<p class="text-sm text-gray-600 mb-1"><strong>👤 Customer:</strong> ${order.name}</p>`
+                   +  `<p class="text-sm text-gray-600 mb-1"><strong>📧 Email:</strong> ${order.email}</p>`
+                   +  `<p class="text-sm text-gray-600 mb-1"><strong>📞 Mobile:</strong> ${order.mobile} ${order.altPhone ? `(Alt: ${order.altPhone})` : ''}</p>`
+                   + `<p class="text-sm text-gray-600 mb-3"><strong>📍 Address:</strong> ${order.address}</p>`
+                   + `<p class="text-xs text-gray-400 mb-3">Placed: ${date}</p>`
 
                     <!-- Status Update Buttons -->
                     <div class="flex flex-wrap gap-2">
