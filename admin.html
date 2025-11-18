@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BerryCuteNCO Admin Panel</title>
+
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background-color: #f7f9fb;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Status Pills (Tailwind-compatible colors) */
+        .status-pill-Pending {
+            background-color: #fee2e2; /* Red-100 */
+            color: #991b1b; /* Red-800 */
+            border: 1px solid #fca5a5;
+        }
+        .status-pill-Processing {
+            background-color: #fef3c7; /* Yellow-100 */
+            color: #92400e; /* Yellow-800 */
+            border: 1px solid #fcd34d;
+        }
+        .status-pill-Delivered {
+            background-color: #d1fae5; /* Green-100 */
+            color: #065f46; /* Green-800 */
+            border: 1px solid #a7f3d0;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        
+        <header class="mb-8 p-4 bg-white rounded-xl shadow-lg flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-gray-800">Welcome to the BerryCuteNCO Admin Panel!</h1>
+            
+            <div id="auth-controls" class="flex items-center space-x-3">
+                <!-- Status displayed here -->
+                <div id="auth-status" class="text-sm font-medium text-blue-600">Connecting…</div>
+                
+                <!-- Sign Out Button (Visible after auto sign-in) -->
+                <button id="sign-out-button" class="hidden bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg shadow-md transition duration-200 text-sm">
+                    Sign Out
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Admin Dashboard Content (Hidden until authenticated) -->
+        <div id="admin-content" class="bg-white p-6 rounded-xl shadow-2xl" style="display: none;">
+            
+            <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Admin Dashboard</h2>
+            <p class="text-gray-600 mb-6">Manage real-time orders below. Your user ID is critical for accessing secured public data.</p>
+            
+            <!-- Recent Orders Section -->
+            <section>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Orders (from Firestore)</h3>
+                
+                <div id="orders-list" class="space-y-4">
+                    <p id="initial-loading-message"
+                       class="text-gray-500 text-center p-8 bg-white rounded-lg shadow-inner">
+                       <svg class="animate-spin h-5 w-5 mr-3 inline text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                       Loading orders...
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <footer class="text-center text-gray-500 text-sm mt-12 p-4">
+            Ⓒ BerryCuteNCo — Realtime Admin Panel
+        </footer>
+    </div>
+
+    <!-- Firebase SDK and Custom Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            doc,
+            updateDoc,
+            onSnapshot,
+            query,
+            serverTimestamp,
+            setLogLevel
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // Enable Firebase debugging logs
+        setLogLevel('Debug');
+
+        // DOM references
+        const ordersListEl = document.getElementById("orders-list");
+        const authStatusEl = document.getElementById("auth-status");
+        const adminContentEl = document.getElementById('admin-content');
+        const signOutButtonEl = document.getElementById('sign-out-button');
+        const initialLoadingMessageEl = document.getElementById("initial-loading-message");
+
+        // Global variables for Firebase instances
+        let db;
+        let auth; 
+
+        // --- 1. Utility Functions ---
+
+        function renderOrder(order, id) {
+            const div = document.createElement("div");
+            const status = order.status || "Pending";
+            const date = order.createdAt?.seconds
+                ? new Date(order.createdAt.seconds * 1000).toLocaleString()
+                : "N/A";
+
+            const address = `
+                ${order.address || ""}<br>
+                ${order.city || ""} - ${order.pincode || ""}<br>
+                ${order.landmark || ""}
+            `;
+
+            div.className =
+                "bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 border border-gray-100";
+            
+            div.setAttribute('data-id', id);
+
+            div.innerHTML = `
+                <div class="flex justify-between items-start border-b pb-2 mb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Order ID: <span class="text-blue-600 font-mono text-sm">${id.substring(0, 10)}...</span></h3>
+                        <p class="text-xs text-gray-500">Amount: ₹${order.amountPaid ? parseFloat(order.amountPaid).toFixed(2) : '0.00'}</p>
+                        <p class="text-xs text-gray-500">Payment ID: ${order.paymentId || "N/A"}</p>
+                    </div>
+                    <span class="px-3 py-1 text-xs font-bold rounded-full status-pill-${status} shadow-sm">
+                        ${status}
+                    </span>
+                </div>
+
+                <p class="text-sm text-gray-700"><strong>Name:</strong> ${order.name}</p>
+                <p class="text-sm text-gray-700"><strong>Email:</strong> ${order.email}</p>
+                <p class="text-sm text-gray-700"><strong>Phone:</strong> ${order.mobile}</p>
+
+                <p class="text-xs text-gray-500 mt-2">
+                    <strong>Address:</strong><br>${address}
+                </p>
+
+                <p class="text-xs text-gray-500 mt-2">
+                    <strong>Placed:</strong> ${date}
+                </p>
+
+                <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t">
+                    <button class="status-update-btn bg-red-200 text-red-800 px-3 py-1 text-xs rounded shadow-sm hover:bg-red-300 transition"
+                            data-id="${id}" data-status="Pending">
+                        Set Pending
+                    </button>
+
+                    <button class="status-update-btn bg-yellow-300 text-yellow-900 px-3 py-1 text-xs rounded shadow-sm hover:bg-yellow-400 transition"
+                            data-id="${id}" data-status="Processing">
+                        Set Processing
+                    </button>
+
+                    <button class="status-update-btn bg-green-300 text-green-900 px-3 py-1 text-xs rounded shadow-sm hover:bg-green-400 transition"
+                            data-id="${id}" data-status="Delivered">
+                        Set Delivered
+                    </button>
+                </div>
+            `;
+
+            ordersListEl.appendChild(div);
+        }
+
+        // --- 2. Realtime Listener ---
+
+        function startOrderListener() {
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            // CRITICAL: Use the required public collection path for shared data
+            const collectionPath = `artifacts/${appId}/public/data/orders`;
+
+            const ordersRef = collection(db, collectionPath);
+            const q = query(ordersRef);
+
+            onSnapshot(
+                q,
+                (snapshot) => {
+                    ordersListEl.innerHTML = "";
+                    initialLoadingMessageEl?.remove(); 
+
+                    if (snapshot.empty) {
+                        ordersListEl.innerHTML =
+                            `<p class="text-center text-gray-500 bg-white p-6 rounded-lg shadow">
+                                No orders yet.
+                             </p>`;
+                        return;
+                    }
+
+                    snapshot.forEach((docSnap) => {
+                        const order = docSnap.data();
+                        const id = docSnap.id;
+                        renderOrder(order, id);
+                    });
+
+                    // Attach event listeners after rendering
+                    document.querySelectorAll(".status-update-btn").forEach((btn) =>
+                        // Pass db to the handler
+                        btn.addEventListener("click", (event) => updateStatus(event, db))
+                    );
+                },
+                (error) => {
+                    console.error("Error loading orders:", error);
+                    ordersListEl.innerHTML =
+                        `<p class="text-red-600 text-center p-4">Error loading orders. Check console for details.</p>`;
+                }
+            );
+        }
+
+        // --- 3. Status Update Logic ---
+        
+        async function updateStatus(event, db) {
+            const orderId = event.target.dataset.id;
+            const newStatus = event.target.dataset.status;
+            
+            // Disable buttons to prevent double-clicks
+            const orderDiv = event.target.closest('div[data-id]');
+            const buttons = orderDiv ? orderDiv.querySelectorAll('.status-update-btn') : [];
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+            
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            // CRITICAL: Use the required public document path
+            const docRef = doc(db, `artifacts/${appId}/public/data/orders`, orderId);
+
+            try {
+                await updateDoc(docRef, {
+                    status: newStatus,
+                    updatedAt: serverTimestamp()
+                });
+                // Success: onSnapshot handles UI update and re-enabling buttons
+
+            } catch (err) {
+                console.error("Update error:", err);
+                console.warn(`[Order ${orderId}] Could not update status. Check security rules and connection.`);
+
+                // Re-enable buttons on failure
+                buttons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                });
+            }
+        }
+        
+        // --- 4. Authentication Logic ---
+        
+        signOutButtonEl.addEventListener('click', async () => {
+            if (auth) {
+                try {
+                    await signOut(auth);
+                    // UI reset is handled by onAuthStateChanged
+                } catch (e) {
+                    console.error("Sign Out Error:", e);
+                }
+            }
+        });
+
+        // --- 5. Firebase Initialization and Auth State Handler ---
+
+        async function initFirebase() {
+            const firebaseConfig = JSON.parse(
+                typeof __firebase_config !== 'undefined' ? __firebase_config : '{}'
+            );
+            
+            if (!firebaseConfig.projectId) {
+                console.error('FATAL ERROR: Firebase project ID not configured.');
+                authStatusEl.textContent = '❌ Config Error';
+                return; 
+            }
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app); 
+
+                // Handle sign-in/sign-out state changes
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        // User is signed in
+                        adminContentEl.style.display = 'block';
+                        signOutButtonEl.classList.remove('hidden');
+
+                        authStatusEl.textContent = `Signed In: ${user.uid.substring(0, 8)}...`;
+                        
+                        // Start the listener only once the user is confirmed
+                        startOrderListener();
+                        
+                    } else {
+                        // User is signed out (or starting up)
+                        adminContentEl.style.display = 'none';
+                        signOutButtonEl.classList.add('hidden');
+                        authStatusEl.textContent = 'Awaiting Admin Sign-in...';
+                        
+                        // Attempt automatic sign-in using the custom token
+                        if (typeof __initial_auth_token !== 'undefined') { 
+                            try {
+                                await signInWithCustomToken(auth, __initial_auth_token);
+                                // The onAuthStateChanged callback will handle the success state
+                            } catch (e) {
+                                console.error("Auto Sign-in Failed:", e);
+                                authStatusEl.textContent = 'Authentication Failed ❌';
+                            }
+                        } else {
+                            // If no token is provided, sign in anonymously for public data access
+                            await signInAnonymously(auth);
+                        }
+                    }
+                });
+
+
+            } catch (err) {
+                console.error("Firebase Init Error:", err);
+                authStatusEl.textContent = "❌ Firebase Error — check console";
+            }
+        }
+
+        window.onload = initFirebase;
+    </script>
+</body>
+</html>
