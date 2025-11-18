@@ -175,36 +175,45 @@ async function initializeFirebase() {
             });
         }
         
+// --- 2. Realtime Order Listener ---
+// Function now accepts db and auth explicitly as arguments
+function setupRealtimeListener(appId, db, auth) { 
+    // Firestore path for public data
+    const ordersCollectionPath = `artifacts/${appId}/public/data/orders`;
+    // We use the 'db' argument that was passed to this function
+    const ordersCollectionRef = collection(db, ordersCollectionPath); 
+    
+    // Query for all orders. Note: No orderBy used to avoid index requirements.
+    const q = query(ordersCollectionRef); 
 
-        // 2. Setup Real-time Firestore Listener for Orders
-        function setupRealtimeListener() {
-            if (!db) return;
+    // Set up the real-time listener
+    onSnapshot(q, (snapshot) => {
+        ordersListEl.innerHTML = ''; // Clear existing orders
+        initialLoadingMessage.remove(); // Remove loading message
 
-            loadingIndicator.classList.remove('hidden'); 
-
-            // Use the public path for collaborative data
-            const ordersRef = collection(db, `artifacts/${appId}/public/data/orders`);
-            const q = query(ordersRef); 
-
-            onSnapshot(q, (querySnapshot) => {
-                loadingIndicator.classList.add('hidden');
-                
-                let fetchedOrders = [];
-                querySnapshot.forEach((doc) => {
-                    fetchedOrders.push({ id: doc.id, ...doc.data() });
-                });
-
-                allOrders = fetchedOrders;
-                // Sort orders in JavaScript: Newest orders first (by createdAt)
-                allOrders.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
-
-                renderFilteredOrders(); 
-            }, (error) => {
-                console.error("Firestore error on orders snapshot:", error);
-                loadingIndicator.classList.add('hidden');
-                ordersListEl.innerHTML = `<p class="text-red-500 text-center">Error fetching orders: ${error.message}</p>`;
-            });
+        if (snapshot.empty) {
+            ordersListEl.innerHTML = '<p class="text-gray-500 text-center p-8">No orders found.</p>';
+            return;
         }
+
+        snapshot.docs.forEach(docSnapshot => {
+            const order = docSnapshot.data();
+            order.id = docSnapshot.id;
+            renderOrder(order);
+        });
+
+        // Attach event listeners after rendering all elements
+        document.querySelectorAll('.status-update-btn').forEach(button => {
+            // CRITICAL FIX: Pass db and auth to the click handler
+            button.addEventListener('click', (event) => handleStatusUpdate(event, db, auth));
+        });
+
+    }, (error) => {
+        console.error("Error fetching orders:", error);
+        ordersListEl.innerHTML = `<p class="text-red-500 text-center p-8">Error fetching orders: ${error.message}</p>`;
+    });
+}
+        
 
         // 3. Filter orders and call the renderer
         function renderFilteredOrders() {
@@ -283,17 +292,18 @@ async function initializeFirebase() {
         }
 
         // 5. Handle Status Update 
-        async function handleStatusUpdate(event) {
+        async function handleStatusUpdate(event,db, auth) {
             const orderId = event.currentTarget.getAttribute('data-id');
             const newStatus = event.currentTarget.getAttribute('data-status');
 
-            if (!db || !orderId) return;
+            if (!orderId) return;
 
-            event.currentTarget.classList.add('opacity-50');
+            event.currentTarget.classList.add('opacity-50','cursor-not-allowed');
             event.currentTarget.disabled = true;
 
             try {
-                const orderDocRef = doc(db, `artifacts/${appId}/public/data/orders,${orderId}`);
+                const appId = typeof__app_id !=='undefined'? __app_Id : 'default-app-id';
+                const orderDocRef = doc(db, `artifacts/${appId}/public/data/orders`,orderId);
                 await updateDoc(orderDocRef, {
                     status: newStatus,
                     updatedAt: serverTimestamp()
@@ -301,7 +311,7 @@ async function initializeFirebase() {
             } catch (error) {
                 console.error(`Error updating status for ${orderId}:`, error);
                 // If it fails, re-enable the button
-                event.currentTarget.classList.remove('opacity-50');
+                event.currentTarget.classList.remove('opacity-50', 'cursor-not-allowed');
                 event.currentTarget.disabled = false;
             }
         }
