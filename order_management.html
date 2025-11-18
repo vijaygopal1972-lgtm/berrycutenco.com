@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BerryCuteNCo Order Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fce4ec; /* Light Pink Background */ }
+        .container-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .section-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        /* Custom "Cute" Button Styling */
+        .cute-button-primary {
+            background-color: #ff69b4; /* Hot Pink */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(255, 105, 180, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cute-button-primary:hover {
+            background-color: #ff85c1;
+            box-shadow: 0 6px 10px rgba(255, 105, 180, 0.6);
+            transform: translateY(-1px);
+        }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-wrapper">
+        <header class="text-center py-8">
+            <h1 class="text-4xl font-extrabold text-[#8a2be2]">BerryCuteNCo Order System</h1>
+            <p id="auth-status" class="text-sm text-gray-500 mt-2">Connecting to secure system...</p>
+        </header>
+
+        <!-- Main Grid Layout (Mobile Stacked, Desktop Side-by-Side) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- 1. Customer Order Submission Form -->
+            <div id="customer-form-section" class="section-card">
+                <h2 class="text-2xl font-bold text-[#ff69b4] mb-4 border-b pb-2 border-pink-100">🛍️ Order Confirmation Form</h2>
+                <p class="text-sm text-gray-500 mb-6">Please enter your contact and shipping details to confirm your order.</p>
+                
+                <form id="order-form" class="space-y-4">
+                    <!-- Secure Payment Field (Read-Only to Prevent Fraud) -->
+                    <div>
+                        <label for="amount-paid" class="block text-sm font-medium text-gray-700">Payment Verified (Amount Paid):</label>
+                        <input type="number" id="amount-paid" placeholder="e.g., 999" required 
+                               class="w-full p-3 border border-pink-300 rounded-lg bg-pink-50 font-bold text-lg"
+                               title="This field represents the amount paid by the customer and cannot be changed.">
+                        <p class="text-xs text-red-500 mt-1">⚠️ *Security Note:* In a real app, this value would be loaded automatically from your payment gateway and would be non-editable.</p>
+                    </div>
+
+                    <!-- Customer Contact Details -->
+                    <input type="text" id="customer-name" placeholder="Full Name (Required)" required 
+                           class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]">
+                    <input type="email" id="customer-email" placeholder="Email ID (Required)" required 
+                           class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]">
+                    <input type="tel" id="customer-mobile" placeholder="Mobile Number (Required, e.g., 9876543210)" required 
+                           class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]">
+                    <input type="tel" id="customer-alt-phone" placeholder="Alternate Phone Number (Optional)"
+                           class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]">
+
+                    <!-- Shipping Address -->
+                    <textarea id="customer-address" placeholder="Full Shipping Address (Required)" rows="3" required 
+                              class="w-full p-3 border border-pink-300 rounded-lg focus:ring-2 focus:ring-[#8a2be2] focus:border-[#8a2be2]"></textarea>
+                    
+                    <button type="submit" id="submit-btn" class="cute-button-primary w-full mt-4">
+                        Confirm Order Details
+                    </button>
+                    <p id="form-message" class="mt-3 text-center text-sm font-semibold"></p>
+                </form>
+            </div>
+
+            <!-- 2. Admin/Staff Order Tracking Dashboard -->
+            <div id="admin-dashboard-section" class="section-card">
+                <h2 class="text-2xl font-bold text-[#8a2be2] mb-4 border-b pb-2 border-purple-100">📦 Order Tracking Dashboard</h2>
+                <p class="text-sm text-gray-500 mb-4">This is the list you and your team use to manage orders.</p>
+                
+                <!-- FILTER DROPDOWN -->
+                <div class="mb-4">
+                    <label for="status-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Status:</label>
+                    <select id="status-filter" class="p-2 border border-purple-300 rounded-lg bg-white focus:ring-2 focus:ring-[#8a2be2]">
+                        <option value="All">All Orders</option>
+                        <option value="New">New</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                </div>
+
+                <div id="orders-list" class="space-y-4">
+                    <!-- Orders will be loaded here in real-time -->
+                    <div id="loading-indicator" class="text-center p-4 text-[#ff69b4]">
+                        <svg class="animate-spin h-5 w-5 mr-3 inline text-[#ff69b4]" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Loading Orders...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Imports and Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, addDoc, updateDoc, onSnapshot, collection, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Enable debug logging for Firestore
+        setLogLevel('debug');
+
+        // --- GLOBAL VARIABLES (Provided by Canvas) ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db;
+        let auth;
+        let userId = null;
+        let allOrders = []; // Global array to hold all fetched orders
+        let currentStatusFilter = 'All'; // Default filter state
+
+        // --- DOM Elements ---
+        const authStatusEl = document.getElementById('auth-status');
+        const orderForm = document.getElementById('order-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formMessageEl = document.getElementById('form-message');
+        const ordersListEl = document.getElementById('orders-list');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const statusFilterEl = document.getElementById('status-filter'); 
+        
+        // Form field elements
+        const customerNameEl = document.getElementById('customer-name');
+        const customerEmailEl = document.getElementById('customer-email');
+        const customerMobileEl = document.getElementById('customer-mobile');
+        const customerAltPhoneEl = document.getElementById('customer-alt-phone');
+        const customerAddressEl = document.getElementById('customer-address');
+        const amountPaidEl = document.getElementById('amount-paid');
+
+
+        // --- CORE FUNCTIONS ---
+
+        // 1. Firebase Initialization and Authentication
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                authStatusEl.textContent = 'Authenticating...';
+
+                await new Promise((resolve) => {
+                    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                        unsubscribe(); 
+                        
+                        if (user) {
+                            userId = user.uid;
+                        } else {
+                            try {
+                                if (initialAuthToken) {
+                                    await signInWithCustomToken(auth, initialAuthToken);
+                                    userId = auth.currentUser.uid;
+                                } else {
+                                    const anonUser = await signInAnonymously(auth);
+                                    userId = anonUser.user.uid;
+                                }
+                            } catch (error) {
+                                console.error("Authentication failed:", error);
+                                userId = 'anonymous-' + crypto.randomUUID();
+                            }
+                        }
+                        
+                        authStatusEl.textContent = System Ready. User ID: ${userId.substring(0, 8)}...${userId.substring(userId.length - 8)};
+                        setupRealtimeListener();
+                        resolve();
+                    });
+                });
+            } catch (e) {
+                console.error("Error initializing Firebase:", e);
+                authStatusEl.textContent = 'FATAL ERROR: Check console for Firebase setup issue.';
+                loadingIndicator.classList.add('hidden');
+            }
+        }
+
+        // 2. Setup Real-time Firestore Listener for Orders
+        function setupRealtimeListener() {
+            if (!db) return;
+
+            const ordersRef = collection(db, artifacts/${appId}/public/data/orders);
+            const q = query(ordersRef); 
+
+            // onSnapshot sets up the real-time listener
+            onSnapshot(q, (querySnapshot) => {
+                loadingIndicator.classList.add('hidden');
+                
+                let fetchedOrders = [];
+                querySnapshot.forEach((doc) => {
+                    fetchedOrders.push({ id: doc.id, ...doc.data() });
+                });
+
+                // 1. Store all orders globally
+                allOrders = fetchedOrders;
+
+                // 2. Sort orders in JavaScript: Newest orders first (by createdAt)
+                allOrders.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+
+                // 3. Render based on current filter
+                renderFilteredOrders(); 
+            }, (error) => {
+                console.error("Firestore error on orders snapshot:", error);
+                loadingIndicator.classList.add('hidden');
+                ordersListEl.innerHTML = <p class="text-red-500 text-center">Error fetching orders: ${error.message}</p>;
+            });
+            
+            // Attach filter change listener
+            statusFilterEl.addEventListener('change', (e) => {
+                currentStatusFilter = e.target.value;
+                renderFilteredOrders(); // Re-render when filter changes
+            });
+        }
+
+        // 3. Filter orders based on the current global filter state and call the renderer
+        function renderFilteredOrders() {
+            let ordersToRender = allOrders;
+
+            if (currentStatusFilter !== 'All') {
+                ordersToRender = allOrders.filter(order => order.status === currentStatusFilter);
+            }
+            
+            renderOrders(ordersToRender); 
+        }
+
+        // 4. Render the Order Dashboard
+        function renderOrders(orders) {
+            ordersListEl.innerHTML = '';
+            if (orders.length === 0) {
+                ordersListEl.innerHTML = <p class="text-center text-gray-400 p-4 italic">No orders found matching the filter criteria.</p>;
+                return;
+            }
+
+            orders.forEach(order => {
+                const statusColor = getStatusColor(order.status);
+                const date = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString() : 'N/A';
+                
+                const orderDiv = document.createElement('div');
+                orderDiv.className = 'p-4 bg-purple-50 rounded-xl border border-purple-200';
+                orderDiv.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg text-gray-800">Order ID: ${order.id.substring(0, 8)}</h3>
+                        <span class="status-badge ${statusColor.bg} ${statusColor.text}">
+                            ${order.status.toUpperCase()}
+                        </span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 mb-1"><strong>💰 Amount Paid:</strong> ₹${order.amountPaid}</p>
+                    <p class="text-sm text-gray-600 mb-1"><strong>👤 Customer:</strong> ${order.name}</p>
+                    <p class="text-sm text-gray-600 mb-1"><strong>📧 Email:</strong> ${order.email}</p>
+                    <p class="text-sm text-gray-600 mb-1"><strong>📞 Mobile:</strong> ${order.mobile} ${order.altPhone ? (Alt: ${order.altPhone}) : ''}</p>
+                    <p class="text-sm text-gray-600 mb-3"><strong>📍 Address:</strong> ${order.address}</p>
+                    <p class="text-xs text-gray-400 mb-3">Placed: ${date}</p>
+
+                    <!-- Status Update Buttons -->
+                    <div class="flex flex-wrap gap-2">
+                        <button data-id="${order.id}" data-status="Processing" 
+                                class="status-update-btn text-xs px-3 py-1 bg-yellow-400 text-yellow-900 rounded-full hover:bg-yellow-500 transition-colors duration-150">
+                            Set Processing
+                        </button>
+                        <button data-id="${order.id}" data-status="Delivered" 
+                                class="status-update-btn text-xs px-3 py-1 bg-green-400 text-green-900 rounded-full hover:bg-green-500 transition-colors duration-150">
+                            Set Delivered
+                        </button>
+                    </div>
+                `;
+                ordersListEl.appendChild(orderDiv);
+            });
+
+            // Attach listeners for status updates (must be done after rendering)
+            document.querySelectorAll('.status-update-btn').forEach(btn => {
+                btn.addEventListener('click', handleStatusUpdate);
+            });
+        }
+
+        // Helper to get Tailwind classes for status badges
+        function getStatusColor(status) {
+            switch(status) {
+                case 'New':
+                    return { bg: 'bg-red-200', text: 'text-red-800' };
+                case 'Processing':
+                    return { bg: 'bg-yellow-200', text: 'text-yellow-800' };
+                case 'Delivered':
+                    return { bg: 'bg-green-200', text: 'text-green-800' };
+                default:
+                    return { bg: 'bg-gray-200', text: 'text-gray-800' };
+            }
+        }
+
+        // 5. Handle Order Submission (Customer Side)
+        orderForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!db) {
+                formMessageEl.textContent = 'System not ready. Please wait.';
+                formMessageEl.className = 'mt-3 text-center text-red-500 font-semibold';
+                return;
+            }
+            
+            // Validation: Ensure amount paid is a positive number
+            const amount = parseFloat(amountPaidEl.value);
+            if (isNaN(amount) || amount <= 0) {
+                 formMessageEl.textContent = '❌ Please enter a valid amount paid.';
+                 formMessageEl.className = 'mt-3 text-center text-red-500 font-semibold';
+                 amountPaidEl.focus();
+                 return;
+            }
+
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="animate-pulse">Placing Order...</span>';
+
+            // Gather all fields
+            const name = customerNameEl.value;
+            const email = customerEmailEl.value;
+            const mobile = customerMobileEl.value;
+            const altPhone = customerAltPhoneEl.value;
+            const address = customerAddressEl.value;
+
+            try {
+                const ordersRef = collection(db, artifacts/${appId}/public/data/orders);
+                await addDoc(ordersRef, {
+                    name: name,
+                    email: email,
+                    mobile: mobile,
+                    altPhone: altPhone,
+                    address: address,
+                    amountPaid: amount, 
+                    status: 'New', 
+                    createdAt: serverTimestamp(), 
+                    submittedBy: userId 
+                });
+                
+                // Clear form and show success
+                orderForm.reset();
+                formMessageEl.textContent = '🎉 Order details confirmed successfully!';
+                formMessageEl.className = 'mt-3 text-center text-green-600 font-semibold';
+            } catch (error) {
+                console.error("Error confirming order details: ", error);
+                formMessageEl.textContent = '❌ Error confirming order. Please try again.';
+                formMessageEl.className = 'mt-3 text-center text-red-500 font-semibold';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Confirm Order Details';
+            }
+        });
+        
+        // 6. Handle Status Update (Admin/Staff Side)
+        async function handleStatusUpdate(event) {
+            const orderId = event.currentTarget.getAttribute('data-id');
+            const newStatus = event.currentTarget.getAttribute('data-status');
+
+            if (!db || !orderId) return;
+
+            // Simple visual feedback
+            event.currentTarget.classList.add('opacity-50');
+            event.currentTarget.disabled = true;
+
+            try {
+                const orderDocRef = doc(db, artifacts/${appId}/public/data/orders, orderId);
+                await updateDoc(orderDocRef, {
+                    status: newStatus,
+                    updatedAt: serverTimestamp()
+                });
+            } catch (error) {
+                console.error(Error updating status for ${orderId}:, error);
+                // Revert visual feedback on error
+                event.currentTarget.classList.remove('opacity-50');
+                event.currentTarget.disabled = false;
+            }
+        }
+
+        // Start the application when the window loads
+        window.onload = initializeFirebase;
+
+    </script>
+</body>
+</html>
