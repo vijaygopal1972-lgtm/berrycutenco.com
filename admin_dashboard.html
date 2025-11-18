@@ -45,7 +45,9 @@
                 <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 max-w-sm mx-auto">
                     <input type="password" id="admin-secret-key" placeholder="Admin Secret Key" 
                            class="flex-grow p-3 border border-purple-400 rounded-lg">
-                    <button id="unlock-btn" class="text-lg px-6 py-2 bg-[#8a2be2] text-white rounded-lg hover:bg-purple-600 transition-colors font-bold">
+                    <!-- CHANGE 1: Added direct onclick handler to call the function -->
+                    <button id="unlock-btn" onclick="directHandleUnlock()" 
+                            class="text-lg px-6 py-2 bg-[#8a2be2] text-white rounded-lg hover:bg-purple-600 transition-colors font-bold">
                         Unlock
                     </button>
                 </div>
@@ -115,11 +117,35 @@
         // Admin Key elements
         const adminKeyInputDiv = document.getElementById('admin-key-input');
         const adminSecretKeyEl = document.getElementById('admin-secret-key');
-        const unlockBtn = document.getElementById('unlock-btn');
         const keyMessageEl = document.getElementById('key-message');
+        
+        // IMPORTANT: Export this function to the global window scope so the onclick handler can see it.
+        window.directHandleUnlock = directHandleUnlock;
 
 
         // --- CORE FUNCTIONS ---
+        
+        // Function to handle the unlock process (called directly from HTML)
+        function directHandleUnlock() {
+            // Read the value directly
+            const key = adminSecretKeyEl.value.trim(); 
+            
+            if (key === ADMIN_SECRET) {
+                console.log("Unlock successful!");
+                keyMessageEl.textContent = '✅ Dashboard Unlocked!';
+                keyMessageEl.className = 'text-sm mt-3 font-semibold text-green-600';
+                
+                // Show the dashboard and start listening
+                setDashboardVisibility(true);
+
+            } else {
+                console.log(Unlock failed. Entered key: ${key});
+                keyMessageEl.textContent = '❌ Incorrect secret key. Try again.';
+                keyMessageEl.className = 'text-sm mt-3 font-semibold text-red-500';
+                adminSecretKeyEl.value = '';
+                adminSecretKeyEl.focus();
+            }
+        }
         
         // Function to toggle dashboard visibility with a slight delay for transition
         function setDashboardVisibility(isVisible) {
@@ -168,47 +194,25 @@
                             }
                         }
                         
-                        authStatusEl.textContent = System Ready. User ID: ${userId.substring(0, 8)}...${userId.substring(userId.length - 8)};
+                        authStatusEl.textContent = System Ready. Admin User ID: ${userId.substring(0, 8)}...${userId.substring(userId.length - 8)};
                         adminIdDisplay.textContent = userId;
-                        loadingIndicator.classList.add('hidden');
                         resolve();
                     });
                 });
             } catch (e) {
                 console.error("Error initializing Firebase:", e);
                 authStatusEl.textContent = 'FATAL ERROR: Check console for Firebase setup issue.';
-                loadingIndicator.classList.add('hidden');
             }
             
             // Initial state: Hidden dashboard, ready for unlock attempt
             setDashboardVisibility(false); 
             
-            // IMPORTANT: Attach the listeners after DOM elements are guaranteed to exist
-            unlockBtn.addEventListener('click', handleUnlock);
+            // Allow 'Enter' key to trigger the function on the input field
             adminSecretKeyEl.addEventListener('keyup', (e) => {
-                if (e.key === 'Enter') handleUnlock();
+                if (e.key === 'Enter') directHandleUnlock();
             });
         }
         
-        // 1.5 Handle Admin Key Unlock
-        function handleUnlock() {
-            // Retrieve value directly from the DOM element
-            const key = adminSecretKeyEl.value.trim(); 
-            
-            if (key === ADMIN_SECRET) {
-                keyMessageEl.textContent = '✅ Dashboard Unlocked!';
-                keyMessageEl.className = 'text-sm mt-3 font-semibold text-green-600';
-                
-                setDashboardVisibility(true);
-
-            } else {
-                keyMessageEl.textContent = '❌ Incorrect secret key. Try again.';
-                keyMessageEl.className = 'text-sm mt-3 font-semibold text-red-500';
-                adminSecretKeyEl.value = '';
-                adminSecretKeyEl.focus();
-            }
-        }
-
 
         // 2. Setup Real-time Firestore Listener for Orders
         function setupRealtimeListener() {
@@ -239,7 +243,6 @@
             });
             
             // Attach filter change listener (only needed once)
-            // Note: This assumes the listener is attached only after unlock
             statusFilterEl.addEventListener('change', (e) => {
                 currentStatusFilter = e.target.value;
                 renderFilteredOrders(); 
@@ -348,4 +351,4 @@
 
     </script>
 </body>
-</html>
+</html>          
