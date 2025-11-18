@@ -52,8 +52,8 @@
             <p id="auth-status" class="text-sm text-gray-500 mt-2">Connecting to secure system...</p>
         </header>
 
-        <!-- Main Grid Layout (Mobile Stacked, Desktop Side-by-Side) -->
-        <!-- The grid structure is now conditional to hide the dashboard column if not admin -->
+        <!-- Main Content Grid -->
+        <!-- NOTE: The grid structure is determined by JavaScript in initializeFirebase -->
         <div id="main-content-grid" class="grid grid-cols-1 gap-8">
             
             <!-- 1. Customer Order Submission Form -->
@@ -134,7 +134,8 @@
         
         // --- ADMIN ROLE CHECK ---
         const urlParams = new URLSearchParams(window.location.search);
-        const isAdmin = urlParams.get('role') === 'admin';
+        // This is the check: it must find "?role=admin"
+        const isAdmin = urlParams.get('role') === 'admin'; 
 
         // --- GLOBAL VARIABLES (Provided by Canvas) ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -172,14 +173,15 @@
 
         // 1. Firebase Initialization and Authentication
         async function initializeFirebase() {
-            // 1. Handle Admin/Customer View Visibility
+            // CRITICAL FIX: Update the grid BEFORE authentication starts
             if (isAdmin) {
                 // Show dashboard and set up two-column layout
                 adminDashboardSection.classList.remove('hidden');
+                // Apply the responsive grid classes for admin view
                 mainContentGrid.classList.add('lg:grid-cols-2');
                 adminIdDisplay.textContent = 'Authenticating...'; // Placeholder before auth completes
             } else {
-                // Hide dashboard and keep single-column layout
+                // Hide dashboard and keep single-column layout (default)
                 adminDashboardSection.classList.add('hidden');
                 mainContentGrid.classList.remove('lg:grid-cols-2');
             }
@@ -229,7 +231,8 @@
             } catch (e) {
                 console.error("Error initializing Firebase:", e);
                 authStatusEl.textContent = 'FATAL ERROR: Check console for Firebase setup issue.';
-                loadingIndicator.classList.add('hidden');
+                // Ensure loading indicator is hidden on fatal error
+                if (loadingIndicator) loadingIndicator.classList.add('hidden');
             }
         }
 
