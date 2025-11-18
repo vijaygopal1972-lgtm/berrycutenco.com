@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -119,12 +119,8 @@
         const adminSecretKeyEl = document.getElementById('admin-secret-key');
         const keyMessageEl = document.getElementById('key-message');
         
-        // FIX: Export this function to the global window scope so the onclick handler can see it.
-        // This is necessary because the script uses "type=module".
-        window.directHandleUnlock = directHandleUnlock;
-
-
-        // --- CORE FUNCTIONS ---
+        
+        // --- CORE FUNCTIONS (Defined first) ---
         
         // Function to handle the unlock process (called directly from HTML)
         function directHandleUnlock() {
@@ -147,6 +143,10 @@
                 adminSecretKeyEl.focus();
             }
         }
+        
+        // *FIX*: Export the function to the global window object IMMEDIATELY 
+        // after it is defined, so the HTML onclick handler can access it.
+        window.directHandleUnlock = directHandleUnlock;
         
         // Function to toggle dashboard visibility with a slight delay for transition
         function setDashboardVisibility(isVisible) {
