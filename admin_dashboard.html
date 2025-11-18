@@ -100,47 +100,61 @@
         
         // --- CORE FUNCTIONS ---
         
-        // 1. Firebase Initialization and Authentication
-       // Lines 104-105: Global variables for Firestore (db) and Auth (auth)
+       // --- 1. Firebase Initialization and Authentication ---
+// Global variables for Firestore (db) and Auth (auth)
 let db, auth; 
 
 async function initializeFirebase() {
     // Correctly parse the config from the environment
-    const firebaseConfig = JSON.parse(typeof__firebase_config !== 'undefined'?__firebase_config :'{}');
-     if(!firebaseConfig.projectId) {console.error('FATAL ERROR: Firebase project ID not configured.');
+    const firebaseConfig = JSON.parse(
+        typeof __firebase_config !== 'undefined' ? __firebase_config : '{}'
+    );
+    
+    if (!firebaseConfig.projectId) {
+        console.error('FATAL ERROR: Firebase project ID not configured.');
         authStatusEL.textContent = 'FATAL ERROR: Firebase configuration missing.';
         return; // Stop initialization
     }
 
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+    try {
+        const app = initializeApp(firebaseConfig);
+        
+        // Assign to global variables (NO 'const' here!)
+        db = getFirestore(app);
+        auth = getAuth(app);
 
-                authStatusEl.textContent = 'Authenticating...';
+        authStatusEL.textContent = 'Authenticating...';
 
-                await new Promise((resolve) => {
-                    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-                        unsubscribe(); 
-                        
-                        if (user) {
-                            userId = user.uid;
-                        } else {
-                            try {
-                                if (initialAuthToken) {
-                                    await signInWithCustomToken(auth, initialAuthToken);
-                                    userId = auth.currentUser.uid;
-                                } else {
-                                    // Sign in anonymously since we removed the admin key
-                                    const anonUser = await signInAnonymously(auth);
-                                    userId = anonUser.user.uid;
-                                }
-                            } catch (error) {
-                                console.error("Authentication failed:", error);
-                                userId = 'anonymous-' + crypto.randomUUID();
-                            }
-                        }
-                        
+        await new Promise((resolve, reject) => {
+            const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                unsubscribe(); // Stop listening after the first state change
+                
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    authStatusEL.textContent = 'Signed in (Admin)';
+                } else {
+                    // Fallback for non-admin/anonymous sign-in if token is missing
+                    await signInAnonymously(auth);
+                    authStatusEL.textContent = 'Signed in (Anonymous)';
+                }
+                
+                resolve();
+            }, reject);
+        });
+        
+        // Get the app ID
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // Note: userId is not strictly needed in the admin dashboard but is good practice.
+        // const userId = auth.currentUser?.uid || crypto.randomUUID(); 
+
+        // Start the listener
+        setupRealtimeListener(appId);
+
+    } catch (e) {
+        console.error("Error initializing Firebase:", e);
+        authStatusEL.textContent = 'FATAL ERROR: Check console for Firebase setup issue.';
+    }
+}
                         authStatusEl.textContent = `System Ready. User ID: ${userId.substring(0, 8)}...${userId.substring(userId.length - 8)}`;
                         adminIdDisplay.textContent = userId;
                         resolve();
