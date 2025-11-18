@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -45,7 +45,7 @@
                 <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 max-w-sm mx-auto">
                     <input type="password" id="admin-secret-key" placeholder="Admin Secret Key" 
                            class="flex-grow p-3 border border-purple-400 rounded-lg">
-                    <!-- CHANGE 1: Added direct onclick handler to call the function -->
+                    <!-- The onclick handler needs directHandleUnlock to be global -->
                     <button id="unlock-btn" onclick="directHandleUnlock()" 
                             class="text-lg px-6 py-2 bg-[#8a2be2] text-white rounded-lg hover:bg-purple-600 transition-colors font-bold">
                         Unlock
@@ -119,7 +119,8 @@
         const adminSecretKeyEl = document.getElementById('admin-secret-key');
         const keyMessageEl = document.getElementById('key-message');
         
-        // IMPORTANT: Export this function to the global window scope so the onclick handler can see it.
+        // FIX: Export this function to the global window scope so the onclick handler can see it.
+        // This is necessary because the script uses "type=module".
         window.directHandleUnlock = directHandleUnlock;
 
 
@@ -351,4 +352,4 @@
 
     </script>
 </body>
-</html>          
+</html>
