@@ -148,7 +148,7 @@ async function initializeFirebase() {
         // const userId = auth.currentUser?.uid || crypto.randomUUID(); 
 
         // Start the listener
-        setupRealtimeListener(appId);
+        setupRealtimeListener(appId,window.db, window.auth);
 
     } catch (e) {
         console.error("Error initializing Firebase:", e);
