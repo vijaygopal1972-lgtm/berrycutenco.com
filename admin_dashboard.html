@@ -121,13 +121,16 @@
 
         // --- CORE FUNCTIONS ---
         
-        // Function to toggle dashboard visibility
+        // Function to toggle dashboard visibility with a slight delay for transition
         function setDashboardVisibility(isVisible) {
             if (isVisible) {
-                adminKeyInputDiv.classList.add('hidden');
-                adminDashboardContent.classList.remove('hidden');
-                // Start listening for data
-                setupRealtimeListener();
+                // Use a short timeout to ensure the DOM updates before class removal
+                setTimeout(() => {
+                    adminKeyInputDiv.classList.add('hidden');
+                    adminDashboardContent.classList.remove('hidden');
+                    setupRealtimeListener();
+                }, 100); 
+
             } else {
                 adminDashboardContent.classList.add('hidden');
             }
@@ -160,6 +163,7 @@
                                 }
                             } catch (error) {
                                 console.error("Authentication failed:", error);
+                                // Fallback for userId if auth fails
                                 userId = 'anonymous-' + crypto.randomUUID();
                             }
                         }
@@ -178,6 +182,8 @@
             
             // Initial state: Hidden dashboard, ready for unlock attempt
             setDashboardVisibility(false); 
+            
+            // IMPORTANT: Attach the listeners after DOM elements are guaranteed to exist
             unlockBtn.addEventListener('click', handleUnlock);
             adminSecretKeyEl.addEventListener('keyup', (e) => {
                 if (e.key === 'Enter') handleUnlock();
@@ -186,18 +192,18 @@
         
         // 1.5 Handle Admin Key Unlock
         function handleUnlock() {
-            const key = adminSecretKeyEl.value.trim();
+            // Retrieve value directly from the DOM element
+            const key = adminSecretKeyEl.value.trim(); 
+            
             if (key === ADMIN_SECRET) {
                 keyMessageEl.textContent = '✅ Dashboard Unlocked!';
-                keyMessageEl.classList.remove('text-red-500');
-                keyMessageEl.classList.add('text-green-600');
+                keyMessageEl.className = 'text-sm mt-3 font-semibold text-green-600';
                 
                 setDashboardVisibility(true);
 
             } else {
                 keyMessageEl.textContent = '❌ Incorrect secret key. Try again.';
-                keyMessageEl.classList.add('text-red-500');
-                keyMessageEl.classList.remove('text-green-600');
+                keyMessageEl.className = 'text-sm mt-3 font-semibold text-red-500';
                 adminSecretKeyEl.value = '';
                 adminSecretKeyEl.focus();
             }
@@ -208,9 +214,8 @@
         function setupRealtimeListener() {
             if (!db) return;
 
-            loadingIndicator.classList.remove('hidden'); // Show loading when fetching data
+            loadingIndicator.classList.remove('hidden'); 
 
-            // Collection is public/data/orders (where the customer submits)
             const ordersRef = collection(db, artifacts/${appId}/public/data/orders);
             const q = query(ordersRef); 
 
@@ -234,6 +239,7 @@
             });
             
             // Attach filter change listener (only needed once)
+            // Note: This assumes the listener is attached only after unlock
             statusFilterEl.addEventListener('change', (e) => {
                 currentStatusFilter = e.target.value;
                 renderFilteredOrders(); 
