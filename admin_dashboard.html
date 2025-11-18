@@ -224,17 +224,17 @@
 
                     //Status Update Buttons 
                     + `<div class="flex flex-wrap gap-2">`
-                        <!-- Buttons are now simple, not tied to a global function that causes the error -->
-                        <button data-id="${order.id}" data-status="Processing" 
-                                class="status-update-btn text-xs px-3 py-1 bg-yellow-400 text-yellow-900 rounded-full hover:bg-yellow-500 transition-colors duration-150">
-                            Set Processing
-                        </button>
-                        <button data-id="${order.id}" data-status="Delivered" 
-                                class="status-update-btn text-xs px-3 py-1 bg-green-400 text-green-900 rounded-full hover:bg-green-500 transition-colors duration-150">
-                            Set Delivered
-                        </button>
-                    </div>
-                `;
+                        // Buttons are now simple, not tied to a global function that causes the error 
+                        +`<button data-id="${order.id}" data-status="Processing" `
+                              +`  class="status-update-btn text-xs px-3 py-1 bg-yellow-400 text-yellow-900 rounded-full hover:bg-yellow-500 transition-colors duration-150">`
+                           +` Set Processing`
+                        +`</button>`
+                        +`<button data-id="${order.id}" data-status="Delivered"` 
+                                +`class="status-update-btn text-xs px-3 py-1 bg-green-400 text-green-900 rounded-full hover:bg-green-500 transition-colors duration-150">`
+                           +` Set Delivered`
+                        +`</button>`
+                   + `</div>`; //This line is now clean:+`<div>` and the entire block ends on this line.
+                
                 ordersListEl.appendChild(orderDiv);
             });
 
