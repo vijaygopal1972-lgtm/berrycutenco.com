@@ -177,6 +177,7 @@
 
     <!-- Firebase Script -->
     <script type="module">
+        // Using stable SDK version 11.6.1 for robust environment compatibility
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, updateDoc, onSnapshot, collection, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -191,20 +192,25 @@
         let userID = null;
         let isAuthReady = false;
         let allOrders = [];
-        let allInventory = []; // NEW: Array to hold all inventory items
+        let allInventory = []; 
         let currentStatusFilter = 'ALL';
+        
+        // This MUST match the document ID under /artifacts in Firestore 
+        // We use the environment variable __app_id for Canvas pathing, falling back to the project ID
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'berrycutenco-24946'; 
+
 
         // --- DOM Elements ---
         const authStatusEl = document.getElementById('auth-status');
         const ordersListEl = document.getElementById('orders-list');
         const ordersLoadingIndicator = document.getElementById('orders-loading-indicator');
-        const inventoryListEl = document.getElementById('inventory-list'); // NEW
-        const inventoryLoadingIndicator = document.getElementById('inventory-loading-indicator'); // NEW
+        const inventoryListEl = document.getElementById('inventory-list'); 
+        const inventoryLoadingIndicator = document.getElementById('inventory-loading-indicator'); 
         const statusFilterEl = document.getElementById('status-filter');
         const adminIdDisplay = document.getElementById('admin-id-display');
         const userIdTextEl = document.getElementById('user-id-text');
-        const totalInventoryCountEl = document.getElementById('total-inventory-count'); // NEW
-        const lowStockCountEl = document.getElementById('low-stock-count'); // NEW
+        const totalInventoryCountEl = document.getElementById('total-inventory-count'); 
+        const lowStockCountEl = document.getElementById('low-stock-count'); 
 
         // --- CORE FUNCTIONS ---
 
@@ -212,30 +218,27 @@
          * 1. Firebase Initialization and Authentication
          */
         async function initializeFirebase() {
-            // Get environment variables safely inside the function
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-            // Correctly parse the config from the environment
-            let firebaseConfig;
-            try {
-                // Use a fallback of '{}' (empty object) if __firebase_config is undefined
-                const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-                firebaseConfig = JSON.parse(configString);
-            } catch (e) {
-                console.error("FATAL ERROR: Failed to parse Firebase config string.", e);
-                authStatusEl.textContent = 'CONFIG PARSE ERROR';
-                return; // Stop initialization
-            }
+            // --- START: COMPLETE HARDCODED CONFIGURATION ---
+            const firebaseConfig = {
+                apiKey: "AIzaSyA34RRGtvkPiqGMAKYlnylHE6UGGx3Dqic",
+                authDomain: "berrycutenco-24946.firebaseapp.com",
+                projectId: "berrycutenco-24946",
+                storageBucket: "berrycutenco-24946.firebasestorage.app",
+                messagingSenderId: "547763232832",
+                appId: "1:547763232832:web:4ed243584ad9194976ffa5",
+                measurementId: "G-71RM0SRJEH" 
+            };
+            // --- END: COMPLETE HARDCODED CONFIGURATION ---
+
 
             if (!firebaseConfig.projectId) {
                 console.error("FATAL ERROR: Firebase configuration missing Project ID.");
                 authStatusEl.textContent = 'FATAL ERROR (Missing Config)';
-                adminIdDisplay.classList.remove('bg-blue-100');
-                adminIdDisplay.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
-                userIdTextEl.textContent = 'Configuration Error: Missing Project ID';
+                userIdTextEl.textContent = `App ID: ${appId}`; 
                 adminIdDisplay.classList.remove('hidden');
-                return; // Stop initialization
+                return; 
             }
 
             try {
@@ -245,7 +248,6 @@
 
                 authStatusEl.textContent = 'Authenticating...';
 
-                // Sign in using the provided token or anonymously
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
@@ -256,12 +258,11 @@
                     if (user) {
                         userID = user.uid;
                         authStatusEl.textContent = `User: ${userID.substring(0, 8)}...`;
-                        userIdTextEl.textContent = userID; // Full ID for collaboration
+                        userIdTextEl.textContent = userID; 
                         adminIdDisplay.classList.remove('hidden');
                         isAuthReady = true;
                         
-                        // Start real-time listeners only AFTER auth is ready
-                        setupRealtimeFirestoreListeners(appId, db, auth);
+                        setupRealtimeFirestoreListeners(); 
                     } else {
                         userID = null;
                         authStatusEl.textContent = 'Signed Out';
@@ -278,11 +279,12 @@
         /**
          * 2. Setup ALL Real-time Firestore Listeners
          */
-        function setupRealtimeFirestoreListeners(appId, db, auth) {
+        function setupRealtimeFirestoreListeners() {
             if (!db || !auth.currentUser) return;
-
+            
             // 2A. ORDERS Listener
-            const ordersCollectionPath = `artifacts/${appId}/public/data/orders`;
+            // This path now uses the unique appId from the environment/fallback
+            const ordersCollectionPath = `artifacts/${appId}/public/data/orders`; 
             const ordersRef = collection(db, ordersCollectionPath);
             ordersLoadingIndicator.classList.remove('hidden');
 
@@ -291,18 +293,17 @@
                 let fetchedOrders = [];
 
                 querySnapshot.forEach((doc) => {
-                    fetchedOrders.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
+                    // FIX: Replace object spread syntax (...) with Object.assign() for wider compatibility
+                    fetchedOrders.push(Object.assign({ id: doc.id }, doc.data()));
                 });
 
                 allOrders = fetchedOrders;
 
-                // Sort in JavaScript: Newest orders first (by createdAt)
                 allOrders.sort((a, b) => {
-                    const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
-                    const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+                    // Check if createdAt exists and is a Timestamp before calling toMillis()
+                    // This defensive check prevents "toDate is not a function" if the field is corrupted
+                    const timeA = a.createdAt && typeof a.createdAt.toMillis === 'function' ? a.createdAt.toMillis() : 0;
+                    const timeB = b.createdAt && typeof b.createdAt.toMillis === 'function' ? b.createdAt.toMillis() : 0;
                     return timeB - timeA;
                 });
                 
@@ -314,8 +315,9 @@
                 ordersListEl.innerHTML = `<p class="text-red-500 text-center">Error fetching orders: ${error.message}</p>`;
             });
 
-            // 2B. INVENTORY Listener (NEW)
-            const inventoryCollectionPath = `artifacts/${appId}/public/data/inventory`;
+            // 2B. INVENTORY Listener
+            // This path now uses the unique appId from the environment/fallback
+            const inventoryCollectionPath = `artifacts/${appId}/public/data/inventory`; 
             const inventoryRef = collection(db, inventoryCollectionPath);
             inventoryLoadingIndicator.classList.remove('hidden');
 
@@ -326,14 +328,18 @@
 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    const item = {
-                        id: doc.id,
-                        ...data,
-                        quantityInStock: data.quantityInStock || 0,
-                        lowStockThreshold: data.lowStockThreshold || 10 // Default threshold
-                    };
+                    
+                    // FIX: Replace object spread syntax (...) with Object.assign() for wider compatibility
+                    const item = Object.assign(
+                        { id: doc.id }, 
+                        data, 
+                        {
+                            quantityInStock: data.quantityInStock || 0,
+                            lowStockThreshold: data.lowStockThreshold || 10 
+                        }
+                    );
 
-                    if (item.quantityInStock <= item.lowStockThreshold) {
+                    if (Number(item.quantityInStock) <= Number(item.lowStockThreshold)) {
                         lowStockCount++;
                     }
 
@@ -344,7 +350,6 @@
                 totalInventoryCountEl.textContent = allInventory.length;
                 lowStockCountEl.textContent = lowStockCount;
 
-                // Sort inventory by quantity in stock (lowest first)
                 allInventory.sort((a, b) => a.quantityInStock - b.quantityInStock);
                 
                 renderInventory();
@@ -372,8 +377,19 @@
             }
 
             filteredOrders.forEach(order => {
-                const date = order.createdAt ? order.createdAt.toDate().toLocaleDateString() : 'N/A';
-                const time = order.createdAt ? order.createdAt.toDate().toLocaleTimeString() : 'N/A';
+                // Robust check: Only call toDate() if the object has the function (i.e., it's a Timestamp)
+                let date, time;
+
+                if (order.createdAt && typeof order.createdAt.toDate === 'function') {
+                    const dateObj = order.createdAt.toDate();
+                    date = dateObj.toLocaleDateString();
+                    time = dateObj.toLocaleTimeString();
+                } else {
+                    // Fallback for non-Timestamp/missing data
+                    date = 'N/A';
+                    time = 'N/A';
+                }
+                
                 const statusBadge = getStatusBadge(order.status);
 
                 const li = document.createElement('li');
@@ -394,9 +410,8 @@
                 ordersListEl.appendChild(li);
             });
             
-            // Attach click listeners to new buttons
             document.querySelectorAll('.handle-update-btn').forEach(button => {
-                button.addEventListener('click', (event) => handleStatusUpdate(event, db, auth));
+                button.addEventListener('click', (event) => handleStatusUpdate(event)); 
             });
         }
 
@@ -425,13 +440,12 @@
         /**
          * 5. Handle Status Update (Orders)
          */
-        async function handleStatusUpdate(event, db, auth) {
+        async function handleStatusUpdate(event) {
             const orderId = event.currentTarget.getAttribute('data-id');
             const currentStatus = event.currentTarget.getAttribute('data-status');
 
             if (!db || !orderId || !auth.currentUser) return;
             
-            // Define next status (simple cycle)
             let newStatus;
             switch (currentStatus) {
                 case 'Pending':
@@ -448,7 +462,8 @@
             event.currentTarget.classList.add('opacity-50');
             event.currentTarget.disabled = true;
 
-            const ordersCollectionPath = `artifacts/${auth.currentUser.uid}/public/data/orders`;
+            // Use the correct appId from the environment/fallback for the path
+            const ordersCollectionPath = `artifacts/${appId}/public/data/orders`; 
             const orderDocRef = doc(db, ordersCollectionPath, orderId);
             
             try {
@@ -456,7 +471,6 @@
                     status: newStatus,
                     updatedAt: serverTimestamp()
                 });
-                // Success is handled by the real-time snapshot listener (onSnapshot)
             } catch (err) {
                 console.error("Update error:", err);
                 authStatusEl.textContent = `UPDATE FAILED for ${orderId}`; 
@@ -466,10 +480,10 @@
         }
 
         /**
-         * 6. Render Inventory List (NEW)
+         * 6. Render Inventory List
          */
         function renderInventory() {
-            inventoryListEl.innerHTML = ''; // Clear previous rows
+            inventoryListEl.innerHTML = ''; 
 
             if (allInventory.length === 0) {
                 inventoryListEl.innerHTML = `<tr><td colspan="4" class="py-4 text-gray-500 text-center">No inventory items found. Add some in the Firebase Console!</td></tr>`;
@@ -477,7 +491,7 @@
             }
 
             allInventory.forEach(item => {
-                const isLowStock = item.quantityInStock <= item.lowStockThreshold;
+                const isLowStock = Number(item.quantityInStock) <= Number(item.lowStockThreshold);
                 
                 let stockText = `${item.quantityInStock}`;
                 let stockClass = 'text-gray-800';
@@ -509,8 +523,6 @@
                 `;
                 inventoryListEl.appendChild(row);
             });
-            
-            // Note: Edit Stock buttons are placeholders for now, the functionality isn't implemented.
         }
 
 
