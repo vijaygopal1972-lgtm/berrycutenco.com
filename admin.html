@@ -3,171 +3,559 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase Initialization Debugger</title>
+    <title>BerryCuteNCO Admin Dashboard</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use Inter font -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        /* Custom styles for a clean, mobile-friendly dashboard */
+        :root {
+            --primary: #8B5CF6; /* Purple-500 */
+            --secondary: #10B981; /* Emerald-500 */
+            --warning: #F59E0B; /* Amber-500 */
+            --danger: #EF4444; /* Red-500 */
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            width: 100%;
+            height: auto;
+        }
+        .main-content {
+            padding: 1rem;
+        }
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 250px;
+                height: 100vh;
+                position: fixed;
+            }
+            .main-content {
+                margin-left: 250px;
+            }
+        }
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .status-badge {
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
         }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#8B5CF6',
+                        'secondary': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="p-8">
+<body class="md:flex">
 
-    <div class="max-w-xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-2xl border border-blue-100">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-1.258 0-2.515.115-3.744.349-1.228.234-2.433.585-3.578 1.057a11.936 11.936 0 00-3.578 3.578c-.472 1.145-.823 2.349-1.057 3.578-.234 1.228-.349 2.485-.349 3.744s.115 2.515.349 3.744c.234 1.228.585 2.433 1.057 3.578a11.936 11.936 0 003.578 3.578c1.145.472 2.349.823 3.578 1.057s2.485.349 3.744.349 2.515-.115 3.744-.349c1.228-.234 2.433-.585 3.578-1.057a11.936 11.936 0 003.578-3.578c.472-1.145.823-2.349 1.057-3.578s.349-2.485.349-3.744-.115-2.515-.349-3.744c-.234-1.228-.585-2.433-1.057-3.578a11.936 11.936 0 00-3.578-3.578z"></path></svg>
-            Initialization Status
-        </h1>
-
-        <div id="status-display" class="p-4 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-600 space-y-2">
-            <p id="config-status" class="font-medium text-gray-700">Config: <span class="text-yellow-600">Loading...</span></p>
-            <p id="init-status" class="font-medium text-gray-700">App Init: <span class="text-yellow-600">Pending...</span></p>
-            <p id="auth-status" class="font-medium text-gray-700">Auth: <span class="text-yellow-600">Pending...</span></p>
-        </div>
-
-        <div id="result-card" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden">
-            <p class="font-semibold text-blue-700">Success!</p>
-            <p id="user-id" class="break-all mt-1 text-sm text-blue-900"></p>
-            <p class="mt-3 text-xs text-blue-600">The core services are now running correctly.</p>
-        </div>
-
-        <div id="error-card" class="mt-6 p-4 bg-red-100 border border-red-300 rounded-lg hidden">
-            <p class="font-semibold text-red-700">Fatal Error:</p>
-            <p id="error-message" class="break-all mt-1 text-sm text-red-900"></p>
-        </div>
-
-        <p class="mt-6 text-xs text-gray-500">This file has been modified to support **manual insertion** of the Firebase configuration object.</p>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar bg-primary text-white p-6 rounded-r-lg shadow-xl">
+        <h1 class="text-2xl font-bold mb-8">Admin Panel</h1>
+        <nav>
+            <a href="#" class="block p-3 mb-2 rounded-lg bg-white/10 hover:bg-white/20 transition duration-150 font-medium">Dashboard</a>
+            <a href="#" class="block p-3 mb-2 rounded-lg hover:bg-white/10 transition duration-150">User Management</a>
+            <a href="#" class="block p-3 mb-2 rounded-lg hover:bg-white/10 transition duration-150">Content Metrics</a>
+            <a href="#" class="block p-3 mb-2 rounded-lg hover:bg-white/10 transition duration-150">Settings</a>
+        </nav>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, setPersistence, browserSessionPersistence, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- Main Content Area -->
+    <div class="main-content flex-1">
+        <header class="flex justify-between items-center py-4 border-b border-gray-200 mb-6">
+            <h2 class="text-3xl font-extrabold text-gray-900">Welcome, Administrator</h2>
+            <div class="flex items-center space-x-4">
+                <span id="auth-status" class="text-sm font-medium text-gray-500">Initializing...</span>
+                <button id="auth-button" class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition duration-150 shadow-md">Login</button>
+            </div>
+        </header>
 
-        // Set log level to Debug to see all Firebase operations in the console
-        setLogLevel('Debug');
+        <!-- Admin ID Display (for collaboration) -->
+        <div id="admin-id-display" class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg mb-6 hidden" role="alert">
+            <p class="font-bold">Admin ID (for collaboration):</p>
+            <p id="user-id-text" class="text-sm font-mono break-all"></p>
+        </div>
+
+        <!-- Dashboard Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="card bg-white p-6 rounded-lg">
+                <p class="text-sm font-medium text-gray-500">Total Users</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">15</p>
+                <p class="text-xs text-secondary mt-2">Data from Firestore</p>
+            </div>
+            <div class="card bg-white p-6 rounded-lg">
+                <p class="text-sm font-medium text-gray-500">Total Items</p>
+                <p id="total-inventory-count" class="text-3xl font-bold text-gray-900 mt-1">0</p>
+                <p class="text-xs text-secondary mt-2">Inventory Count</p>
+            </div>
+            <div class="card bg-white p-6 rounded-lg">
+                <p id="low-stock-text" class="text-sm font-medium text-gray-500">Low Stock Items</p>
+                <p id="low-stock-count" class="text-3xl font-bold text-danger mt-1">0</p>
+                <p class="text-xs text-danger mt-2">Needs Reorder</p>
+            </div>
+            <div class="card bg-white p-6 rounded-lg">
+                <p class="text-sm font-medium text-gray-500">Server Load</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">15%</p>
+                <p class="text-xs text-secondary mt-2">Data from Free tier</p>
+            </div>
+        </div>
         
-        // --- DOM Elements for Status Updates ---
-        const configStatusEl = document.getElementById('config-status').querySelector('span');
-        const initStatusEl = document.getElementById('init-status').querySelector('span');
-        const authStatusEl = document.getElementById('auth-status').querySelector('span');
-        const errorCard = document.getElementById('error-card');
-        const errorMessageEl = document.getElementById('error-message');
-        const resultCard = document.getElementById('result-card');
-        const userIdEl = document.getElementById('user-id');
+        <!-- Inventory Section (NEW) -->
+        <div class="bg-white p-6 rounded-lg card mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Inventory Management</h3>
+                <button class="bg-secondary text-white px-4 py-2 rounded-lg font-semibold hover:bg-secondary/90 transition duration-150 shadow-md">
+                    + Add New Item
+                </button>
+            </div>
+            
+            <!-- Inventory Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Name / SKU</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-list" class="bg-white divide-y divide-gray-200">
+                        <!-- Inventory rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Inventory Loading Indicator -->
+            <div id="inventory-loading-indicator" class="text-center py-4 text-gray-500">
+                Loading inventory...
+            </div>
+        </div>
+
+        <!-- Orders Section (Existing) -->
+        <div class="bg-white p-6 rounded-lg card">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Current Orders</h3>
+                <select id="status-filter" class="p-2 border border-gray-300 rounded-lg">
+                    <option value="ALL">All Statuses</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Pending">Pending</option>
+                </select>
+            </div>
+
+            <!-- Orders Loading Indicator -->
+            <div id="orders-loading-indicator" class="text-center py-4 text-gray-500">
+                Waiting for initialization...
+            </div>
+
+            <!-- Orders List -->
+            <ul id="orders-list" class="space-y-4">
+                <!-- Orders will be populated here by JavaScript -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        // Using stable SDK version 11.6.1 for robust environment compatibility
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, onSnapshot, collection, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Set Firebase logging level for debugging (optional)
+        setLogLevel('debug');
+
+        // --- GLOBAL VARIABLES (Accessible outside functions) ---
+        let db; // Global Firestore instance
+        let auth; // Global Auth instance
+        let userID = null;
+        let isAuthReady = false;
+        let allOrders = [];
+        let allInventory = []; 
+        let currentStatusFilter = 'ALL';
         
-        function updateStatus(element, text, colorClass) {
-            element.textContent = text;
-            element.className = colorClass;
-        }
+        // This MUST match the document ID under /artifacts in Firestore 
+        // We use the environment variable __app_id for Canvas pathing, falling back to the project ID
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'berrycutenco-24946'; 
+
+
+        // --- DOM Elements ---
+        const authStatusEl = document.getElementById('auth-status');
+        const ordersListEl = document.getElementById('orders-list');
+        const ordersLoadingIndicator = document.getElementById('orders-loading-indicator');
+        const inventoryListEl = document.getElementById('inventory-list'); 
+        const inventoryLoadingIndicator = document.getElementById('inventory-loading-indicator'); 
+        const statusFilterEl = document.getElementById('status-filter');
+        const adminIdDisplay = document.getElementById('admin-id-display');
+        const userIdTextEl = document.getElementById('user-id-text');
+        const totalInventoryCountEl = document.getElementById('total-inventory-count'); 
+        const lowStockCountEl = document.getElementById('low-stock-count'); 
+
+        // --- CORE FUNCTIONS ---
 
         /**
-         * Safely initializes Firebase and performs authentication.
+         * 1. Firebase Initialization and Authentication
          */
         async function initializeFirebase() {
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+            // Define the configuration: Prioritize the environment variable if available, 
+            // otherwise use the hardcoded config provided by the user.
             let firebaseConfig;
-            
-            // --- 1. MANUAL FIREBASE CONFIGURATION START ---
-            // !!! REPLACE ALL "YOUR_..." PLACEHOLDERS WITH YOUR ACTUAL VALUES FROM FIREBASE !!!
-           
-                // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyA34RRGtvkPiqGMAKYlnylHE6UGGx3Dqic",
-  authDomain: "berrycutenco-24946.firebaseapp.com",
-  projectId: "berrycutenco-24946",
-  storageBucket: "berrycutenco-24946.firebasestorage.app",
-  messagingSenderId: "547763232832",
-  appId: "1:547763232832:web:4ed243584ad9194976ffa5",
-  measurementId: "G-71RM0SRJEH"
-};
 
-            // Check if placeholders were replaced
-            if (firebaseConfig.apiKey.includes('YOUR_')) {
-                updateStatus(configStatusEl, 'PLACEHOLDER', 'text-red-600');
-                handleFatalError("Config Error: Please replace all 'YOUR_...' placeholders in firebaseConfig.");
-                return;
+            // FIX: Use environment config (__firebase_config) if available to ensure auth works correctly.
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try {
+                    firebaseConfig = JSON.parse(__firebase_config);
+                    console.log("Using environment provided Firebase config.");
+                } catch (e) {
+                    console.error("Failed to parse __firebase_config, falling back to hardcoded values.", e);
+                    // Fall through to use hardcoded config
+                }
             }
-            updateStatus(configStatusEl, 'OK (Manual)', 'text-green-600');
-            // --- 1. MANUAL FIREBASE CONFIGURATION END ---
+
+            // Fallback/Default configuration (if environment variable failed or was missing)
+            if (!firebaseConfig) {
+                // --- START: COMPLETE HARDCODED CONFIGURATION ---
+                firebaseConfig = {
+                    apiKey: "AIzaSyA34RRGtvkPiqGMAKYlnylHE6UGGx3Dqic",
+                    authDomain: "berrycutenco-24946.firebaseapp.com",
+                    projectId: "berrycutenco-24946",
+                    storageBucket: "berrycutenco-24946.firebasestorage.app",
+                    messagingSenderId: "547763232832",
+                    appId: "1:547763232832:web:4ed243584ad9194976ffa5",
+                    measurementId: "G-71RM0SRJEH" 
+                };
+                console.log("Using hardcoded Firebase config.");
+                // --- END: COMPLETE HARDCODED CONFIGURATION ---
+            }
 
 
-            // 2. Initialize Firebase App
-            let app, auth, db;
+            if (!firebaseConfig.projectId) {
+                console.error("FATAL ERROR: Firebase configuration missing Project ID.");
+                authStatusEl.textContent = 'FATAL ERROR (Missing Config)';
+                userIdTextEl.textContent = `App ID: ${appId}`; 
+                adminIdDisplay.classList.remove('hidden');
+                return; 
+            }
+
             try {
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
+                const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
-                updateStatus(initStatusEl, 'OK', 'text-green-600');
-            } catch (e) {
-                updateStatus(initStatusEl, 'FAILED', 'text-red-600');
-                handleFatalError("App Init Error: " + e.message);
-                return;
-            }
+                auth = getAuth(app);
 
-            // 3. Handle Authentication (Still checks for the environment token for testing)
-            try {
-                // Ensure persistence is set to session for security in this environment
-                await setPersistence(auth, browserSessionPersistence);
-                
-                let authResult;
-                // This will be null if running outside the platform, forcing Anonymous sign-in
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                authStatusEl.textContent = 'Authenticating...';
 
                 if (initialAuthToken) {
-                    console.log("Attempting sign-in with custom token...");
-                    authResult = await signInWithCustomToken(auth, initialAuthToken);
+                    await signInWithCustomToken(auth, initialAuthToken);
                 } else {
-                    console.log("Custom token not found. Signing in anonymously...");
-                    authResult = await signInAnonymously(auth);
+                    await signInAnonymously(auth);
                 }
 
-                if (authResult.user) {
-                    const userId = authResult.user.uid;
-                    updateStatus(authStatusEl, 'Success', 'text-green-600');
-                    showSuccess(userId);
-                    console.log("Successfully authenticated user:", userId);
-                    
-                    // You can now proceed with Firestore operations using 'db' and 'userId'
-                } else {
-                    throw new Error("Authentication failed: No user object returned.");
-                }
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userID = user.uid;
+                        authStatusEl.textContent = `User: ${userID.substring(0, 8)}...`;
+                        userIdTextEl.textContent = userID; 
+                        adminIdDisplay.classList.remove('hidden');
+                        isAuthReady = true;
+                        
+                        setupRealtimeFirestoreListeners(); 
+                    } else {
+                        userID = null;
+                        authStatusEl.textContent = 'Signed Out';
+                        isAuthReady = true;
+                    }
+                });
 
-            } catch (e) {
-                // This catch specifically handles the 'auth/configuration-not-found' 
-                // and other auth-related errors.
-                updateStatus(authStatusEl, 'FAILED', 'text-red-600');
-                handleFatalError(`Authentication Failed: ${e.code || 'UNKNOWN'} - ${e.message}`);
+            } catch (error) {
+                console.error("Firebase Initialization Error:", error);
+                authStatusEl.textContent = 'INIT ERROR';
             }
         }
+
+        /**
+         * 2. Setup ALL Real-time Firestore Listeners
+         */
+        function setupRealtimeFirestoreListeners() {
+            if (!db || !auth.currentUser) return;
+            
+            // 2A. ORDERS Listener
+            // This path now uses the unique appId from the environment/fallback
+            const ordersCollectionPath = `artifacts/${appId}/public/data/orders`; 
+            const ordersRef = collection(db, ordersCollectionPath);
+            ordersLoadingIndicator.classList.remove('hidden');
+
+            onSnapshot(query(ordersRef), (querySnapshot) => {
+                ordersLoadingIndicator.classList.add('hidden');
+                let fetchedOrders = [];
+
+                querySnapshot.forEach((doc) => {
+                    // FIX: Replace object spread syntax (...) with Object.assign() for wider compatibility
+                    fetchedOrders.push(Object.assign({ id: doc.id }, doc.data()));
+                });
+
+                allOrders = fetchedOrders;
+
+                allOrders.sort((a, b) => {
+                    // Check if createdAt exists and is a Timestamp before calling toMillis()
+                    // This defensive check prevents "toDate is not a function" if the field is corrupted
+                    const timeA = a.createdAt && typeof a.createdAt.toMillis === 'function' ? a.createdAt.toMillis() : 0;
+                    const timeB = b.createdAt && typeof b.createdAt.toMillis === 'function' ? b.createdAt.toMillis() : 0;
+                    return timeB - timeA;
+                });
+                
+                renderFilteredOrders();
+
+            }, (error) => {
+                console.error("Firestore error on orders snapshot:", error);
+                ordersLoadingIndicator.classList.add('hidden');
+                ordersListEl.innerHTML = `<p class="text-red-500 text-center">Error fetching orders: ${error.message}</p>`;
+            });
+
+            // 2B. INVENTORY Listener
+            // This path now uses the unique appId from the environment/fallback
+            const inventoryCollectionPath = `artifacts/${appId}/public/data/inventory`; 
+            const inventoryRef = collection(db, inventoryCollectionPath);
+            inventoryLoadingIndicator.classList.remove('hidden');
+
+            onSnapshot(query(inventoryRef), (querySnapshot) => {
+                inventoryLoadingIndicator.classList.add('hidden');
+                let fetchedInventory = [];
+                let lowStockCount = 0;
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    
+                    // FIX: Replace object spread syntax (...) with Object.assign() for wider compatibility
+                    const item = Object.assign(
+                        { id: doc.id }, 
+                        data, 
+                        {
+                            quantityInStock: data.quantityInStock || 0,
+                            lowStockThreshold: data.lowStockThreshold || 10 
+                        }
+                    );
+
+                    if (Number(item.quantityInStock) <= Number(item.lowStockThreshold)) {
+                        lowStockCount++;
+                    }
+
+                    fetchedInventory.push(item);
+                });
+
+                allInventory = fetchedInventory;
+                totalInventoryCountEl.textContent = allInventory.length;
+                lowStockCountEl.textContent = lowStockCount;
+
+                allInventory.sort((a, b) => a.quantityInStock - b.quantityInStock);
+                
+                renderInventory();
+
+            }, (error) => {
+                console.error("Firestore error on inventory snapshot:", error);
+                inventoryLoadingIndicator.classList.add('hidden');
+                inventoryListEl.innerHTML = `<tr><td colspan="4" class="py-4 text-red-500 text-center">Error fetching inventory: ${error.message}</td></tr>`;
+            });
+        }
+
+        /**
+         * 3. Utility function to render orders based on the current filter.
+         */
+        function renderFilteredOrders() {
+            ordersListEl.innerHTML = '';
+            
+            const filteredOrders = allOrders.filter(order => 
+                currentStatusFilter === 'ALL' || order.status === currentStatusFilter
+            );
+
+            if (filteredOrders.length === 0) {
+                ordersListEl.innerHTML = `<p class="text-gray-500 text-center py-4">No orders found with status: ${currentStatusFilter}</p>`;
+                return;
+            }
+
+            filteredOrders.forEach(order => {
+                // Robust check: Only call toDate() if the object has the function (i.e., it's a Timestamp)
+                let date, time;
+
+                if (order.createdAt && typeof order.createdAt.toDate === 'function') {
+                    const dateObj = order.createdAt.toDate();
+                    date = dateObj.toLocaleDateString();
+                    time = dateObj.toLocaleTimeString();
+                } else {
+                    // Fallback for non-Timestamp/missing data
+                    date = 'N/A';
+                    time = 'N/A';
+                }
+                
+                const statusBadge = getStatusBadge(order.status);
+
+                const li = document.createElement('li');
+                li.className = 'flex flex-col md:flex-row justify-between items-start md:items-center bg-gray-50 p-4 rounded-lg border border-gray-200';
+                li.innerHTML = `
+                    <div class="mb-2 md:mb-0">
+                        <p class="font-semibold text-gray-800 break-all">Order ID: ${order.id}</p>
+                        <p class="text-sm text-gray-500">Created: ${date} at ${time}</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        ${statusBadge}
+                        <button class="bg-primary text-white px-3 py-1 text-sm rounded-lg hover:bg-primary/90 transition duration-150 shadow-sm handle-update-btn"
+                                data-id="${order.id}" data-status="${order.status}">
+                            Update Status
+                        </button>
+                    </div>
+                `;
+                ordersListEl.appendChild(li);
+            });
+            
+            document.querySelectorAll('.handle-update-btn').forEach(button => {
+                button.addEventListener('click', (event) => handleStatusUpdate(event)); 
+            });
+        }
+
+        /**
+         * 4. Utility function for dynamic status badges (Orders)
+         */
+        function getStatusBadge(status) {
+            let style;
+            switch (status) {
+                case 'Pending':
+                    style = 'bg-red-200 text-red-800';
+                    break;
+                case 'Processing':
+                    style = 'bg-yellow-200 text-yellow-800';
+                    break;
+                case 'Delivered':
+                    style = 'bg-green-200 text-green-800';
+                    break;
+                default:
+                    style = 'bg-gray-200 text-gray-800';
+                    break;
+            }
+            return `<span class="status-badge ${style}">${status}</span>`;
+        }
+
+        /**
+         * 5. Handle Status Update (Orders)
+         */
+        async function handleStatusUpdate(event) {
+            const orderId = event.currentTarget.getAttribute('data-id');
+            const currentStatus = event.currentTarget.getAttribute('data-status');
+
+            if (!db || !orderId || !auth.currentUser) return;
+            
+            let newStatus;
+            switch (currentStatus) {
+                case 'Pending':
+                    newStatus = 'Processing';
+                    break;
+                case 'Processing':
+                    newStatus = 'Delivered';
+                    break;
+                default:
+                    newStatus = 'Pending';
+                    break;
+            }
+
+            event.currentTarget.classList.add('opacity-50');
+            event.currentTarget.disabled = true;
+
+            // Use the correct appId from the environment/fallback for the path
+            const ordersCollectionPath = `artifacts/${appId}/public/data/orders`; 
+            const orderDocRef = doc(db, ordersCollectionPath, orderId);
+            
+            try {
+                await updateDoc(orderDocRef, {
+                    status: newStatus,
+                    updatedAt: serverTimestamp()
+                });
+            } catch (err) {
+                console.error("Update error:", err);
+                authStatusEl.textContent = `UPDATE FAILED for ${orderId}`; 
+                event.currentTarget.classList.remove('opacity-50');
+                event.currentTarget.disabled = false;
+            }
+        }
+
+        /**
+         * 6. Render Inventory List
+         */
+        function renderInventory() {
+            inventoryListEl.innerHTML = ''; 
+
+            if (allInventory.length === 0) {
+                inventoryListEl.innerHTML = `<tr><td colspan="4" class="py-4 text-gray-500 text-center">No inventory items found. Add some in the Firebase Console!</td></tr>`;
+                return;
+            }
+
+            allInventory.forEach(item => {
+                const isLowStock = Number(item.quantityInStock) <= Number(item.lowStockThreshold);
+                
+                let stockText = `${item.quantityInStock}`;
+                let stockClass = 'text-gray-800';
+
+                if (isLowStock) {
+                    stockText = `🚨 ${item.quantityInStock} (LOW)`;
+                    stockClass = 'font-bold text-danger';
+                }
+
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-100 transition duration-100';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${item.itemName || 'N/A'}</div>
+                        <div class="text-xs text-gray-500 break-all">${item.skuOrProductID || item.id}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm ${stockClass}">${stockText}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-800">$${(item.sellingPrice || 0).toFixed(2)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-primary hover:text-primary/80 transition duration-150 edit-inventory-btn"
+                                data-id="${item.id}">
+                            Edit Stock
+                        </button>
+                    </td>
+                `;
+                inventoryListEl.appendChild(row);
+            });
+        }
+
+
+        // --- EVENT LISTENERS ---
+
+        // Listen for filter changes and re-render the orders list
+        statusFilterEl.addEventListener('change', (event) => {
+            currentStatusFilter = event.target.value;
+            renderFilteredOrders();
+        });
         
-        /**
-         * Displays the fatal error message on the UI.
-         * @param {string} message 
-         */
-        function handleFatalError(message) {
-            console.error("FIREBASE INITIALIZATION FAILED:", message);
-            errorCard.classList.remove('hidden');
-            errorMessageEl.textContent = message;
-            // Hide the success card if an error occurs
-            resultCard.classList.add('hidden');
-        }
+        // --- START THE APPLICATION ---
+        window.onload = initializeFirebase; 
 
-        /**
-         * Displays the successful initialization status and User ID.
-         * @param {string} userId 
-         */
-        function showSuccess(userId) {
-            resultCard.classList.remove('hidden');
-            userIdEl.textContent = "User ID: " + userId;
-            // Hide the error card if successful
-            errorCard.classList.add('hidden');
-        }
-
-        window.onload = initializeFirebase;
     </script>
 </body>
 </html>
