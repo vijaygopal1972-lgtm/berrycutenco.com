@@ -92,7 +92,7 @@
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
             
-            // Handle configuration parsing locally inside the function (Fix for "projectId not provided")
+            // Handle configuration parsing locally inside the function 
             const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
             let localFirebaseConfig = {};
             try {
@@ -112,7 +112,7 @@
 
             try {
                 const app = initializeApp(localFirebaseConfig);
-                // ASSIGNMENT (No const/let/var)
+                // ASSIGNMENT (No const/let/var here, using the global 'let db;' from above)
                 db = getFirestore(app);
                 auth = getAuth(app);
 
@@ -314,7 +314,6 @@
 
         // 5. Handle Status Update
         
-        // Removed db/auth from arguments since they are globally available
         window.handleStatusUpdate = async function(event) {
             const selectEl = event.currentTarget;
             const orderId = selectEl.getAttribute('data-order-id');
