@@ -40,7 +40,7 @@
             <p id="error-message" class="break-all mt-1 text-sm text-red-900"></p>
         </div>
 
-        <p class="mt-6 text-xs text-gray-500">This file includes robust checks for the environment variables (`__firebase_config` and `__initial_auth_token`).</p>
+        <p class="mt-6 text-xs text-gray-500">This file has been modified to support **manual insertion** of the Firebase configuration object.</p>
     </div>
 
     <script type="module">
@@ -71,21 +71,29 @@
         async function initializeFirebase() {
             let firebaseConfig;
             
-            // 1. Check and Parse Firebase Config
-            try {
-                if (typeof __firebase_config === 'undefined' || !__firebase_config) {
-                    throw new Error("Global '__firebase_config' is undefined or empty.");
-                }
-                firebaseConfig = JSON.parse(__firebase_config);
-                if (!firebaseConfig.apiKey) {
-                    throw new Error("Parsed config object is missing 'apiKey'.");
-                }
-                updateStatus(configStatusEl, 'OK', 'text-green-600');
-            } catch (e) {
-                updateStatus(configStatusEl, 'FAILED', 'text-red-600');
-                handleFatalError("Config Error: " + e.message);
+            // --- 1. MANUAL FIREBASE CONFIGURATION START ---
+            // !!! REPLACE ALL "YOUR_..." PLACEHOLDERS WITH YOUR ACTUAL VALUES FROM FIREBASE !!!
+           
+                // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA34RRGtvkPiqGMAKYlnylHE6UGGx3Dqic",
+  authDomain: "berrycutenco-24946.firebaseapp.com",
+  projectId: "berrycutenco-24946",
+  storageBucket: "berrycutenco-24946.firebasestorage.app",
+  messagingSenderId: "547763232832",
+  appId: "1:547763232832:web:4ed243584ad9194976ffa5",
+  measurementId: "G-71RM0SRJEH"
+};
+
+            // Check if placeholders were replaced
+            if (firebaseConfig.apiKey.includes('YOUR_')) {
+                updateStatus(configStatusEl, 'PLACEHOLDER', 'text-red-600');
+                handleFatalError("Config Error: Please replace all 'YOUR_...' placeholders in firebaseConfig.");
                 return;
             }
+            updateStatus(configStatusEl, 'OK (Manual)', 'text-green-600');
+            // --- 1. MANUAL FIREBASE CONFIGURATION END ---
+
 
             // 2. Initialize Firebase App
             let app, auth, db;
@@ -100,12 +108,13 @@
                 return;
             }
 
-            // 3. Handle Authentication
+            // 3. Handle Authentication (Still checks for the environment token for testing)
             try {
                 // Ensure persistence is set to session for security in this environment
                 await setPersistence(auth, browserSessionPersistence);
                 
                 let authResult;
+                // This will be null if running outside the platform, forcing Anonymous sign-in
                 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
                 if (initialAuthToken) {
@@ -123,7 +132,6 @@
                     console.log("Successfully authenticated user:", userId);
                     
                     // You can now proceed with Firestore operations using 'db' and 'userId'
-                    // For example: const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
                 } else {
                     throw new Error("Authentication failed: No user object returned.");
                 }
