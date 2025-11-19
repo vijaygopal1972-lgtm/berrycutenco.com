@@ -3,112 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BerryCuteNCO Admin Panel</title>
-    <!-- Tailwind (ok for internal admin) -->
+    <title>BerryCuteNCO Admin Dashboard</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: sans-serif; }
+        /* Custom styles for a clean, mobile-friendly dashboard */
+        :root {
+            --primary: #8B5CF6; /* Purple-500 */
+            --secondary: #10B981; /* Emerald-500 */
+            --warning: #F59E0B; /* Amber-500 */
+            --danger: #EF4444; /* Red-500 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            width: 100%;
+            height: auto;
+        }
+        .main-content {
+            padding: 1rem;
+        }
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 250px;
+                height: 100vh;
+                position: fixed;
+            }
+            .main-content {
+                margin-left: 250px;
+            }
+        }
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .status-badge {
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+        }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#8B5CF6',
+                        'secondary': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="md:flex">
 
-    <div class="max-w-4xl mx-auto p-4 md:p-8">
-        <header class="mb-6 border-b pb-4 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-pink-600">BerryCuteNCO Admin Dashboard</h1>
-            <div id="auth-status" class="text-sm font-medium text-gray-500">
-                <span id="auth-status-el">Initializing...</span>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar bg-primary text-white p-6 rounded-r-lg shadow-xl">
+        <h1 class="text-2xl font-bold mb-8">Admin Panel</h1>
+        <nav>
+            <a href="#" class="block p-3 mb-2 rounded-lg bg-white/10 hover:bg-white/20 transition duration-150 font-medium">Dashboard</a>
+            <a href="#" class="block p-3 mb-2 rounded-lg hover:bg-white/10 transition duration-150">User Management</a>
+            <a href="#" class="block p-3 mb-2 rounded-lg hover:bg-white/10 transition duration-150">Content Metrics</a>
+            <a href="#" class="block p-3 mb-2 rounded-lg hover:bg-white/10 transition duration-150">Settings</a>
+        </nav>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content flex-1">
+        <header class="flex justify-between items-center py-4 border-b border-gray-200 mb-6">
+            <h2 class="text-3xl font-extrabold text-gray-900">Welcome, Administrator</h2>
+            <div class="flex items-center space-x-4">
+                <span id="auth-status" class="text-sm font-medium text-gray-500">Initializing...</span>
+                <button id="auth-button" class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition duration-150 shadow-md">Login</button>
             </div>
         </header>
 
-        <!-- Admin ID Display -->
-        <div class="mb-6 p-3 bg-indigo-100 rounded-lg shadow-sm">
-            <p class="text-sm text-indigo-700 font-medium">
-                Admin ID (for collaboration):
-                <span id="admin-id-display" class="font-mono text-indigo-900 break-all"></span>
-            </p>
+        <!-- Admin ID Display (for collaboration) -->
+        <div id="admin-id-display" class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg mb-6 hidden" role="alert">
+            <p class="font-bold">Admin ID (for collaboration):</p>
+            <p id="user-id-text" class="text-sm font-mono break-all"></p>
         </div>
 
-        <!-- Status Filter + Loading -->
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-            <div id="status-filter" class="flex space-x-2 p-1 bg-white rounded-lg shadow-md mb-4 sm:mb-0">
-                <!-- buttons injected -->
+        <!-- Dashboard Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="card bg-white p-6 rounded-lg">
+                <p class="text-sm font-medium text-gray-500">Total Users</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">15</p>
+                <p class="text-xs text-secondary mt-2">Data from Firestore</p>
             </div>
-            <div id="loading-indicator" class="hidden flex items-center space-x-2 text-gray-500">
-                <svg class="animate-spin h-5 w-5 text-pink-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Loading Orders...</span>
+            <div class="card bg-white p-6 rounded-lg">
+                <p class="text-sm font-medium text-gray-500">Total Items</p>
+                <p id="total-inventory-count" class="text-3xl font-bold text-gray-900 mt-1">0</p>
+                <p class="text-xs text-secondary mt-2">Inventory Count</p>
+            </div>
+            <div class="card bg-white p-6 rounded-lg">
+                <p class="text-sm font-medium text-gray-500">Low Stock Items</p>
+                <p id="low-stock-count" class="text-3xl font-bold text-danger mt-1">0</p>
+                <p class="text-xs text-danger mt-2">Needs Reorder</p>
+            </div>
+            <div class="card bg-white p-6 rounded-lg">
+                <p class="text-sm font-medium text-gray-500">Server Load</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">15%</p>
+                <p class="text-xs text-secondary mt-2">Data from Free tier</p>
             </div>
         </div>
-
-        <!-- Orders -->
-        <div class="bg-white p-6 rounded-xl shadow-2xl">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Current Orders</h2>
-            <div id="orders-list" class="space-y-4">
-                <p class="text-gray-500 text-center py-4">Waiting for initialization...</p>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div id="custom-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 hidden items-center justify-center p-4" onclick="closeModal()">
-            <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
-                <h3 id="modal-title" class="text-xl font-bold mb-3 text-red-600">Error</h3>
-                <p id="modal-message" class="text-gray-700 mb-4">An error occurred.</p>
-                <button onclick="closeModal()" class="w-full bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition">
-                    Close
+        
+        <!-- Inventory Section (NEW) -->
+        <div class="bg-white p-6 rounded-lg card mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Inventory Management</h3>
+                <button class="bg-secondary text-white px-4 py-2 rounded-lg font-semibold hover:bg-secondary/90 transition duration-150 shadow-md">
+                    + Add New Item
                 </button>
             </div>
+            
+            <!-- Inventory Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Name / SKU</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-list" class="bg-white divide-y divide-gray-200">
+                        <!-- Inventory rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Inventory Loading Indicator -->
+            <div id="inventory-loading-indicator" class="text-center py-4 text-gray-500">
+                Loading inventory...
+            </div>
+        </div>
+
+        <!-- Orders Section (Existing) -->
+        <div class="bg-white p-6 rounded-lg card">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Current Orders</h3>
+                <select id="status-filter" class="p-2 border border-gray-300 rounded-lg">
+                    <option value="ALL">All Statuses</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Pending">Pending</option>
+                </select>
+            </div>
+
+            <!-- Orders Loading Indicator -->
+            <div id="orders-loading-indicator" class="text-center py-4 text-gray-500">
+                Waiting for initialization...
+            </div>
+
+            <!-- Orders List -->
+            <ul id="orders-list" class="space-y-4">
+                <!-- Orders will be populated here by JavaScript -->
+            </ul>
         </div>
     </div>
 
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, query, onSnapshot, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-lite.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, onSnapshot, collection, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Optional: debug logs
+        // Set Firebase logging level for debugging (optional)
         setLogLevel('debug');
 
-        // 🔐 REPLACE THESE WITH YOUR REAL CONFIG FROM FIREBASE CONSOLE
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY_HERE",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const APP_ID = "berrycutenco"; // folder prefix in Firestore, you can rename if you want
-
-        // Globals
-        let db, auth;
-        let userId = null;
+        // --- GLOBAL VARIABLES (Accessible outside functions) ---
+        let db; // Global Firestore instance
+        let auth; // Global Auth instance
+        let userID = null;
         let isAuthReady = false;
         let allOrders = [];
+        let allInventory = []; // NEW: Array to hold all inventory items
         let currentStatusFilter = 'ALL';
 
-        // DOM refs
-        const authStatusEl   = document.getElementById('auth-status-el');
-        const ordersListEl   = document.getElementById('orders-list');
-        const loadingEl      = document.getElementById('loading-indicator');
+        // --- DOM Elements ---
+        const authStatusEl = document.getElementById('auth-status');
+        const ordersListEl = document.getElementById('orders-list');
+        const ordersLoadingIndicator = document.getElementById('orders-loading-indicator');
+        const inventoryListEl = document.getElementById('inventory-list'); // NEW
+        const inventoryLoadingIndicator = document.getElementById('inventory-loading-indicator'); // NEW
         const statusFilterEl = document.getElementById('status-filter');
         const adminIdDisplay = document.getElementById('admin-id-display');
+        const userIdTextEl = document.getElementById('user-id-text');
+        const totalInventoryCountEl = document.getElementById('total-inventory-count'); // NEW
+        const lowStockCountEl = document.getElementById('low-stock-count'); // NEW
 
-        // 1) Init + Auth
+        // --- CORE FUNCTIONS ---
+
+        /**
+         * 1. Firebase Initialization and Authentication
+         */
         async function initializeFirebase() {
-            try {
-                const initialAuthToken =
-                    typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+            // Get environment variables safely inside the function
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
+            // Correctly parse the config from the environment
+            let firebaseConfig;
+            try {
+                // Use a fallback of '{}' (empty object) if __firebase_config is undefined
+                const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+                firebaseConfig = JSON.parse(configString);
+            } catch (e) {
+                console.error("FATAL ERROR: Failed to parse Firebase config string.", e);
+                authStatusEl.textContent = 'CONFIG PARSE ERROR';
+                return; // Stop initialization
+            }
+
+            if (!firebaseConfig.projectId) {
+                console.error("FATAL ERROR: Firebase configuration missing Project ID.");
+                authStatusEl.textContent = 'FATAL ERROR (Missing Config)';
+                adminIdDisplay.classList.remove('bg-blue-100');
+                adminIdDisplay.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+                userIdTextEl.textContent = 'Configuration Error: Missing Project ID';
+                adminIdDisplay.classList.remove('hidden');
+                return; // Stop initialization
+            }
+
+            try {
                 const app = initializeApp(firebaseConfig);
-                db   = getFirestore(app);
+                db = getFirestore(app);
                 auth = getAuth(app);
 
-                authStatusEl.textContent = 'Authenticating…';
+                authStatusEl.textContent = 'Authenticating...';
 
+                // Sign in using the provided token or anonymously
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
@@ -117,206 +254,277 @@
 
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        userId = user.uid;
-                        adminIdDisplay.textContent = userId;
-                        authStatusEl.textContent = 'Authenticated';
-                    } else {
-                        userId = null;
-                        adminIdDisplay.textContent = 'N/A';
-                        authStatusEl.textContent = 'Not Signed In';
-                    }
-
-                    if (!isAuthReady) {
+                        userID = user.uid;
+                        authStatusEl.textContent = `User: ${userID.substring(0, 8)}...`;
+                        userIdTextEl.textContent = userID; // Full ID for collaboration
+                        adminIdDisplay.classList.remove('hidden');
                         isAuthReady = true;
-                        setupStatusFilter();
-                        setupRealtimeListener();
+                        
+                        // Start real-time listeners only AFTER auth is ready
+                        setupRealtimeFirestoreListeners(appId, db, auth);
+                    } else {
+                        userID = null;
+                        authStatusEl.textContent = 'Signed Out';
+                        isAuthReady = true;
                     }
                 });
 
-            } catch (err) {
-                console.error("Firebase Initialization Error:", err);
-                authStatusEl.textContent = 'Init Error';
+            } catch (error) {
+                console.error("Firebase Initialization Error:", error);
+                authStatusEl.textContent = 'INIT ERROR';
             }
         }
 
-        // 2) Real-time listener
-        function setupRealtimeListener() {
-            if (!db || !isAuthReady) return;
+        /**
+         * 2. Setup ALL Real-time Firestore Listeners
+         */
+        function setupRealtimeFirestoreListeners(appId, db, auth) {
+            if (!db || !auth.currentUser) return;
 
-            loadingEl.classList.remove('hidden');
+            // 2A. ORDERS Listener
+            const ordersCollectionPath = `artifacts/${appId}/public/data/orders`;
+            const ordersRef = collection(db, ordersCollectionPath);
+            ordersLoadingIndicator.classList.remove('hidden');
 
-            const collectionPath = `artifacts/${APP_ID}/public/data/orders`;
-            const ordersRef = collection(db, collectionPath);
-            const q = query(ordersRef);
+            onSnapshot(query(ordersRef), (querySnapshot) => {
+                ordersLoadingIndicator.classList.add('hidden');
+                let fetchedOrders = [];
 
-            onSnapshot(q, (snapshot) => {
-                loadingEl.classList.add('hidden');
-
-                const fetched = [];
-                snapshot.forEach(docSnap => {
-                    fetched.push({ id: docSnap.id, ...docSnap.data() });
+                querySnapshot.forEach((doc) => {
+                    fetchedOrders.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
                 });
 
-                allOrders = fetched;
+                allOrders = fetchedOrders;
 
+                // Sort in JavaScript: Newest orders first (by createdAt)
                 allOrders.sort((a, b) => {
-                    const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-                    const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-                    return bTime - aTime;
+                    const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
+                    const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+                    return timeB - timeA;
+                });
+                
+                renderFilteredOrders();
+
+            }, (error) => {
+                console.error("Firestore error on orders snapshot:", error);
+                ordersLoadingIndicator.classList.add('hidden');
+                ordersListEl.innerHTML = `<p class="text-red-500 text-center">Error fetching orders: ${error.message}</p>`;
+            });
+
+            // 2B. INVENTORY Listener (NEW)
+            const inventoryCollectionPath = `artifacts/${appId}/public/data/inventory`;
+            const inventoryRef = collection(db, inventoryCollectionPath);
+            inventoryLoadingIndicator.classList.remove('hidden');
+
+            onSnapshot(query(inventoryRef), (querySnapshot) => {
+                inventoryLoadingIndicator.classList.add('hidden');
+                let fetchedInventory = [];
+                let lowStockCount = 0;
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const item = {
+                        id: doc.id,
+                        ...data,
+                        quantityInStock: data.quantityInStock || 0,
+                        lowStockThreshold: data.lowStockThreshold || 10 // Default threshold
+                    };
+
+                    if (item.quantityInStock <= item.lowStockThreshold) {
+                        lowStockCount++;
+                    }
+
+                    fetchedInventory.push(item);
                 });
 
-                setupStatusFilter();
-                renderFilteredOrders();
+                allInventory = fetchedInventory;
+                totalInventoryCountEl.textContent = allInventory.length;
+                lowStockCountEl.textContent = lowStockCount;
+
+                // Sort inventory by quantity in stock (lowest first)
+                allInventory.sort((a, b) => a.quantityInStock - b.quantityInStock);
+                
+                renderInventory();
+
             }, (error) => {
-                loadingEl.classList.add('hidden');
-                console.error("Error fetching orders:", error);
-                ordersListEl.innerHTML =
-                    `<p class="text-red-500 text-center py-4">Error fetching orders: ${error.message}</p>`;
+                console.error("Firestore error on inventory snapshot:", error);
+                inventoryLoadingIndicator.classList.add('hidden');
+                inventoryListEl.innerHTML = `<tr><td colspan="4" class="py-4 text-red-500 text-center">Error fetching inventory: ${error.message}</td></tr>`;
             });
         }
 
-        // 3) Status helpers
-        function getStatusClasses(status) {
-            switch (status) {
-                case 'New':        return 'bg-red-100 text-red-800 ring-red-300';
-                case 'Processing': return 'bg-yellow-200 text-yellow-800 ring-yellow-400';
-                case 'Shipped':    return 'bg-blue-200 text-blue-800 ring-blue-400';
-                case 'Delivered':  return 'bg-green-200 text-green-800 ring-green-400';
-                default:           return 'bg-gray-200 text-gray-800 ring-gray-400';
-            }
-        }
-
-        function getUniqueStatuses() {
-            const set = new Set(['ALL', 'New', 'Processing', 'Shipped', 'Delivered']);
-            allOrders.forEach(o => { if (o.status) set.add(o.status); });
-            const arr = Array.from(set).filter(s => s !== 'ALL');
-            return ['ALL', ...arr.sort()];
-        }
-
-        function setupStatusFilter() {
-            const statuses = getUniqueStatuses();
-            statusFilterEl.innerHTML = statuses.map(status => {
-                const active = status === currentStatusFilter
-                    ? 'bg-pink-600 text-white shadow-md'
-                    : 'bg-white text-gray-700 hover:bg-gray-100';
-                return `
-                    <button data-status="${status}"
-                            class="px-3 py-1 text-sm font-medium rounded-lg transition ${active}">
-                        ${status}
-                    </button>`;
-            }).join('');
-
-            statusFilterEl.onclick = (e) => {
-                const status = e.target.getAttribute('data-status');
-                if (!status) return;
-                currentStatusFilter = status;
-                setupStatusFilter();
-                renderFilteredOrders();
-            };
-        }
-
-        // 4) Render orders
+        /**
+         * 3. Utility function to render orders based on the current filter.
+         */
         function renderFilteredOrders() {
-            const list = allOrders.filter(o =>
-                currentStatusFilter === 'ALL' || o.status === currentStatusFilter
+            ordersListEl.innerHTML = '';
+            
+            const filteredOrders = allOrders.filter(order => 
+                currentStatusFilter === 'ALL' || order.status === currentStatusFilter
             );
 
-            if (!list.length) {
-                ordersListEl.innerHTML =
-                    `<p class="text-gray-500 text-center py-4">No orders found with status: ${currentStatusFilter}</p>`;
+            if (filteredOrders.length === 0) {
+                ordersListEl.innerHTML = `<p class="text-gray-500 text-center py-4">No orders found with status: ${currentStatusFilter}</p>`;
                 return;
             }
 
-            ordersListEl.innerHTML = list.map(order => {
-                const statusClasses = getStatusClasses(order.status);
-                let orderDate = 'N/A';
-                if (order.createdAt?.toDate) {
-                    orderDate = order.createdAt.toDate().toLocaleString();
-                }
+            filteredOrders.forEach(order => {
+                const date = order.createdAt ? order.createdAt.toDate().toLocaleDateString() : 'N/A';
+                const time = order.createdAt ? order.createdAt.toDate().toLocaleTimeString() : 'N/A';
+                const statusBadge = getStatusBadge(order.status);
 
-                const statusOptions = getUniqueStatuses()
-                    .filter(s => s !== 'ALL')
-                    .map(s => `<option value="${s}" ${order.status === s ? 'selected' : ''}>${s}</option>`)
-                    .join('');
-
-                return `
-                <div class="p-4 border border-gray-100 rounded-xl bg-white shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition" data-order-id="${order.id}">
-                    <div class="flex-grow mb-3 md:mb-0">
-                        <div class="text-sm text-gray-400 mb-1">
-                            Order ID: <span class="font-mono text-gray-600">${order.id}</span>
-                        </div>
-                        <div class="text-base text-gray-500">Date: ${orderDate}</div>
+                const li = document.createElement('li');
+                li.className = 'flex flex-col md:flex-row justify-between items-start md:items-center bg-gray-50 p-4 rounded-lg border border-gray-200';
+                li.innerHTML = `
+                    <div class="mb-2 md:mb-0">
+                        <p class="font-semibold text-gray-800 break-all">Order ID: ${order.id}</p>
+                        <p class="text-sm text-gray-500">Created: ${date} at ${time}</p>
                     </div>
-
-                    <div class="flex-shrink-0 mb-3 md:mb-0 md:mx-6">
-                        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ring-1 ${statusClasses}">
-                            ${order.status || 'Unknown'}
-                        </span>
+                    <div class="flex items-center space-x-3">
+                        ${statusBadge}
+                        <button class="bg-primary text-white px-3 py-1 text-sm rounded-lg hover:bg-primary/90 transition duration-150 shadow-sm handle-update-btn"
+                                data-id="${order.id}" data-status="${order.status}">
+                            Update Status
+                        </button>
                     </div>
-
-                    <div class="flex-shrink-0 flex items-center space-x-2">
-                        <select
-                            data-order-id="${order.id}"
-                            data-current-status="${order.status}"
-                            onchange="handleStatusUpdate(event)"
-                            class="border border-gray-300 rounded-lg p-2 text-sm focus:ring-pink-500 focus:border-pink-500 transition">
-                            <option value="" disabled>Update Status</option>
-                            ${statusOptions}
-                        </select>
-                    </div>
-                </div>`;
-            }).join('');
+                `;
+                ordersListEl.appendChild(li);
+            });
+            
+            // Attach click listeners to new buttons
+            document.querySelectorAll('.handle-update-btn').forEach(button => {
+                button.addEventListener('click', (event) => handleStatusUpdate(event, db, auth));
+            });
         }
 
-        // 5) Status update
-        window.handleStatusUpdate = async function (event) {
-            const selectEl   = event.currentTarget;
-            const orderId    = selectEl.getAttribute('data-order-id');
-            const current    = selectEl.getAttribute('data-current-status');
-            const newStatus  = selectEl.value;
+        /**
+         * 4. Utility function for dynamic status badges (Orders)
+         */
+        function getStatusBadge(status) {
+            let style;
+            switch (status) {
+                case 'Pending':
+                    style = 'bg-red-200 text-red-800';
+                    break;
+                case 'Processing':
+                    style = 'bg-yellow-200 text-yellow-800';
+                    break;
+                case 'Delivered':
+                    style = 'bg-green-200 text-green-800';
+                    break;
+                default:
+                    style = 'bg-gray-200 text-gray-800';
+                    break;
+            }
+            return `<span class="status-badge ${style}">${status}</span>`;
+        }
 
-            if (!db || !orderId || !newStatus || newStatus === current) {
-                selectEl.value = current;
-                return;
+        /**
+         * 5. Handle Status Update (Orders)
+         */
+        async function handleStatusUpdate(event, db, auth) {
+            const orderId = event.currentTarget.getAttribute('data-id');
+            const currentStatus = event.currentTarget.getAttribute('data-status');
+
+            if (!db || !orderId || !auth.currentUser) return;
+            
+            // Define next status (simple cycle)
+            let newStatus;
+            switch (currentStatus) {
+                case 'Pending':
+                    newStatus = 'Processing';
+                    break;
+                case 'Processing':
+                    newStatus = 'Delivered';
+                    break;
+                default:
+                    newStatus = 'Pending';
+                    break;
             }
 
-            selectEl.classList.add('opacity-50');
-            selectEl.disabled = true;
+            event.currentTarget.classList.add('opacity-50');
+            event.currentTarget.disabled = true;
 
-            const ref = doc(db, `artifacts/${APP_ID}/public/data/orders`, orderId);
-
+            const ordersCollectionPath = `artifacts/${auth.currentUser.uid}/public/data/orders`;
+            const orderDocRef = doc(db, ordersCollectionPath, orderId);
+            
             try {
-                await updateDoc(ref, {
+                await updateDoc(orderDocRef, {
                     status: newStatus,
                     updatedAt: serverTimestamp()
                 });
+                // Success is handled by the real-time snapshot listener (onSnapshot)
             } catch (err) {
                 console.error("Update error:", err);
-                showModal("Update Failed", `Could not update status for Order ID: ${orderId}. Error: ${err.message}`);
-                selectEl.value = current;
-            } finally {
-                selectEl.classList.remove('opacity-50');
-                selectEl.disabled = false;
+                authStatusEl.textContent = `UPDATE FAILED for ${orderId}`; 
+                event.currentTarget.classList.remove('opacity-50');
+                event.currentTarget.disabled = false;
             }
-        };
-
-        // 6) Modal helpers
-        function showModal(title, message) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-message').textContent = message;
-            const modal = document.getElementById('custom-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
         }
 
-        window.closeModal = function () {
-            const modal = document.getElementById('custom-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        };
+        /**
+         * 6. Render Inventory List (NEW)
+         */
+        function renderInventory() {
+            inventoryListEl.innerHTML = ''; // Clear previous rows
 
-        // Start
-        window.onload = initializeFirebase;
+            if (allInventory.length === 0) {
+                inventoryListEl.innerHTML = `<tr><td colspan="4" class="py-4 text-gray-500 text-center">No inventory items found. Add some in the Firebase Console!</td></tr>`;
+                return;
+            }
+
+            allInventory.forEach(item => {
+                const isLowStock = item.quantityInStock <= item.lowStockThreshold;
+                
+                let stockText = `${item.quantityInStock}`;
+                let stockClass = 'text-gray-800';
+
+                if (isLowStock) {
+                    stockText = `🚨 ${item.quantityInStock} (LOW)`;
+                    stockClass = 'font-bold text-danger';
+                }
+
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-100 transition duration-100';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${item.itemName || 'N/A'}</div>
+                        <div class="text-xs text-gray-500 break-all">${item.skuOrProductID || item.id}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm ${stockClass}">${stockText}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-800">$${(item.sellingPrice || 0).toFixed(2)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-primary hover:text-primary/80 transition duration-150 edit-inventory-btn"
+                                data-id="${item.id}">
+                            Edit Stock
+                        </button>
+                    </td>
+                `;
+                inventoryListEl.appendChild(row);
+            });
+            
+            // Note: Edit Stock buttons are placeholders for now, the functionality isn't implemented.
+        }
+
+
+        // --- EVENT LISTENERS ---
+
+        // Listen for filter changes and re-render the orders list
+        statusFilterEl.addEventListener('change', (event) => {
+            currentStatusFilter = event.target.value;
+            renderFilteredOrders();
+        });
+        
+        // --- START THE APPLICATION ---
+        window.onload = initializeFirebase; 
+
     </script>
 </body>
 </html>
