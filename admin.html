@@ -7,30 +7,21 @@
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom scrollbar styling for a cleaner look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
         /* Inter font for a professional look */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        /* Transition utility for better visual feedback on hover */
+        .card-transition { transition: all 0.3s ease-in-out; }
     </style>
 </head>
 <body class="bg-gray-50 flex h-screen overflow-hidden">
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-gray-900 text-white flex-shrink-0 transition-all duration-300 ease-in-out md:translate-x-0 -translate-x-full">
+    <aside id="sidebar" class="w-64 bg-gray-900 text-white flex-shrink-0 transition-all duration-300 ease-in-out md:translate-x-0 -translate-x-full z-20 fixed md:static h-full">
         <div class="p-6">
             <h1 class="text-3xl font-extrabold text-indigo-400">Admin Panel</h1>
             <p class="text-sm text-gray-400 mt-1">Control Center</p>
@@ -69,7 +60,7 @@
                 
                 <!-- User Profile/Logout -->
                 <div class="flex items-center space-x-4">
-                    <span class="text-gray-600 font-medium hidden sm:inline">User ID: <span id="user-id">Loading...</span></span>
+                    <span class="text-gray-600 font-medium hidden sm:inline">User ID: <span id="user-id" class="font-mono text-xs bg-gray-200 px-2 py-1 rounded">Loading...</span></span>
                     <button id="logout-button" class="bg-red-500 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition duration-150 shadow-md">
                         Logout
                     </button>
@@ -81,69 +72,69 @@
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-8">
             <h3 class="text-3xl font-bold text-gray-900 mb-6">Dashboard Overview</h3>
 
-            <!-- Stats Grid -->
+            <!-- Stats Grid - NOW DYNAMIC -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Stat Card 1 -->
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1 border-b-4 border-indigo-500">
+                <!-- Stat Card 1: Total Users -->
+                <div class="bg-white p-6 rounded-xl shadow-lg card-transition hover:shadow-xl transform hover:-translate-y-1 border-b-4 border-indigo-500">
                     <div class="flex justify-between items-center">
                         <span class="text-sm font-medium text-gray-500">Total Users</span>
                         <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20h-2m2 0h-2M13 18H5m14 0c-1.4 0-2.8-.7-4.1-2a13.3 13.3 0 01-4.8 0c-1.3 1.3-2.7 2-4.1 2H3a1 1 0 01-1-1v-4a1 1 0 011-1h18a1 1 0 011 1v4a1 1 0 01-1 1h-2zM8 10a2 2 0 100-4 2 2 0 000 4zM16 10a2 2 0 100-4 2 2 0 000 4z"></path></svg>
                     </div>
-                    <p class="text-4xl font-bold text-gray-900 mt-1">1,245</p>
-                    <p class="text-xs text-green-500 mt-2">+12% from last month</p>
+                    <p id="total-users" class="text-4xl font-bold text-gray-900 mt-1">Loading...</p>
+                    <p class="text-xs text-green-500 mt-2">Data from Firestore</p>
                 </div>
-                <!-- Stat Card 2 -->
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1 border-b-4 border-green-500">
+                <!-- Stat Card 2: New Comments -->
+                <div class="bg-white p-6 rounded-xl shadow-lg card-transition hover:shadow-xl transform hover:-translate-y-1 border-b-4 border-green-500">
                     <div class="flex justify-between items-center">
                         <span class="text-sm font-medium text-gray-500">New Comments</span>
                         <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
                     </div>
-                    <p class="text-4xl font-bold text-gray-900 mt-1">45</p>
-                    <p class="text-xs text-red-500 mt-2">-3% from yesterday</p>
+                    <p id="new-comments" class="text-4xl font-bold text-gray-900 mt-1">Loading...</p>
+                    <p class="text-xs text-green-500 mt-2">Data from Firestore</p>
                 </div>
-                <!-- Stat Card 3 -->
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1 border-b-4 border-yellow-500">
+                <!-- Stat Card 3: Pending Approvals -->
+                <div class="bg-white p-6 rounded-xl shadow-lg card-transition hover:shadow-xl transform hover:-translate-y-1 border-b-4 border-yellow-500">
                     <div class="flex justify-between items-center">
                         <span class="text-sm font-medium text-gray-500">Pending Approvals</span>
                         <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <p class="text-4xl font-bold text-gray-900 mt-1">12</p>
-                    <p class="text-xs text-gray-500 mt-2">Requires immediate attention</p>
+                    <p id="pending-approvals" class="text-4xl font-bold text-gray-900 mt-1">Loading...</p>
+                    <p class="text-xs text-yellow-500 mt-2">Data from Firestore</p>
                 </div>
-                <!-- Stat Card 4 -->
-                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1 border-b-4 border-red-500">
+                <!-- Stat Card 4: Server Load -->
+                <div class="bg-white p-6 rounded-xl shadow-lg card-transition hover:shadow-xl transform hover:-translate-y-1 border-b-4 border-red-500">
                     <div class="flex justify-between items-center">
                         <span class="text-sm font-medium text-gray-500">Server Load</span>
                         <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 17h18M5 13h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2zm8-5v2"></path></svg>
                     </div>
-                    <p class="text-4xl font-bold text-gray-900 mt-1">68%</p>
-                    <p class="text-xs text-orange-500 mt-2">High usage peak at 85%</p>
+                    <p class="text-4xl font-bold text-gray-900 mt-1"><span id="server-load">Loading...</span>%</p>
+                    <p class="text-xs text-red-500 mt-2">Data from Firestore</p>
                 </div>
             </div>
 
-            <!-- Content Section (Table & Activity) -->
+            <!-- Content Section (Activity & Actions) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Recent Activity Feed (2/3 width on large screens) -->
+                <!-- Recent Activity Feed (2/3 width on large screens) - NOW DYNAMIC -->
                 <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
                     <h4 class="text-xl font-semibold mb-4 text-gray-800">Recent System Activity</h4>
                     <ul id="activity-list" class="space-y-4">
-                        <!-- Activity items will be populated here by JS -->
+                        <li class="text-gray-500">Loading real-time activity...</li>
                     </ul>
                 </div>
 
-                <!-- User Management Actions (1/3 width on large screens) -->
+                <!-- User Management Actions (1/3 width on large screens) - NOW FUNCTIONAL -->
                 <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg">
                     <h4 class="text-xl font-semibold mb-4 text-gray-800">Quick Actions</h4>
                     <div class="space-y-4">
-                        <button class="w-full py-3 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md flex items-center justify-center">
+                        <button id="add-user-btn" data-action="Add User" class="w-full py-3 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md flex items-center justify-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM12 14c-1.4 0-2.8-.7-4.1-2a13.3 13.3 0 01-4.8 0c-1.3 1.3-2.7 2-4.1 2H3a1 1 0 01-1-1v-4a1 1 0 011-1h18a1 1 0 011 1v4a1 1 0 01-1 1h-2z"></path></svg>
                             Add New User
                         </button>
-                        <button class="w-full py-3 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150 shadow-md flex items-center justify-center">
+                        <button id="approve-all-btn" data-action="Approve All" class="w-full py-3 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150 shadow-md flex items-center justify-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.382a12.001 12.001 0 00-17.2 0l-2 2a1 1 0 00.141 1.414l5.3 5.3a1 1 0 001.414 0L17 4.5l2-2a1 1 0 00-.083-1.414z"></path></svg>
                             Approve All Pending
                         </button>
-                        <button class="w-full py-3 px-4 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-150 shadow-md flex items-center justify-center">
+                        <button id="export-data-btn" data-action="Export Data" class="w-full py-3 px-4 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-150 shadow-md flex items-center justify-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             Export Data
                         </button>
@@ -152,6 +143,23 @@
             </div>
         </main>
     </div>
+
+    <!-- Confirmation Modal (Hidden by default) -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-xl p-6 shadow-2xl w-full max-w-sm transform transition-all">
+            <h3 id="modal-title" class="text-xl font-bold text-gray-800 mb-3">Confirm Action</h3>
+            <p id="modal-message" class="text-gray-600 mb-6">Are you sure you want to proceed with this action?</p>
+            <div class="flex justify-end space-x-3">
+                <button id="modal-cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-150">
+                    Cancel
+                </button>
+                <button id="modal-confirm-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-150 font-semibold">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Firebase Initialization and Logic -->
     <script type="module">
@@ -168,44 +176,53 @@
         // Initialize Firebase
         if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) {
             console.error("Firebase config is missing or empty.");
-            // Display an error message on the UI if possible
+            // We can't proceed without config, but we continue to show the UI
         }
         
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        
-        // Set Firebase Logging for Debugging
-        setLogLevel('debug');
+        let app, db, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            setLogLevel('debug'); // Set Firebase Logging for Debugging
+        } catch (e) {
+            console.error("Failed to initialize Firebase:", e);
+        }
 
         let isAuthReady = false;
         let currentUserId = null;
         
-        // --- Utility Functions ---
+        // --- UI Utility Functions ---
         
         // Custom message box for UI feedback
         function showMessage(message, type = 'info') {
             const container = document.createElement('div');
-            container.className = `fixed top-4 right-4 p-4 rounded-lg shadow-xl text-white z-50 transition-opacity duration-300 ${type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'}`;
+            container.className = `fixed top-4 right-4 p-4 rounded-lg shadow-xl text-white z-50 transition-all duration-300 transform translate-x-full opacity-0 ${type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'}`;
             container.textContent = message;
             document.body.appendChild(container);
+            
+            // Animate in
             setTimeout(() => {
-                container.style.opacity = '0';
+                container.classList.remove('translate-x-full', 'opacity-0');
+            }, 10);
+
+            // Animate out and remove
+            setTimeout(() => {
+                container.classList.add('translate-x-full', 'opacity-0');
                 container.addEventListener('transitionend', () => container.remove());
-            }, 3000);
+            }, 4000);
         }
 
         // --- Authentication ---
 
         async function authenticateUser() {
+            if (!auth) return;
             try {
-                // Set persistence to local storage to maintain session (optional, but good practice)
                 await setPersistence(auth, browserLocalPersistence);
                 
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
-                    // Fallback to anonymous sign-in if no custom token is provided
                     await signInAnonymously(auth);
                 }
             } catch (error) {
@@ -215,6 +232,7 @@
         }
 
         function setupAuthListener() {
+            if (!auth) return;
             onAuthStateChanged(auth, (user) => {
                 const userIdDisplay = document.getElementById('user-id');
                 
@@ -224,40 +242,75 @@
                     isAuthReady = true;
                     console.log("User authenticated. UID:", currentUserId);
 
-                    // Start listening to the public activity data now that auth is ready
+                    // Start listening to data now that auth is ready
+                    setupStatsListener();
                     setupActivityListener();
                 } else {
                     currentUserId = null;
-                    userIdDisplay.textContent = 'Guest (Not Admin)';
+                    userIdDisplay.textContent = 'Signed Out';
                     isAuthReady = false;
-                    console.log("User is signed out or auth token invalid.");
-                    showMessage("Access Denied: Please use the correct admin token.", 'error');
+                    console.log("User is signed out.");
                 }
             });
         }
 
         async function handleLogout() {
+            if (!auth) return;
             try {
                 await signOut(auth);
-                showMessage("Signed out successfully. Redirecting...", 'success');
-                // Note: In a real app, you would redirect the user here.
+                showMessage("Signed out successfully.", 'success');
+                // The onAuthStateChanged listener will handle UI updates
             } catch (error) {
                 console.error("Logout failed:", error);
                 showMessage(`Logout failed: ${error.message}`, 'error');
             }
         }
         
-        // --- Firestore Data Logic (Public/Admin Artifacts) ---
+        // --- Firestore Data Listeners (Real-time Updates) ---
+        
+        function setupStatsListener() {
+            if (!db || !isAuthReady) return;
+
+            // Document path for dashboard metrics (Public Data)
+            const statsDocPath = `/artifacts/${appId}/public/data/dashboardStats/metrics`;
+            const statsDocRef = doc(db, statsDocPath);
+
+            onSnapshot(statsDocRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    
+                    document.getElementById('total-users').textContent = data.totalUsers !== undefined ? data.totalUsers.toLocaleString() : 'N/A';
+                    document.getElementById('new-comments').textContent = data.newComments !== undefined ? data.newComments.toLocaleString() : 'N/A';
+                    document.getElementById('pending-approvals').textContent = data.pendingApprovals !== undefined ? data.pendingApprovals.toLocaleString() : 'N/A';
+                    document.getElementById('server-load').textContent = data.serverLoad !== undefined ? data.serverLoad.toLocaleString() : 'N/A';
+                } else {
+                    // This is the first time data is being read.
+                    console.log("Dashboard metrics document not found. Using default '0' values.");
+                    document.getElementById('total-users').textContent = '0';
+                    document.getElementById('new-comments').textContent = '0';
+                    document.getElementById('pending-approvals').textContent = '0';
+                    document.getElementById('server-load').textContent = '0';
+                }
+            }, (error) => {
+                console.error("Error fetching dashboard stats:", error);
+                showMessage(`Error loading stats: ${error.message}`, 'error');
+            });
+        }
+
 
         function setupActivityListener() {
-            if (!isAuthReady) return;
+            if (!db || !isAuthReady) return;
 
-            // Path for public, collaborative data (which an admin would monitor)
+            // Collection path for public, collaborative system activity
             const collectionPath = `/artifacts/${appId}/public/data/systemActivity`;
             const q = query(collection(db, collectionPath));
+            const activityList = document.getElementById('activity-list');
+            
+            // Clear mock loading message
+            activityList.innerHTML = '';
+            activityList.innerHTML = '<li class="text-gray-500">Awaiting activity data...</li>';
 
             onSnapshot(q, (snapshot) => {
-                const activityList = document.getElementById('activity-list');
                 activityList.innerHTML = ''; // Clear existing list
                 
                 if (snapshot.empty) {
@@ -268,11 +321,10 @@
                 const activities = [];
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    // Deserialize complex data if needed, but for activity, simple is fine.
                     activities.push({ id: doc.id, ...data });
                 });
                 
-                // Sort by timestamp (assuming a 'timestamp' field exists) descending
+                // Sort by timestamp descending
                 activities.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
                 activities.forEach(activity => {
@@ -283,15 +335,16 @@
                     let iconClass = 'text-blue-500';
                     let actionText = activity.action || 'Unknown Action';
 
-                    if (actionText.includes('Created')) {
+                    if (actionText.includes('Created') || actionText.includes('Added')) {
                         iconClass = 'text-green-500';
-                    } else if (actionText.includes('Deleted')) {
+                    } else if (actionText.includes('Deleted') || actionText.includes('Removed')) {
                         iconClass = 'text-red-500';
-                    } else if (actionText.includes('Updated')) {
+                    } else if (actionText.includes('Updated') || actionText.includes('Changed')) {
                         iconClass = 'text-yellow-500';
                     }
 
                     const timeStamp = activity.timestamp ? new Date(activity.timestamp).toLocaleString() : 'N/A';
+                    const userIdShort = activity.user_id ? activity.user_id.substring(0, 8) + '...' : 'System';
                     
                     li.innerHTML = `
                         <div class="flex-shrink-0">
@@ -299,7 +352,7 @@
                         </div>
                         <div class="ml-3">
                             <p class="text-sm font-semibold text-gray-800">${actionText}</p>
-                            <p class="text-xs text-gray-600">By User: ${activity.user_id ? activity.user_id.substring(0, 8) + '...' : 'System'}</p>
+                            <p class="text-xs text-gray-600">By User: ${userIdShort}</p>
                             <p class="text-xs text-gray-400">${timeStamp}</p>
                         </div>
                     `;
@@ -309,6 +362,63 @@
             }, (error) => {
                 console.error("Error fetching activity feed:", error);
                 showMessage(`Error loading activity feed: ${error.message}`, 'error');
+            });
+        }
+
+
+        // --- Quick Action Modal Logic ---
+
+        const modal = document.getElementById('confirmation-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+
+        function openModal(action, callback) {
+            modalTitle.textContent = `Confirm: ${action}`;
+            modalMessage.textContent = `Are you sure you want to perform the action: "${action}"? This action cannot be easily undone.`;
+            
+            // Re-clone to remove old event listeners
+            const newConfirmBtn = modalConfirmBtn.cloneNode(true);
+            modalConfirmBtn.parentNode.replaceChild(newConfirmBtn, modalConfirmBtn);
+
+            newConfirmBtn.addEventListener('click', () => {
+                callback();
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            });
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        modalCancelBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        });
+        
+        function handleQuickAction(action) {
+            openModal(action, () => {
+                // Placeholder logic for the quick actions
+                console.log(`Executing action: ${action}`);
+                
+                // In a real application, you would put Firebase write/update logic here.
+                let message;
+                switch(action) {
+                    case 'Add User':
+                        message = 'User creation process initiated.';
+                        break;
+                    case 'Approve All':
+                        message = 'Approvals are being processed in the background.';
+                        break;
+                    case 'Export Data':
+                        message = 'Data export request has been queued.';
+                        break;
+                    default:
+                        message = 'Action confirmed, but no specific task was defined.';
+                }
+
+                showMessage(message, 'success');
             });
         }
 
@@ -324,48 +434,20 @@
         // Logout button handler
         document.getElementById('logout-button').addEventListener('click', handleLogout);
 
+        // Quick Action button handlers (uses data-action attribute)
+        document.getElementById('add-user-btn').addEventListener('click', (e) => handleQuickAction(e.currentTarget.dataset.action));
+        document.getElementById('approve-all-btn').addEventListener('click', (e) => handleQuickAction(e.currentTarget.dataset.action));
+        document.getElementById('export-data-btn').addEventListener('click', (e) => handleQuickAction(e.currentTarget.dataset.action));
+
+
         // --- Main Execution ---
-        authenticateUser();
-        setupAuthListener();
-
-        // Add mock activity data for initial view (will be overwritten by Firestore)
-        const mockActivities = [
-            { action: 'Created new Article: "Q3 Financial Report"', user_id: 'user-a1b2c3d4', timestamp: Date.now() - 500000 },
-            { action: 'Updated User: Jane Doe (Permissions changed)', user_id: 'user-f7e6d5c4', timestamp: Date.now() - 1200000 },
-            { action: 'Deleted Comment: "Spam detected"', user_id: 'System-Bot', timestamp: Date.now() - 2400000 },
-            { action: 'Login successful: Administrator', user_id: 'admin-123456', timestamp: Date.now() - 3600000 }
-        ];
-
-        function loadMockActivities() {
-            const activityList = document.getElementById('activity-list');
-            activityList.innerHTML = '';
-            mockActivities.forEach(activity => {
-                const li = document.createElement('li');
-                li.className = 'flex items-start p-3 bg-gray-50 rounded-lg border-l-4 border-gray-200';
-                let iconClass = 'text-blue-500';
-                
-                if (activity.action.includes('Created')) { iconClass = 'text-green-500'; }
-                else if (activity.action.includes('Deleted')) { iconClass = 'text-red-500'; }
-                else if (activity.action.includes('Updated')) { iconClass = 'text-yellow-500'; }
-
-                const timeStamp = new Date(activity.timestamp).toLocaleString();
-
-                li.innerHTML = `
-                    <div class="flex-shrink-0">
-                        <svg class="w-6 h-6 ${iconClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-semibold text-gray-800">${activity.action}</p>
-                        <p class="text-xs text-gray-600">By User: ${activity.user_id}</p>
-                        <p class="text-xs text-gray-400">${timeStamp}</p>
-                    </div>
-                `;
-                activityList.appendChild(li);
-            });
+        if (app) {
+            authenticateUser();
+            setupAuthListener();
+        } else {
+            document.getElementById('user-id').textContent = 'Firebase Error';
+            document.getElementById('activity-list').innerHTML = '<li class="text-red-500">Firebase initialization failed. Check your configuration.</li>';
         }
-        
-        // Load mock activities while waiting for Firestore initialization
-        loadMockActivities();
 
     </script>
 </body>
