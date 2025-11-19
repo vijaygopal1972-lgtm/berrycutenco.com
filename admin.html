@@ -4,67 +4,157 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BerryCuteNCO Admin Panel</title>
-    <!-- Load Tailwind CSS -->
+    <!-- Load Tailwind CSS from CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; }
+        /* Custom styles for Admin Dashboard */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f9;
+        }
+        .sidebar {
+            width: 280px;
+            background-color: #1a202c; /* Dark background for sidebar */
+        }
+        .main-content {
+            min-height: 100vh;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .nav-link {
+            transition: all 0.2s;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+        }
+        .nav-link:hover {
+            background-color: #2d3748; /* Darker on hover */
+        }
+        .nav-link.active {
+            background-color: #4c51bf; /* Blue for active link */
+            color: white;
+            font-weight: 600;
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="flex">
 
-    <div class="max-w-4xl mx-auto p-4 md:p-8">
-        <header class="mb-6 border-b pb-4 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-pink-600">BerryCuteNCO Admin Dashboard</h1>
-            <div id="auth-status" class="text-sm font-medium text-gray-500">
-                <span id="auth-status-el">Initializing...</span>
-            </div>
-        </header>
-
-        <!-- Admin ID Display -->
-        <div class="mb-6 p-3 bg-indigo-100 rounded-lg shadow-sm">
-            <p class="text-sm text-indigo-700 font-medium">
-                Admin ID (for collaboration): <span id="admin-id-display" class="font-mono text-indigo-900 break-all"></span>
-            </p>
+    <!-- Sidebar -->
+    <div class="sidebar text-gray-300 flex flex-col h-screen fixed">
+        <div class="p-6 text-xl font-bold text-white border-b border-gray-700">
+            Admin Panel
         </div>
-
-        <!-- Status Filter and Loading Indicator -->
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-            <div id="status-filter" class="flex space-x-2 p-1 bg-white rounded-lg shadow-md mb-4 sm:mb-0">
-                <!-- Buttons rendered by setupStatusFilter -->
-            </div>
-            <div id="loading-indicator" class="hidden flex items-center space-x-2 text-gray-500">
-                <svg class="animate-spin h-5 w-5 text-pink-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Loading Orders...</span>
-            </div>
-        </div>
-
-        <!-- Orders List -->
-        <div class="bg-white p-6 rounded-xl shadow-2xl">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Current Orders</h2>
-            <div id="orders-list" class="space-y-4">
-                <p class="text-gray-500 text-center py-4">Waiting for initialization...</p>
-            </div>
-        </div>
-
-        <!-- Custom Modal for Alerts (replacing alert()) -->
-        <div id="custom-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 hidden items-center justify-center p-4" onclick="closeModal()">
-            <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
-                <h3 id="modal-title" class="text-xl font-bold mb-3 text-red-600">Error</h3>
-                <p id="modal-message" class="text-gray-700 mb-4">An error occurred.</p>
-                <button onclick="closeModal()" class="w-full bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition duration-150">Close</button>
-            </div>
+        <nav class="flex-grow">
+            <a class="nav-link flex items-center space-x-3 active" href="#">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                <span>Dashboard</span>
+            </a>
+            <a class="nav-link flex items-center space-x-3" href="#">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-3m-1.2-5.8l-5.3-5.3c-1.3-1.3-3.4-1.3-4.7 0l-5.3 5.3c-1.3 1.3-1.3 3.4 0 4.7l5.3 5.3c1.3 1.3 3.4 1.3 4.7 0l5.3-5.3c1.3-1.3 1.3-3.4 0-4.7z"></path></svg>
+                <span>User Management</span>
+            </a>
+            <a class="nav-link flex items-center space-x-3" href="#">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6m-4-6h4"></path></svg>
+                <span>Content Metrics</span>
+            </a>
+            <a class="nav-link flex items-center space-x-3" href="#">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="p-4 border-t border-gray-700">
+            <button id="auth-button" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-colors">
+                Login
+            </button>
+            <p id="auth-status" class="text-xs mt-2 text-center text-red-400">Loading...</p>
         </div>
     </div>
 
-    <!-- Firebase SDK Imports -->
+    <!-- Main Content -->
+    <div class="main-content flex-1 ml-72 p-8">
+        <header class="flex justify-between items-center pb-6 border-b mb-6">
+            <h1 class="text-3xl font-extrabold text-gray-800">Welcome, Administrator</h1>
+            <div class="flex items-center space-x-4">
+                <span id="admin-id-display" class="text-sm font-medium text-gray-500">User ID: Loading...</span>
+                <button id="logout-button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg shadow-sm transition-colors hidden">Logout</button>
+            </div>
+        </header>
+
+        <!-- Dashboard Overview -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-5">
+                <p class="text-sm font-semibold text-gray-500">Total Users</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">Loading...</p>
+                <p class="text-xs text-gray-400">Data from Firestore</p>
+            </div>
+            <div class="card p-5">
+                <p class="text-sm font-semibold text-gray-500">New Comments</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">Loading...</p>
+                <p class="text-xs text-gray-400">Data from Firestore</p>
+            </div>
+            <div class="card p-5">
+                <p class="text-sm font-semibold text-gray-500">Pending Approvals</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">Loading...</p>
+                <p class="text-xs text-gray-400">Data from Firestore</p>
+            </div>
+            <div class="card p-5">
+                <p class="text-sm font-semibold text-gray-500">Server Load</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">Loading...%</p>
+                <p class="text-xs text-gray-400">Data from FreeDOM</p>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Current Orders</h2>
+            <div class="card p-6">
+                <!-- Filter Section -->
+                <div class="flex justify-between items-center mb-4">
+                    <div id="status-filter" class="flex space-x-2 text-sm">
+                        <button data-status="ALL" class="filter-btn bg-indigo-500 text-white px-3 py-1 rounded-full shadow-md transition-colors hover:bg-indigo-600">All</button>
+                        <button data-status="Processing" class="filter-btn bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full hover:bg-yellow-300">Processing</button>
+                        <button data-status="Delivered" class="filter-btn bg-green-200 text-green-800 px-3 py-1 rounded-full hover:bg-green-300">Delivered</button>
+                        <button data-status="Cancelled" class="filter-btn bg-red-200 text-red-800 px-3 py-1 rounded-full hover:bg-red-300">Cancelled</button>
+                    </div>
+                    <div id="loading-indicator" class="flex items-center space-x-2 text-sm text-indigo-600 hidden">
+                        <svg class="animate-spin h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Loading Orders...</span>
+                    </div>
+                </div>
+
+                <!-- Orders List -->
+                <div id="orders-list" class="space-y-4">
+                    <p class="text-center text-gray-500 p-4">Waiting for initialization.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Custom Modal for Alerts/Confirmation (instead of alert/confirm) -->
+    <div id="custom-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm">
+            <h3 id="modal-title" class="text-xl font-bold mb-3 text-gray-800">Notification</h3>
+            <p id="modal-message" class="text-gray-600 mb-6"></p>
+            <div class="flex justify-end space-x-3">
+                <button id="modal-cancel-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors hidden">Cancel</button>
+                <button id="modal-confirm-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">OK</button>
+            </div>
+        </div>
+    </div>
+    
+
     <script type="module">
+        // Import Firebase components
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, query, onSnapshot, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-lite.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, limit, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Set Firebase logging level for debugging (optional)
         setLogLevel('debug');
@@ -78,11 +168,58 @@
         let currentStatusFilter = 'ALL';
 
         // --- DOM Elements ---
-        const authStatusEl = document.getElementById('auth-status-el');
+        const authStatusEl = document.getElementById('auth-status');
         const ordersListEl = document.getElementById('orders-list');
-        const loadingIndicator = document.getElementById('loading-indicator');
+        const loadingIndicatorEl = document.getElementById('loading-indicator');
         const statusFilterEl = document.getElementById('status-filter');
-        const adminIdDisplay = document.getElementById('admin-id-display');
+        const adminIdDisplayEl = document.getElementById('admin-id-display');
+        const authButtonEl = document.getElementById('auth-button');
+        const logoutButtonEl = document.getElementById('logout-button');
+        
+        // Modal Elements
+        const customModalEl = document.getElementById('custom-modal');
+        const modalTitleEl = document.getElementById('modal-title');
+        const modalMessageEl = document.getElementById('modal-message');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+
+
+        // --- UTILITY FUNCTIONS ---
+
+        /**
+         * Custom display function instead of alert() or confirm().
+         * @param {string} title - Title for the modal.
+         * @param {string} message - Message content.
+         * @param {boolean} isConfirm - If true, show a Cancel button and return a Promise.
+         * @returns {Promise<boolean>|void} Resolves true/false if isConfirm is true.
+         */
+        function showCustomModal(title, message, isConfirm = false) {
+            modalTitleEl.textContent = title;
+            modalMessageEl.textContent = message;
+            customModalEl.classList.remove('hidden');
+
+            if (isConfirm) {
+                modalCancelBtn.classList.remove('hidden');
+                return new Promise(resolve => {
+                    modalConfirmBtn.onclick = () => {
+                        customModalEl.classList.add('hidden');
+                        modalCancelBtn.classList.add('hidden');
+                        resolve(true);
+                    };
+                    modalCancelBtn.onclick = () => {
+                        customModalEl.classList.add('hidden');
+                        modalCancelBtn.classList.add('hidden');
+                        resolve(false);
+                    };
+                });
+            } else {
+                modalCancelBtn.classList.add('hidden');
+                modalConfirmBtn.onclick = () => {
+                    customModalEl.classList.add('hidden');
+                };
+            }
+        }
+
 
         // --- CORE FUNCTIONS ---
 
@@ -91,34 +228,65 @@
             // Get environment variables safely inside the function
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-            
-            // Handle configuration parsing locally inside the function 
+
+            // Correctly parse the config from the environment
             const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-            let localFirebaseConfig = {};
+            let firebaseConfig;
+
             try {
-                localFirebaseConfig = JSON.parse(configString);
+                firebaseConfig = JSON.parse(configString);
             } catch (e) {
                 console.error('FATAL ERROR: Failed to parse Firebase config string.', e);
                 authStatusEl.textContent = 'CONFIG PARSE ERROR';
-                return;
+                return; // Stop initialization
             }
 
             // Check for critical project ID
-            if (!localFirebaseConfig.projectId) {
+            if (!firebaseConfig.projectId) {
                 console.error('FATAL ERROR: Firebase configuration missing Project ID.');
                 authStatusEl.textContent = 'FATAL ERROR (Missing Config)';
-                return; 
+                return; // Stop initialization
             }
 
             try {
-                const app = initializeApp(localFirebaseConfig);
+                const app = initializeApp(firebaseConfig);
+                
                 // ASSIGNMENT (No const/let/var here, using the global 'let db;' from above)
                 db = getFirestore(app);
                 auth = getAuth(app);
 
                 authStatusEl.textContent = 'Authenticating...';
-                
-                // Sign In using the provided token or anonymously
+
+                // We must await for the onAuthStateChanged to resolve before proceeding
+                // This ensures we have the correct userId before trying to fetch data
+                await new Promise(resolve => {
+                    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                        if (user) {
+                            userId = user.uid;
+                            adminIdDisplayEl.textContent = `User ID: ${userId}`;
+                            authButtonEl.textContent = 'Logout';
+                            authButtonEl.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                            authButtonEl.classList.add('bg-red-600', 'hover:bg-red-700');
+                            
+                            // Once authenticated, start the real-time data listener
+                            setupRealtimeFirestoreListener(appId, db, auth);
+                        } else {
+                            // User is signed out or anonymous
+                            userId = null;
+                            adminIdDisplayEl.textContent = 'User ID: N/A';
+                            authButtonEl.textContent = 'Login';
+                            authButtonEl.classList.remove('bg-red-600', 'hover:bg-red-700');
+                            authButtonEl.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+                            ordersListEl.innerHTML = '<p class="text-center text-gray-500 p-4">Please log in to view orders.</p>';
+                        }
+                        authStatusEl.textContent = user ? 'Authenticated' : 'Logged Out';
+                        isAuthReady = true; // Mark auth process as complete
+                        unsubscribe(); // Stop listening after the first check
+                        resolve();
+                    });
+                });
+
+                // Sign in using the provided token or anonymously
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
@@ -126,248 +294,279 @@
                     await signInAnonymously(auth);
                 }
 
-                // Listen for Auth State Changes
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        adminIdDisplay.textContent = userId;
-                        authStatusEl.textContent = 'Authenticated';
-                    } else {
-                        // This might happen if the token expires or is invalid
-                        userId = null;
-                        adminIdDisplay.textContent = 'N/A';
-                        authStatusEl.textContent = 'Not Signed In';
-                    }
-                    
-                    if (!isAuthReady) {
-                        // Only run setup once the initial auth state is known
-                        isAuthReady = true;
-                        setupStatusFilter();
-                        // Pass the current appId to the listener
-                        setupRealtimeListener(db, auth, appId); 
-                    }
-                });
-
             } catch (error) {
-                console.error("Firebase Initialization Error:", error);
-                authStatusEl.textContent = 'Init Error';
+                console.error('Failed to initialize Firebase:', error.message, error);
+                authStatusEl.textContent = `ERROR: ${error.code}`;
             }
         }
 
-        // 2. Setup Real-time Firestore Listener for Orders
-        function setupRealtimeListener(db, auth, appId) {
-            // Wait for auth to be confirmed before attempting to fetch
-            if (!db || !isAuthReady) return;
 
-            loadingIndicator.classList.remove('hidden');
+        // 2. Setup Real-time Firestore Listener for Orders
+        function setupRealtimeFirestoreListener(appId, db, auth) {
+            if (!db || !isAuthReady) return; // Wait until Firebase is fully initialized and authenticated
+
+            loadingIndicatorEl.classList.remove('hidden');
 
             // Use the public path for collaborative data
             const ordersCollectionPath = `artifacts/${appId}/public/data/orders`;
             const ordersRef = collection(db, ordersCollectionPath);
+
+            // Fetch the entire collection (filtering is done in memory for simplicity)
             const q = query(ordersRef);
 
             // Set up real-time listener
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                loadingIndicator.classList.add('hidden');
-                
+            onSnapshot(q, (querySnapshot) => {
+                loadingIndicatorEl.classList.add('hidden'); // Hide loading indicator on successful fetch
+
                 let fetchedOrders = [];
                 querySnapshot.forEach((doc) => {
-                    // Include the document ID for updates
+                    // console.log("Fetched order doc:", doc.id, doc.data());
                     fetchedOrders.push({ id: doc.id, ...doc.data() });
                 });
 
+                // Store all orders globally
                 allOrders = fetchedOrders;
-                
+
                 // Sort orders in JavaScript: Newest first (by createdAt)
+                // We access the timestamp object and convert to milliseconds for sorting
                 allOrders.sort((a, b) => {
-                    // Safely convert Firestore Timestamp to milliseconds for sorting
-                    // Handle cases where createdAt might be missing (e.g., initial test documents)
-                    const aTime = a.createdAt && typeof a.createdAt.toMillis === 'function' ? a.createdAt.toMillis() : 0;
-                    const bTime = b.createdAt && typeof b.createdAt.toMillis === 'function' ? b.createdAt.toMillis() : 0;
-                    return bTime - aTime; // Descending order (Newest first)
+                    const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
+                    const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+                    return timeB - timeA; // Descending order (newest first)
                 });
-                
-                setupStatusFilter(); // Re-run to update status list if new status appears
+
                 renderFilteredOrders();
+
             }, (error) => {
-                // Error handling
-                console.error("Error on orders onSnapshot:", error);
-                loadingIndicator.classList.add('hidden');
-                ordersListEl.innerHTML = `<p class="text-red-500 text-center py-4">Error fetching orders: ${error.message}</p>`;
+                console.error("Error updating status for orders on onSnapshot:", error);
+                loadingIndicatorEl.classList.add('hidden');
+                ordersListEl.innerHTML = `<p class="text-center text-red-500 p-4">Error fetching orders: ${error.message}</p>`;
             });
-            
-            // In a real app, you would save 'unsubscribe' and call it when component unmounts.
-        }
-        
-        // 3. Status Utilities
-        
-        // Get CSS classes based on order status
-        function getStatusClasses(status) {
-            switch (status) {
-                case 'New':
-                    return 'bg-red-100 text-red-800 ring-red-300';
-                case 'Processing':
-                    return 'bg-yellow-200 text-yellow-800 ring-yellow-400';
-                case 'Shipped':
-                    return 'bg-blue-200 text-blue-800 ring-blue-400';
-                case 'Delivered':
-                    return 'bg-green-200 text-green-800 ring-green-400';
-                default:
-                    return 'bg-gray-200 text-gray-800 ring-gray-400';
-            }
         }
 
-        // Get all unique statuses from the current orders
-        function getUniqueStatuses() {
-            const statuses = new Set(['ALL', 'New', 'Processing', 'Shipped', 'Delivered']); // Ensure all expected statuses are present
-            allOrders.forEach(order => {
-                if (order.status) {
-                    statuses.add(order.status);
-                }
-            });
-            // Convert to array and ensure a stable order (ALL first, then others)
-            const statusArray = Array.from(statuses).filter(s => s !== 'ALL');
-            return ['ALL', ...statusArray.sort()];
-        }
 
-        // Render the status filter buttons
-        function setupStatusFilter() {
-            const statuses = getUniqueStatuses();
-            statusFilterEl.innerHTML = statuses.map(status => {
-                const isActive = status === currentStatusFilter ? 'bg-pink-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100';
-                return `
-                    <button data-status="${status}" class="px-3 py-1 text-sm font-medium rounded-lg transition duration-150 ${isActive}">
-                        ${status}
-                    </button>
-                `;
-            }).join('');
-            
-            // Attach click handler for filtering
-            statusFilterEl.onclick = (event) => {
-                const status = event.target.getAttribute('data-status');
-                if (status) {
-                    currentStatusFilter = status;
-                    setupStatusFilter(); // Re-render buttons to show active state
-                    renderFilteredOrders();
-                }
-            };
-        }
+        // 3. Rendering Functions
 
-        // 4. Rendering Functions
-
-        // Render the final list of orders
+        /**
+         * Renders the order list based on the currentStatusFilter.
+         */
         function renderFilteredOrders() {
+            ordersListEl.innerHTML = ''; // Clear existing orders
+
             const filteredOrders = allOrders.filter(order => 
                 currentStatusFilter === 'ALL' || order.status === currentStatusFilter
             );
 
             if (filteredOrders.length === 0) {
-                ordersListEl.innerHTML = `<p class="text-gray-500 text-center py-4">No orders found with status: ${currentStatusFilter}</p>`;
+                ordersListEl.innerHTML = `<p class="text-center text-gray-500 p-4">No ${currentStatusFilter.toLowerCase()} orders found.</p>`;
                 return;
             }
 
-            ordersListEl.innerHTML = filteredOrders.map(order => {
-                const statusClasses = getStatusClasses(order.status);
-                
-                // Format timestamp safely
-                let orderDate = 'N/A';
-                if (order.createdAt && typeof order.createdAt.toDate === 'function') {
-                    orderDate = order.createdAt.toDate().toLocaleString();
+            filteredOrders.forEach(order => {
+                ordersListEl.appendChild(createOrderCard(order));
+            });
+
+            // Set the active filter button style
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-status') === currentStatusFilter) {
+                    btn.classList.add('ring-2', 'ring-offset-2', 'ring-indigo-500');
+                } else {
+                    btn.classList.remove('ring-2', 'ring-offset-2', 'ring-indigo-500');
                 }
-                
-                // Dropdown for status update
-                const statusOptions = getUniqueStatuses().filter(s => s !== 'ALL').map(status => 
-                    `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`
-                ).join('');
-
-                return `
-                    <div class="p-4 border border-gray-100 rounded-xl bg-white shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center transition duration-200 ease-in-out hover:shadow-xl" data-order-id="${order.id}">
-                        <!-- Left: Order Info -->
-                        <div class="flex-grow mb-3 md:mb-0">
-                            <div class="text-sm text-gray-400 mb-1">Order ID: <span class="font-mono text-gray-600">${order.id}</span></div>
-                            <div class="text-base text-gray-500">Date: ${orderDate}</div>
-                        </div>
-
-                        <!-- Center: Status Tag -->
-                        <div class="flex-shrink-0 mb-3 md:mb-0 md:mx-6">
-                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ring-1 ${statusClasses}">
-                                ${order.status || 'Unknown'}
-                            </span>
-                        </div>
-                        
-                        <!-- Right: Status Update Dropdown -->
-                        <div class="flex-shrink-0 flex items-center space-x-2">
-                            <select 
-                                data-order-id="${order.id}"
-                                data-current-status="${order.status}"
-                                onchange="handleStatusUpdate(event)"
-                                class="border border-gray-300 rounded-lg p-2 text-sm focus:ring-pink-500 focus:border-pink-500 transition duration-150"
-                            >
-                                <option value="" disabled>Update Status</option>
-                                ${statusOptions}
-                            </select>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            });
         }
 
-        // 5. Handle Status Update
+        /**
+         * Creates an HTML element for a single order.
+         * @param {object} order - The order data.
+         * @returns {HTMLElement} The created order card element.
+         */
+        function createOrderCard(order) {
+            const card = document.createElement('div');
+            card.className = 'flex justify-between items-center p-4 border rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow';
+            card.setAttribute('data-order-id', order.id);
+
+            const date = order.createdAt ? order.createdAt.toDate().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }) : 'N/A';
+
+            // Order details
+            const details = `
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">${order.id}</p>
+                    <p class="text-xs text-gray-500">Placed: ${date}</p>
+                    <p class="text-xs text-gray-500">Status: <span class="${getStatusStyles(order.status)} px-2 py-0.5 rounded-full text-xs font-medium">${order.status}</span></p>
+                </div>
+            `;
+
+            // Status update controls
+            const controls = document.createElement('div');
+            controls.className = 'flex space-x-2';
+            
+            const nextStatus = getNextStatus(order.status);
+            if (nextStatus) {
+                const updateButton = document.createElement('button');
+                updateButton.textContent = `Mark as ${nextStatus}`;
+                updateButton.className = 'update-btn bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors';
+                updateButton.setAttribute('data-order-id', order.id);
+                updateButton.setAttribute('data-status', order.status);
+                updateButton.setAttribute('data-next-status', nextStatus);
+                updateButton.onclick = handleStatusUpdate;
+                controls.appendChild(updateButton);
+            }
+
+            // Cancel button
+            if (order.status !== 'Cancelled') {
+                 const cancelButton = document.createElement('button');
+                cancelButton.textContent = 'Cancel';
+                cancelButton.className = 'cancel-btn bg-red-500 hover:bg-red-600 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors';
+                cancelButton.setAttribute('data-order-id', order.id);
+                cancelButton.setAttribute('data-status', order.status);
+                cancelButton.setAttribute('data-next-status', 'Cancelled');
+                cancelButton.onclick = handleStatusUpdate;
+                controls.appendChild(cancelButton);
+            }
+           
+
+            card.innerHTML = details;
+            card.appendChild(controls);
+
+            return card;
+        }
+
+        /**
+         * Determines the next logical status for an order.
+         * @param {string} currentStatus - The current status of the order.
+         * @returns {string|null} The next status, or null if it's a terminal status.
+         */
+        function getNextStatus(currentStatus) {
+            switch (currentStatus) {
+                case 'Processing':
+                    return 'Shipped';
+                case 'Shipped':
+                    return 'Delivered';
+                case 'Delivered':
+                case 'Cancelled':
+                default:
+                    return null;
+            }
+        }
         
-        window.handleStatusUpdate = async function(event) {
-            const selectEl = event.currentTarget;
-            const orderId = selectEl.getAttribute('data-order-id');
-            const currentStatus = selectEl.getAttribute('data-current-status');
-            const newStatus = selectEl.value;
+        /**
+         * Returns Tailwind CSS classes for status display.
+         * @param {string} status - The status string.
+         * @returns {string} Tailwind CSS classes.
+         */
+        function getStatusStyles(status) {
+            switch (status) {
+                case 'Processing':
+                    return 'bg-yellow-200 text-yellow-800';
+                case 'Shipped':
+                    return 'bg-blue-200 text-blue-800';
+                case 'Delivered':
+                    return 'bg-green-200 text-green-800';
+                case 'Cancelled':
+                    return 'bg-red-200 text-red-800';
+                default:
+                    return 'bg-gray-200 text-gray-800';
+            }
+        }
 
-            // Get appId again to use in doc path
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-            if (!db || !orderId || newStatus === currentStatus || newStatus === "") {
-                // If it fails or selection is invalid, reset the select box 
-                selectEl.value = currentStatus;
+        // 4. Handle Status Update
+        async function handleStatusUpdate(event) {
+            if (!db) {
+                showCustomModal('Error', 'Database not initialized. Please refresh and try again.', false);
                 return;
             }
             
-            // Add visual state for saving
-            selectEl.classList.add('opacity-50');
-            selectEl.disabled = true;
+            const orderId = event.currentTarget.getAttribute('data-order-id');
+            const currentStatus = event.currentTarget.getAttribute('data-status');
+            const newStatus = event.currentTarget.getAttribute('data-next-status');
 
-            const orderDocRef = doc(db, `artifacts/${appId}/public/data/orders`, orderId);
+            if (!orderId || !newStatus) return;
+
+            // Confirmation check before cancelling
+            if (newStatus === 'Cancelled') {
+                const isConfirmed = await showCustomModal(
+                    'Confirm Cancellation', 
+                    `Are you sure you want to cancel order ID: ${orderId}? This cannot be undone.`, 
+                    true
+                );
+                if (!isConfirmed) return;
+            }
+
+            // Visually disable the button and show a loading state on the button itself
+            event.currentTarget.classList.add('opacity-50');
+            event.currentTarget.disabled = true;
 
             try {
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const docPath = `artifacts/${appId}/public/data/orders/${orderId}`;
+                const orderDocRef = doc(db, docPath);
+
                 await updateDoc(orderDocRef, {
                     status: newStatus,
-                    updatedAt: serverTimestamp() // Add a timestamp for when the update occurred
+                    updatedAt: serverTimestamp()
                 });
-                // The onSnapshot listener handles the UI update on success
+
+                // Success message
+                showCustomModal('Success', `Order ${orderId} status updated to: ${newStatus}`, false);
+
             } catch (error) {
-                console.error("Update error:", error);
-                showModal("Update Failed", `Could not update status for Order ID: ${orderId}. Error: ${error.message}`);
-                // If it fails, re-enable the button and reset value
-                selectEl.value = currentStatus;
+                console.error(`Error updating status for ${orderId}:`, error);
+                showCustomModal('Update Failed', `Could not update status for order ${orderId}. Error: ${error.message}`, false);
             } finally {
-                // Remove visual state
-                selectEl.classList.remove('opacity-50');
-                selectEl.disabled = false;
+                // Re-enable the button regardless of success/fail
+                event.currentTarget.classList.remove('opacity-50');
+                event.currentTarget.disabled = false;
             }
         }
-        
-        // 6. Custom Modal Functions (replacing alert/confirm)
-        function showModal(title, message) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-message').textContent = message;
-            document.getElementById('custom-modal').classList.remove('hidden');
-            document.getElementById('custom-modal').classList.add('flex');
+
+        // 5. Event Listeners for Filters and Auth
+
+        function setupEventListeners() {
+            // Filter buttons
+            statusFilterEl.addEventListener('click', (event) => {
+                if (event.target.classList.contains('filter-btn')) {
+                    const status = event.target.getAttribute('data-status');
+                    if (status) {
+                        currentStatusFilter = status;
+                        renderFilteredOrders();
+                    }
+                }
+            });
+
+            // Auth button (Login/Logout)
+            authButtonEl.addEventListener('click', async () => {
+                if (!auth || !isAuthReady) return;
+
+                if (auth.currentUser) {
+                    try {
+                        await signOut(auth);
+                        showCustomModal('Logout', 'You have been successfully logged out.', false);
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                        showCustomModal('Logout Failed', `Could not log out. Error: ${error.message}`, false);
+                    }
+                } else {
+                    // Re-run initialization to attempt sign-in
+                    await initializeFirebase();
+                }
+            });
         }
 
-        window.closeModal = function() {
-            document.getElementById('custom-modal').classList.add('hidden');
-            document.getElementById('custom-modal').classList.remove('flex');
+
+        // --- ENTRY POINT ---
+        window.onload = function () {
+            setupEventListeners();
+            initializeFirebase();
         }
 
-        // Start initialization when the page loads
-        window.onload = initializeFirebase;
     </script>
 </body>
 </html>
