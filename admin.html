@@ -94,13 +94,20 @@
             <p class="font-bold">Admin ID (for collaboration):</p>
             <p id="user-id-text" class="text-sm font-mono break-all"></p>
         </div>
+        
+        <!-- Global Error Display -->
+        <div id="global-error-display" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 hidden" role="alert">
+            <p class="font-bold">Firestore Error Detected:</p>
+            <p id="global-error-text" class="text-sm"></p>
+        </div>
+
 
         <!-- Dashboard Overview -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="card bg-white p-6 rounded-lg">
                 <p class="text-sm font-medium text-gray-500">Total Users</p>
                 <p class="text-3xl font-bold text-gray-900 mt-1">15</p>
-                <p class="text-xs text-secondary mt-2">Data from Firestore</p>
+                <p class="text-xs text-secondary mt-2">Mock Data</p>
             </div>
             <div class="card bg-white p-6 rounded-lg">
                 <p class="text-sm font-medium text-gray-500">Total Items</p>
@@ -115,7 +122,7 @@
             <div class="card bg-white p-6 rounded-lg">
                 <p class="text-sm font-medium text-gray-500">Server Load</p>
                 <p class="text-3xl font-bold text-gray-900 mt-1">15%</p>
-                <p class="text-xs text-secondary mt-2">Data from Free tier</p>
+                <p class="text-xs text-secondary mt-2">Mock Data</p>
             </div>
         </div>
         
@@ -211,8 +218,19 @@
         const userIdTextEl = document.getElementById('user-id-text');
         const totalInventoryCountEl = document.getElementById('total-inventory-count'); 
         const lowStockCountEl = document.getElementById('low-stock-count'); 
+        const globalErrorDisplay = document.getElementById('global-error-display'); // NEW
+        const globalErrorTextEl = document.getElementById('global-error-text'); // NEW
 
         // --- CORE FUNCTIONS ---
+        
+        /**
+         * Utility function to display a global error message.
+         */
+        function displayError(message) {
+            console.error("GLOBAL ERROR:", message);
+            globalErrorTextEl.textContent = message;
+            globalErrorDisplay.classList.remove('hidden');
+        }
 
         /**
          * 1. Firebase Initialization and Authentication
@@ -220,18 +238,15 @@
         async function initializeFirebase() {
             const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-            // Define the configuration: Prioritize the environment variable if available, 
-            // otherwise use the hardcoded config provided by the user.
+            // Define the configuration: Prioritize the environment variable if available.
             let firebaseConfig;
 
-            // FIX: Use environment config (__firebase_config) if available to ensure auth works correctly.
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 try {
                     firebaseConfig = JSON.parse(__firebase_config);
                     console.log("Using environment provided Firebase config.");
                 } catch (e) {
                     console.error("Failed to parse __firebase_config, falling back to hardcoded values.", e);
-                    // Fall through to use hardcoded config
                 }
             }
 
@@ -252,8 +267,8 @@
             }
 
 
-            if (!firebaseConfig.projectId) {
-                console.error("FATAL ERROR: Firebase configuration missing Project ID.");
+            if (!firebaseConfig || !firebaseConfig.projectId) {
+                displayError("FATAL ERROR: Firebase configuration missing Project ID. Cannot initialize.");
                 authStatusEl.textContent = 'FATAL ERROR (Missing Config)';
                 userIdTextEl.textContent = `App ID: ${appId}`; 
                 adminIdDisplay.classList.remove('hidden');
@@ -292,6 +307,7 @@
             } catch (error) {
                 console.error("Firebase Initialization Error:", error);
                 authStatusEl.textContent = 'INIT ERROR';
+                displayError(`Initialization Failed: ${error.message}`);
             }
         }
 
@@ -302,7 +318,6 @@
             if (!db || !auth.currentUser) return;
             
             // 2A. ORDERS Listener
-            // This path now uses the unique appId from the environment/fallback
             const ordersCollectionPath = `artifacts/${appId}/public/data/orders`; 
             const ordersRef = collection(db, ordersCollectionPath);
             ordersLoadingIndicator.classList.remove('hidden');
@@ -312,15 +327,14 @@
                 let fetchedOrders = [];
 
                 querySnapshot.forEach((doc) => {
-                    // FIX: Replace object spread syntax (...) with Object.assign() for wider compatibility
+                    // Using Object.assign for robust merging
                     fetchedOrders.push(Object.assign({ id: doc.id }, doc.data()));
                 });
 
                 allOrders = fetchedOrders;
 
                 allOrders.sort((a, b) => {
-                    // Check if createdAt exists and is a Timestamp before calling toMillis()
-                    // This defensive check prevents "toDate is not a function" if the field is corrupted
+                    // Robust sorting check for Timestamp type
                     const timeA = a.createdAt && typeof a.createdAt.toMillis === 'function' ? a.createdAt.toMillis() : 0;
                     const timeB = b.createdAt && typeof b.createdAt.toMillis === 'function' ? b.createdAt.toMillis() : 0;
                     return timeB - timeA;
@@ -329,13 +343,14 @@
                 renderFilteredOrders();
 
             }, (error) => {
+                // IMPORTANT: This often catches PERMISSION_DENIED errors.
                 console.error("Firestore error on orders snapshot:", error);
                 ordersLoadingIndicator.classList.add('hidden');
-                ordersListEl.innerHTML = `<p class="text-red-500 text-center">Error fetching orders: ${error.message}</p>`;
+                ordersListEl.innerHTML = `<p class="text-red-500 text-center">Error fetching orders. Check security rules: ${error.message}</p>`;
+                displayError(`Orders Fetch Failed: ${error.message}. Check the path: ${ordersCollectionPath}`);
             });
 
             // 2B. INVENTORY Listener
-            // This path now uses the unique appId from the environment/fallback
             const inventoryCollectionPath = `artifacts/${appId}/public/data/inventory`; 
             const inventoryRef = collection(db, inventoryCollectionPath);
             inventoryLoadingIndicator.classList.remove('hidden');
@@ -348,7 +363,6 @@
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     
-                    // FIX: Replace object spread syntax (...) with Object.assign() for wider compatibility
                     const item = Object.assign(
                         { id: doc.id }, 
                         data, 
@@ -374,9 +388,11 @@
                 renderInventory();
 
             }, (error) => {
+                // IMPORTANT: This often catches PERMISSION_DENIED errors.
                 console.error("Firestore error on inventory snapshot:", error);
                 inventoryLoadingIndicator.classList.add('hidden');
-                inventoryListEl.innerHTML = `<tr><td colspan="4" class="py-4 text-red-500 text-center">Error fetching inventory: ${error.message}</td></tr>`;
+                inventoryListEl.innerHTML = `<tr><td colspan="4" class="py-4 text-red-500 text-center">Error fetching inventory. Check security rules: ${error.message}</td></tr>`;
+                displayError(`Inventory Fetch Failed: ${error.message}. Check the path: ${inventoryCollectionPath}`);
             });
         }
 
@@ -460,10 +476,14 @@
          * 5. Handle Status Update (Orders)
          */
         async function handleStatusUpdate(event) {
-            const orderId = event.currentTarget.getAttribute('data-id');
-            const currentStatus = event.currentTarget.getAttribute('data-status');
+            const button = event.currentTarget;
+            const orderId = button.getAttribute('data-id');
+            const currentStatus = button.getAttribute('data-status');
 
-            if (!db || !orderId || !auth.currentUser) return;
+            if (!db || !orderId || !auth.currentUser) {
+                displayError("Database not initialized or user not authenticated for update.");
+                return;
+            }
             
             let newStatus;
             switch (currentStatus) {
@@ -478,10 +498,10 @@
                     break;
             }
 
-            event.currentTarget.classList.add('opacity-50');
-            event.currentTarget.disabled = true;
+            // Visually disable the button while updating
+            button.classList.add('opacity-50');
+            button.disabled = true;
 
-            // Use the correct appId from the environment/fallback for the path
             const ordersCollectionPath = `artifacts/${appId}/public/data/orders`; 
             const orderDocRef = doc(db, ordersCollectionPath, orderId);
             
@@ -492,9 +512,10 @@
                 });
             } catch (err) {
                 console.error("Update error:", err);
-                authStatusEl.textContent = `UPDATE FAILED for ${orderId}`; 
-                event.currentTarget.classList.remove('opacity-50');
-                event.currentTarget.disabled = false;
+                // Re-enable the button and display the error message on failure
+                button.classList.remove('opacity-50');
+                button.disabled = false;
+                displayError(`Update Failed for Order ${orderId}: ${err.message}. Check your security rules!`);
             }
         }
 
