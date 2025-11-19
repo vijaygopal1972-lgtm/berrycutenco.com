@@ -108,7 +108,7 @@
                 <p class="text-xs text-secondary mt-2">Inventory Count</p>
             </div>
             <div class="card bg-white p-6 rounded-lg">
-                <p class="text-sm font-medium text-gray-500">Low Stock Items</p>
+                <p id="low-stock-text" class="text-sm font-medium text-gray-500">Low Stock Items</p>
                 <p id="low-stock-count" class="text-3xl font-bold text-danger mt-1">0</p>
                 <p class="text-xs text-danger mt-2">Needs Reorder</p>
             </div>
@@ -220,17 +220,36 @@
         async function initializeFirebase() {
             const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-            // --- START: COMPLETE HARDCODED CONFIGURATION ---
-            const firebaseConfig = {
-                apiKey: "AIzaSyA34RRGtvkPiqGMAKYlnylHE6UGGx3Dqic",
-                authDomain: "berrycutenco-24946.firebaseapp.com",
-                projectId: "berrycutenco-24946",
-                storageBucket: "berrycutenco-24946.firebasestorage.app",
-                messagingSenderId: "547763232832",
-                appId: "1:547763232832:web:4ed243584ad9194976ffa5",
-                measurementId: "G-71RM0SRJEH" 
-            };
-            // --- END: COMPLETE HARDCODED CONFIGURATION ---
+            // Define the configuration: Prioritize the environment variable if available, 
+            // otherwise use the hardcoded config provided by the user.
+            let firebaseConfig;
+
+            // FIX: Use environment config (__firebase_config) if available to ensure auth works correctly.
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try {
+                    firebaseConfig = JSON.parse(__firebase_config);
+                    console.log("Using environment provided Firebase config.");
+                } catch (e) {
+                    console.error("Failed to parse __firebase_config, falling back to hardcoded values.", e);
+                    // Fall through to use hardcoded config
+                }
+            }
+
+            // Fallback/Default configuration (if environment variable failed or was missing)
+            if (!firebaseConfig) {
+                // --- START: COMPLETE HARDCODED CONFIGURATION ---
+                firebaseConfig = {
+                    apiKey: "AIzaSyA34RRGtvkPiqGMAKYlnylHE6UGGx3Dqic",
+                    authDomain: "berrycutenco-24946.firebaseapp.com",
+                    projectId: "berrycutenco-24946",
+                    storageBucket: "berrycutenco-24946.firebasestorage.app",
+                    messagingSenderId: "547763232832",
+                    appId: "1:547763232832:web:4ed243584ad9194976ffa5",
+                    measurementId: "G-71RM0SRJEH" 
+                };
+                console.log("Using hardcoded Firebase config.");
+                // --- END: COMPLETE HARDCODED CONFIGURATION ---
+            }
 
 
             if (!firebaseConfig.projectId) {
