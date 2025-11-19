@@ -3,452 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>BerryCuteNCO Admin Panel</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Inter font for a professional look */
-        body { font-family: 'Inter', sans-serif; }
-        /* Custom scrollbar styling for a cleaner look */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        /* Transition utility for better visual feedback on hover */
-        .card-transition { transition: all 0.3s ease-in-out; }
+        body { font-family: sans-serif; }
     </style>
 </head>
-<body class="bg-gray-50 flex h-screen overflow-hidden">
+<body class="bg-gray-50 min-h-screen">
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-gray-900 text-white flex-shrink-0 transition-all duration-300 ease-in-out md:translate-x-0 -translate-x-full z-20 fixed md:static h-full">
-        <div class="p-6">
-            <h1 class="text-3xl font-extrabold text-indigo-400">Admin Panel</h1>
-            <p class="text-sm text-gray-400 mt-1">Control Center</p>
-        </div>
-        <nav class="mt-8 space-y-2 px-4">
-            <!-- Navigation Links -->
-            <a href="#" class="flex items-center p-3 text-lg font-medium rounded-lg bg-indigo-700 hover:bg-indigo-600 transition duration-150">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                Dashboard
-            </a>
-            <a href="#" class="flex items-center p-3 text-gray-300 font-medium rounded-lg hover:bg-gray-800 transition duration-150">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20h-2m2 0h-2M13 18H5m14 0c-1.4 0-2.8-.7-4.1-2a13.3 13.3 0 01-4.8 0c-1.3 1.3-2.7 2-4.1 2H3a1 1 0 01-1-1v-4a1 1 0 011-1h18a1 1 0 011 1v4a1 1 0 01-1 1h-2zM8 10a2 2 0 100-4 2 2 0 000 4zM16 10a2 2 0 100-4 2 2 0 000 4z"></path></svg>
-                User Management
-            </a>
-            <a href="#" class="flex items-center p-3 text-gray-300 font-medium rounded-lg hover:bg-gray-800 transition duration-150">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                Content Metrics
-            </a>
-            <a href="#" class="flex items-center p-3 text-gray-300 font-medium rounded-lg hover:bg-gray-800 transition duration-150">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                Settings
-            </a>
-        </nav>
-    </aside>
-
-    <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header/Top Bar -->
-        <header class="bg-white shadow-md z-10">
-            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <!-- Mobile Menu Button -->
-                <button id="menu-toggle" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-                <h2 class="text-2xl font-semibold text-gray-800 hidden md:block">Welcome, Administrator</h2>
-                
-                <!-- User Profile/Logout -->
-                <div class="flex items-center space-x-4">
-                    <span class="text-gray-600 font-medium hidden sm:inline">User ID: <span id="user-id" class="font-mono text-xs bg-gray-200 px-2 py-1 rounded">Loading...</span></span>
-                    <button id="logout-button" class="bg-red-500 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition duration-150 shadow-md">
-                        Logout
-                    </button>
-                </div>
+    <div class="max-w-4xl mx-auto p-4 md:p-8">
+        <header class="mb-6 border-b pb-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-pink-600">BerryCuteNCO Admin Dashboard</h1>
+            <div id="auth-status" class="text-sm font-medium text-gray-500">
+                <span id="auth-status-el">Initializing...</span>
             </div>
         </header>
 
-        <!-- Page Content -->
-        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-8">
-            <h3 class="text-3xl font-bold text-gray-900 mb-6">Dashboard Overview</h3>
+        <!-- Admin ID Display -->
+        <div class="mb-6 p-3 bg-indigo-100 rounded-lg shadow-sm">
+            <p class="text-sm text-indigo-700 font-medium">
+                Admin ID (for collaboration): <span id="admin-id-display" class="font-mono text-indigo-900 break-all"></span>
+            </p>
+        </div>
 
-            <!-- Stats Grid - NOW DYNAMIC -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Stat Card 1: Total Users -->
-                <div class="bg-white p-6 rounded-xl shadow-lg card-transition hover:shadow-xl transform hover:-translate-y-1 border-b-4 border-indigo-500">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm font-medium text-gray-500">Total Users</span>
-                        <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20h-2m2 0h-2M13 18H5m14 0c-1.4 0-2.8-.7-4.1-2a13.3 13.3 0 01-4.8 0c-1.3 1.3-2.7 2-4.1 2H3a1 1 0 01-1-1v-4a1 1 0 011-1h18a1 1 0 011 1v4a1 1 0 01-1 1h-2zM8 10a2 2 0 100-4 2 2 0 000 4zM16 10a2 2 0 100-4 2 2 0 000 4z"></path></svg>
-                    </div>
-                    <p id="total-users" class="text-4xl font-bold text-gray-900 mt-1">Loading...</p>
-                    <p class="text-xs text-green-500 mt-2">Data from Firestore</p>
-                </div>
-                <!-- Stat Card 2: New Comments -->
-                <div class="bg-white p-6 rounded-xl shadow-lg card-transition hover:shadow-xl transform hover:-translate-y-1 border-b-4 border-green-500">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm font-medium text-gray-500">New Comments</span>
-                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
-                    </div>
-                    <p id="new-comments" class="text-4xl font-bold text-gray-900 mt-1">Loading...</p>
-                    <p class="text-xs text-green-500 mt-2">Data from Firestore</p>
-                </div>
-                <!-- Stat Card 3: Pending Approvals -->
-                <div class="bg-white p-6 rounded-xl shadow-lg card-transition hover:shadow-xl transform hover:-translate-y-1 border-b-4 border-yellow-500">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm font-medium text-gray-500">Pending Approvals</span>
-                        <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <p id="pending-approvals" class="text-4xl font-bold text-gray-900 mt-1">Loading...</p>
-                    <p class="text-xs text-yellow-500 mt-2">Data from Firestore</p>
-                </div>
-                <!-- Stat Card 4: Server Load -->
-                <div class="bg-white p-6 rounded-xl shadow-lg card-transition hover:shadow-xl transform hover:-translate-y-1 border-b-4 border-red-500">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm font-medium text-gray-500">Server Load</span>
-                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 17h18M5 13h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2zm8-5v2"></path></svg>
-                    </div>
-                    <p class="text-4xl font-bold text-gray-900 mt-1"><span id="server-load">Loading...</span>%</p>
-                    <p class="text-xs text-red-500 mt-2">Data from Firestore</p>
-                </div>
+        <!-- Status Filter and Loading Indicator -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+            <div id="status-filter" class="flex space-x-2 p-1 bg-white rounded-lg shadow-md mb-4 sm:mb-0">
+                <!-- Buttons rendered by statusFilterEl.onclick -->
             </div>
-
-            <!-- Content Section (Activity & Actions) -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Recent Activity Feed (2/3 width on large screens) - NOW DYNAMIC -->
-                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
-                    <h4 class="text-xl font-semibold mb-4 text-gray-800">Recent System Activity</h4>
-                    <ul id="activity-list" class="space-y-4">
-                        <li class="text-gray-500">Loading real-time activity...</li>
-                    </ul>
-                </div>
-
-                <!-- User Management Actions (1/3 width on large screens) - NOW FUNCTIONAL -->
-                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg">
-                    <h4 class="text-xl font-semibold mb-4 text-gray-800">Quick Actions</h4>
-                    <div class="space-y-4">
-                        <button id="add-user-btn" data-action="Add User" class="w-full py-3 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM12 14c-1.4 0-2.8-.7-4.1-2a13.3 13.3 0 01-4.8 0c-1.3 1.3-2.7 2-4.1 2H3a1 1 0 01-1-1v-4a1 1 0 011-1h18a1 1 0 011 1v4a1 1 0 01-1 1h-2z"></path></svg>
-                            Add New User
-                        </button>
-                        <button id="approve-all-btn" data-action="Approve All" class="w-full py-3 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-150 shadow-md flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.382a12.001 12.001 0 00-17.2 0l-2 2a1 1 0 00.141 1.414l5.3 5.3a1 1 0 001.414 0L17 4.5l2-2a1 1 0 00-.083-1.414z"></path></svg>
-                            Approve All Pending
-                        </button>
-                        <button id="export-data-btn" data-action="Export Data" class="w-full py-3 px-4 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-150 shadow-md flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Export Data
-                        </button>
-                    </div>
-                </div>
+            <div id="loading-indicator" class="hidden flex items-center space-x-2 text-gray-500">
+                <svg class="animate-spin h-5 w-5 text-pink-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Loading Orders...</span>
             </div>
-        </main>
-    </div>
+        </div>
 
-    <!-- Confirmation Modal (Hidden by default) -->
-    <div id="confirmation-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden items-center justify-center">
-        <div class="bg-white rounded-xl p-6 shadow-2xl w-full max-w-sm transform transition-all">
-            <h3 id="modal-title" class="text-xl font-bold text-gray-800 mb-3">Confirm Action</h3>
-            <p id="modal-message" class="text-gray-600 mb-6">Are you sure you want to proceed with this action?</p>
-            <div class="flex justify-end space-x-3">
-                <button id="modal-cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-150">
-                    Cancel
-                </button>
-                <button id="modal-confirm-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-150 font-semibold">
-                    Confirm
-                </button>
+        <!-- Orders List -->
+        <div class="bg-white p-6 rounded-xl shadow-2xl">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Current Orders</h2>
+            <div id="orders-list" class="space-y-4">
+                <p class="text-gray-500 text-center py-4">Waiting for initialization...</p>
+            </div>
+        </div>
+
+        <!-- Custom Modal for Alerts (replacing alert()) -->
+        <div id="custom-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 hidden items-center justify-center p-4" onclick="closeModal()">
+            <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+                <h3 id="modal-title" class="text-xl font-bold mb-3 text-red-600">Error</h3>
+                <p id="modal-message" class="text-gray-700 mb-4">An error occurred.</p>
+                <button onclick="closeModal()" class="w-full bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition duration-150">Close</button>
             </div>
         </div>
     </div>
 
-
-    <!-- Firebase Initialization and Logic -->
+    <!-- Firebase SDK Imports -->
     <script type="module">
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
-        // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, onSnapshot, query, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, query, onSnapshot, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-lite.js";
 
-        // Initialize Firebase
-        if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) {
-            console.error("Firebase config is missing or empty.");
-            // We can't proceed without config, but we continue to show the UI
-        }
-        
-        let app, db, auth;
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            setLogLevel('debug'); // Set Firebase Logging for Debugging
-        } catch (e) {
-            console.error("Failed to initialize Firebase:", e);
-        }
+        // Set Firebase logging level for debugging (optional)
+        setLogLevel('debug');
 
-        let isAuthReady = false;
-        let currentUserId = null;
-        
-        // --- UI Utility Functions ---
-        
-        // Custom message box for UI feedback
-        function showMessage(message, type = 'info') {
-            const container = document.createElement('div');
-            container.className = `fixed top-4 right-4 p-4 rounded-lg shadow-xl text-white z-50 transition-all duration-300 transform translate-x-full opacity-0 ${type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500'}`;
-            container.textContent = message;
-            document.body.appendChild(container);
+        // --- GLOBAL VARIABLES (Accessible outside functions) ---
+        let db; // Global Firestore instance
+        let auth; // Global Auth instance
+        let userId = null;
+        let isAuthReady = false; 
+        let allOrders = [];
+        let currentStatusFilter = 'ALL';
+
+        // --- DOM Elements ---
+        const authStatusEl = document.getElementById('auth-status-el');
+        const ordersListEl = document.getElementById('orders-list');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const statusFilterEl = document.getElementById('status-filter');
+        const adminIdDisplay = document.getElementById('admin-id-display');
+
+        // --- CORE FUNCTIONS ---
+
+        // 1. Firebase Initialization and Authentication
+        async function initializeFirebase() {
+            // Get environment variables safely inside the function
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
             
-            // Animate in
-            setTimeout(() => {
-                container.classList.remove('translate-x-full', 'opacity-0');
-            }, 10);
-
-            // Animate out and remove
-            setTimeout(() => {
-                container.classList.add('translate-x-full', 'opacity-0');
-                container.addEventListener('transitionend', () => container.remove());
-            }, 4000);
-        }
-
-        // --- Authentication ---
-
-        async function authenticateUser() {
-            if (!auth) return;
+            // Handle configuration parsing locally inside the function (Fix for "projectId not provided")
+            const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+            let localFirebaseConfig = {};
             try {
-                await setPersistence(auth, browserLocalPersistence);
+                localFirebaseConfig = JSON.parse(configString);
+            } catch (e) {
+                console.error('FATAL ERROR: Failed to parse Firebase config string.', e);
+                authStatusEl.textContent = 'CONFIG PARSE ERROR';
+                return;
+            }
+
+            // Check for critical project ID
+            if (!localFirebaseConfig.projectId) {
+                console.error('FATAL ERROR: Firebase configuration missing Project ID.');
+                authStatusEl.textContent = 'FATAL ERROR (Missing Config)';
+                return; 
+            }
+
+            try {
+                const app = initializeApp(localFirebaseConfig);
+                // ASSIGNMENT (No const/let/var)
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                authStatusEl.textContent = 'Authenticating...';
                 
+                // Sign In using the provided token or anonymously
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
+                    // Fallback to anonymous sign-in if token is missing
                     await signInAnonymously(auth);
                 }
-            } catch (error) {
-                console.error("Firebase Authentication failed:", error);
-                showMessage(`Authentication failed: ${error.message}`, 'error');
-            }
-        }
 
-        function setupAuthListener() {
-            if (!auth) return;
-            onAuthStateChanged(auth, (user) => {
-                const userIdDisplay = document.getElementById('user-id');
-                
-                if (user) {
-                    currentUserId = user.uid;
-                    userIdDisplay.textContent = currentUserId;
-                    isAuthReady = true;
-                    console.log("User authenticated. UID:", currentUserId);
-
-                    // Start listening to data now that auth is ready
-                    setupStatsListener();
-                    setupActivityListener();
-                } else {
-                    currentUserId = null;
-                    userIdDisplay.textContent = 'Signed Out';
-                    isAuthReady = false;
-                    console.log("User is signed out.");
-                }
-            });
-        }
-
-        async function handleLogout() {
-            if (!auth) return;
-            try {
-                await signOut(auth);
-                showMessage("Signed out successfully.", 'success');
-                // The onAuthStateChanged listener will handle UI updates
-            } catch (error) {
-                console.error("Logout failed:", error);
-                showMessage(`Logout failed: ${error.message}`, 'error');
-            }
-        }
-        
-        // --- Firestore Data Listeners (Real-time Updates) ---
-        
-        function setupStatsListener() {
-            if (!db || !isAuthReady) return;
-
-            // Document path for dashboard metrics (Public Data)
-            const statsDocPath = `/artifacts/${appId}/public/data/dashboardStats/metrics`;
-            const statsDocRef = doc(db, statsDocPath);
-
-            onSnapshot(statsDocRef, (docSnapshot) => {
-                if (docSnapshot.exists()) {
-                    const data = docSnapshot.data();
-                    
-                    document.getElementById('total-users').textContent = data.totalUsers !== undefined ? data.totalUsers.toLocaleString() : 'N/A';
-                    document.getElementById('new-comments').textContent = data.newComments !== undefined ? data.newComments.toLocaleString() : 'N/A';
-                    document.getElementById('pending-approvals').textContent = data.pendingApprovals !== undefined ? data.pendingApprovals.toLocaleString() : 'N/A';
-                    document.getElementById('server-load').textContent = data.serverLoad !== undefined ? data.serverLoad.toLocaleString() : 'N/A';
-                } else {
-                    // This is the first time data is being read.
-                    console.log("Dashboard metrics document not found. Using default '0' values.");
-                    document.getElementById('total-users').textContent = '0';
-                    document.getElementById('new-comments').textContent = '0';
-                    document.getElementById('pending-approvals').textContent = '0';
-                    document.getElementById('server-load').textContent = '0';
-                }
-            }, (error) => {
-                console.error("Error fetching dashboard stats:", error);
-                showMessage(`Error loading stats: ${error.message}`, 'error');
-            });
-        }
-
-
-        function setupActivityListener() {
-            if (!db || !isAuthReady) return;
-
-            // Collection path for public, collaborative system activity
-            const collectionPath = `/artifacts/${appId}/public/data/systemActivity`;
-            const q = query(collection(db, collectionPath));
-            const activityList = document.getElementById('activity-list');
-            
-            // Clear mock loading message
-            activityList.innerHTML = '';
-            activityList.innerHTML = '<li class="text-gray-500">Awaiting activity data...</li>';
-
-            onSnapshot(q, (snapshot) => {
-                activityList.innerHTML = ''; // Clear existing list
-                
-                if (snapshot.empty) {
-                    activityList.innerHTML = '<li class="text-gray-500">No recent activity recorded.</li>';
-                    return;
-                }
-                
-                const activities = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    activities.push({ id: doc.id, ...data });
-                });
-                
-                // Sort by timestamp descending
-                activities.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-                activities.forEach(activity => {
-                    // Simple template for activity item
-                    const li = document.createElement('li');
-                    li.className = 'flex items-start p-3 bg-gray-50 rounded-lg border-l-4 border-gray-200';
-
-                    let iconClass = 'text-blue-500';
-                    let actionText = activity.action || 'Unknown Action';
-
-                    if (actionText.includes('Created') || actionText.includes('Added')) {
-                        iconClass = 'text-green-500';
-                    } else if (actionText.includes('Deleted') || actionText.includes('Removed')) {
-                        iconClass = 'text-red-500';
-                    } else if (actionText.includes('Updated') || actionText.includes('Changed')) {
-                        iconClass = 'text-yellow-500';
+                // Listen for Auth State Changes
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        adminIdDisplay.textContent = userId;
+                        authStatusEl.textContent = 'Authenticated';
+                    } else {
+                        // This might happen if the token expires or is invalid
+                        userId = null;
+                        adminIdDisplay.textContent = 'N/A';
+                        authStatusEl.textContent = 'Not Signed In';
                     }
-
-                    const timeStamp = activity.timestamp ? new Date(activity.timestamp).toLocaleString() : 'N/A';
-                    const userIdShort = activity.user_id ? activity.user_id.substring(0, 8) + '...' : 'System';
                     
-                    li.innerHTML = `
-                        <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 ${iconClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm font-semibold text-gray-800">${actionText}</p>
-                            <p class="text-xs text-gray-600">By User: ${userIdShort}</p>
-                            <p class="text-xs text-gray-400">${timeStamp}</p>
-                        </div>
-                    `;
-                    activityList.appendChild(li);
+                    if (!isAuthReady) {
+                        // Only run setup once the initial auth state is known
+                        isAuthReady = true;
+                        setupStatusFilter();
+                        // Pass the current appId to the listener
+                        setupRealtimeListener(db, auth, appId); 
+                    }
                 });
 
-            }, (error) => {
-                console.error("Error fetching activity feed:", error);
-                showMessage(`Error loading activity feed: ${error.message}`, 'error');
-            });
+            } catch (error) {
+                console.error("Firebase Initialization Error:", error);
+                authStatusEl.textContent = 'Init Error';
+            }
         }
 
+        // 2. Setup Real-time Firestore Listener for Orders
+        function setupRealtimeListener(db, auth, appId) {
+            // Wait for auth to be confirmed before attempting to fetch
+            if (!db || !isAuthReady) return;
 
-        // --- Quick Action Modal Logic ---
+            loadingIndicator.classList.remove('hidden');
 
-        const modal = document.getElementById('confirmation-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
-        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+            // Use the public path for collaborative data
+            const ordersCollectionPath = `artifacts/${appId}/public/data/orders`;
+            const ordersRef = collection(db, ordersCollectionPath);
+            const q = query(ordersRef);
 
-        function openModal(action, callback) {
-            modalTitle.textContent = `Confirm: ${action}`;
-            modalMessage.textContent = `Are you sure you want to perform the action: "${action}"? This action cannot be easily undone.`;
-            
-            // Re-clone to remove old event listeners
-            const newConfirmBtn = modalConfirmBtn.cloneNode(true);
-            modalConfirmBtn.parentNode.replaceChild(newConfirmBtn, modalConfirmBtn);
-
-            newConfirmBtn.addEventListener('click', () => {
-                callback();
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            });
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        modalCancelBtn.addEventListener('click', () => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        });
-        
-        function handleQuickAction(action) {
-            openModal(action, () => {
-                // Placeholder logic for the quick actions
-                console.log(`Executing action: ${action}`);
+            // Set up real-time listener
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                loadingIndicator.classList.add('hidden');
                 
-                // In a real application, you would put Firebase write/update logic here.
-                let message;
-                switch(action) {
-                    case 'Add User':
-                        message = 'User creation process initiated.';
-                        break;
-                    case 'Approve All':
-                        message = 'Approvals are being processed in the background.';
-                        break;
-                    case 'Export Data':
-                        message = 'Data export request has been queued.';
-                        break;
-                    default:
-                        message = 'Action confirmed, but no specific task was defined.';
-                }
+                let fetchedOrders = [];
+                querySnapshot.forEach((doc) => {
+                    // Include the document ID for updates
+                    fetchedOrders.push({ id: doc.id, ...doc.data() });
+                });
 
-                showMessage(message, 'success');
+                allOrders = fetchedOrders;
+                
+                // Sort orders in JavaScript: Newest first (by createdAt)
+                allOrders.sort((a, b) => {
+                    // Safely convert Firestore Timestamp to milliseconds for sorting
+                    // Handle cases where createdAt might be missing (e.g., initial test documents)
+                    const aTime = a.createdAt && typeof a.createdAt.toMillis === 'function' ? a.createdAt.toMillis() : 0;
+                    const bTime = b.createdAt && typeof b.createdAt.toMillis === 'function' ? b.createdAt.toMillis() : 0;
+                    return bTime - aTime; // Descending order (Newest first)
+                });
+                
+                setupStatusFilter(); // Re-run to update status list if new status appears
+                renderFilteredOrders();
+            }, (error) => {
+                // Error handling
+                console.error("Error on orders onSnapshot:", error);
+                loadingIndicator.classList.add('hidden');
+                ordersListEl.innerHTML = `<p class="text-red-500 text-center py-4">Error fetching orders: ${error.message}</p>`;
             });
+            
+            // In a real app, you would save 'unsubscribe' and call it when component unmounts.
         }
-
-
-        // --- UI Interactions ---
-
-        // Mobile sidebar toggle logic
-        document.getElementById('menu-toggle').addEventListener('click', () => {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('-translate-x-full');
-        });
         
-        // Logout button handler
-        document.getElementById('logout-button').addEventListener('click', handleLogout);
-
-        // Quick Action button handlers (uses data-action attribute)
-        document.getElementById('add-user-btn').addEventListener('click', (e) => handleQuickAction(e.currentTarget.dataset.action));
-        document.getElementById('approve-all-btn').addEventListener('click', (e) => handleQuickAction(e.currentTarget.dataset.action));
-        document.getElementById('export-data-btn').addEventListener('click', (e) => handleQuickAction(e.currentTarget.dataset.action));
-
-
-        // --- Main Execution ---
-        if (app) {
-            authenticateUser();
-            setupAuthListener();
-        } else {
-            document.getElementById('user-id').textContent = 'Firebase Error';
-            document.getElementById('activity-list').innerHTML = '<li class="text-red-500">Firebase initialization failed. Check your configuration.</li>';
+        // 3. Status Utilities
+        
+        // Get CSS classes based on order status
+        function getStatusClasses(status) {
+            switch (status) {
+                case 'New':
+                    return 'bg-red-100 text-red-800 ring-red-300';
+                case 'Processing':
+                    return 'bg-yellow-200 text-yellow-800 ring-yellow-400';
+                case 'Shipped':
+                    return 'bg-blue-200 text-blue-800 ring-blue-400';
+                case 'Delivered':
+                    return 'bg-green-200 text-green-800 ring-green-400';
+                default:
+                    return 'bg-gray-200 text-gray-800 ring-gray-400';
+            }
         }
 
+        // Get all unique statuses from the current orders
+        function getUniqueStatuses() {
+            const statuses = new Set(['ALL', 'New', 'Processing', 'Shipped', 'Delivered']); // Ensure all expected statuses are present
+            allOrders.forEach(order => {
+                if (order.status) {
+                    statuses.add(order.status);
+                }
+            });
+            // Convert to array and ensure a stable order (ALL first, then others)
+            const statusArray = Array.from(statuses).filter(s => s !== 'ALL');
+            return ['ALL', ...statusArray.sort()];
+        }
+
+        // Render the status filter buttons
+        function setupStatusFilter() {
+            const statuses = getUniqueStatuses();
+            statusFilterEl.innerHTML = statuses.map(status => {
+                const isActive = status === currentStatusFilter ? 'bg-pink-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-100';
+                return `
+                    <button data-status="${status}" class="px-3 py-1 text-sm font-medium rounded-lg transition duration-150 ${isActive}">
+                        ${status}
+                    </button>
+                `;
+            }).join('');
+            
+            // Attach click handler for filtering
+            statusFilterEl.onclick = (event) => {
+                const status = event.target.getAttribute('data-status');
+                if (status) {
+                    currentStatusFilter = status;
+                    setupStatusFilter(); // Re-render buttons to show active state
+                    renderFilteredOrders();
+                }
+            };
+        }
+
+        // 4. Rendering Functions
+
+        // Render the final list of orders
+        function renderFilteredOrders() {
+            const filteredOrders = allOrders.filter(order => 
+                currentStatusFilter === 'ALL' || order.status === currentStatusFilter
+            );
+
+            if (filteredOrders.length === 0) {
+                ordersListEl.innerHTML = `<p class="text-gray-500 text-center py-4">No orders found with status: ${currentStatusFilter}</p>`;
+                return;
+            }
+
+            ordersListEl.innerHTML = filteredOrders.map(order => {
+                const statusClasses = getStatusClasses(order.status);
+                
+                // Format timestamp safely
+                let orderDate = 'N/A';
+                if (order.createdAt && typeof order.createdAt.toDate === 'function') {
+                    orderDate = order.createdAt.toDate().toLocaleString();
+                }
+                
+                // Dropdown for status update
+                const statusOptions = getUniqueStatuses().filter(s => s !== 'ALL').map(status => 
+                    `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`
+                ).join('');
+
+                return `
+                    <div class="p-4 border border-gray-100 rounded-xl bg-white shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center transition duration-200 ease-in-out hover:shadow-xl" data-order-id="${order.id}">
+                        <!-- Left: Order Info -->
+                        <div class="flex-grow mb-3 md:mb-0">
+                            <div class="text-sm text-gray-400 mb-1">Order ID: <span class="font-mono text-gray-600">${order.id}</span></div>
+                            <div class="text-base text-gray-500">Date: ${orderDate}</div>
+                        </div>
+
+                        <!-- Center: Status Tag -->
+                        <div class="flex-shrink-0 mb-3 md:mb-0 md:mx-6">
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold ring-1 ${statusClasses}">
+                                ${order.status || 'Unknown'}
+                            </span>
+                        </div>
+                        
+                        <!-- Right: Status Update Dropdown -->
+                        <div class="flex-shrink-0 flex items-center space-x-2">
+                            <select 
+                                data-order-id="${order.id}"
+                                data-current-status="${order.status}"
+                                onchange="handleStatusUpdate(event)"
+                                class="border border-gray-300 rounded-lg p-2 text-sm focus:ring-pink-500 focus:border-pink-500 transition duration-150"
+                            >
+                                <option value="" disabled>Update Status</option>
+                                ${statusOptions}
+                            </select>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 5. Handle Status Update
+        
+        // Removed db/auth from arguments since they are globally available
+        window.handleStatusUpdate = async function(event) {
+            const selectEl = event.currentTarget;
+            const orderId = selectEl.getAttribute('data-order-id');
+            const currentStatus = selectEl.getAttribute('data-current-status');
+            const newStatus = selectEl.value;
+
+            // Get appId again to use in doc path
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+            if (!db || !orderId || newStatus === currentStatus || newStatus === "") {
+                // If it fails or selection is invalid, reset the select box 
+                selectEl.value = currentStatus;
+                return;
+            }
+            
+            // Add visual state for saving
+            selectEl.classList.add('opacity-50');
+            selectEl.disabled = true;
+
+            const orderDocRef = doc(db, `artifacts/${appId}/public/data/orders`, orderId);
+
+            try {
+                await updateDoc(orderDocRef, {
+                    status: newStatus,
+                    updatedAt: serverTimestamp() // Add a timestamp for when the update occurred
+                });
+                // The onSnapshot listener handles the UI update on success
+            } catch (error) {
+                console.error("Update error:", error);
+                showModal("Update Failed", `Could not update status for Order ID: ${orderId}. Error: ${error.message}`);
+                // If it fails, re-enable the button and reset value
+                selectEl.value = currentStatus;
+            } finally {
+                // Remove visual state
+                selectEl.classList.remove('opacity-50');
+                selectEl.disabled = false;
+            }
+        }
+        
+        // 6. Custom Modal Functions (replacing alert/confirm)
+        function showModal(title, message) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('custom-modal').classList.remove('hidden');
+            document.getElementById('custom-modal').classList.add('flex');
+        }
+
+        window.closeModal = function() {
+            document.getElementById('custom-modal').classList.add('hidden');
+            document.getElementById('custom-modal').classList.remove('flex');
+        }
+
+        // Start initialization when the page loads
+        window.onload = initializeFirebase;
     </script>
 </body>
 </html>
