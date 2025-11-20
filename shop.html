@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css"> 
 
     <style>
-    /* Styling for the dynamic payment link */
+    /* This CSS block is for the specific styling of the dynamic payment link */
     #instamojoPayLink {
       display: block;
       width: 100%;
@@ -31,65 +31,6 @@
     }
     .cta:hover {
       background-color: #e652a1;
-    }
-
-    /* --- Drawer-style mobile nav (left for layout, as it was untouched) --- */
-    .nav { position: sticky; top: 0; z-index: 1000; }
-
-    .hamburger {
-      display: none;
-      width: 28px; height: 22px; position: relative;
-      border: 0; background: none; padding: 0; cursor: pointer;
-      margin-left: 8px;
-    }
-    .hamburger span {
-      position: absolute; left: 0; right: 0; height: 2px;
-      background: #7A276C;
-      border-radius: 2px; transition: transform .2s ease, top .2s ease, opacity .2s ease;
-    }
-    .hamburger span:nth-child(1){ top: 0; }
-    .hamburger span:nth-child(2){ top: 10px; }
-    .hamburger span:nth-child(3){ top: 20px; }
-
-    .mobile-drawer{
-      position: fixed; top:0; right:0; height:100dvh; width:260px;
-      background:#ffd8e8;
-      padding:80px 24px 24px; box-shadow:-8px 0 24px rgba(0,0,0,.15);
-      transform:translateX(100%); transition:transform .25s ease-in-out; z-index:1001;
-      display:flex; flex-direction:column; gap:6px;
-    }
-    .mobile-drawer a{
-      display:block; padding:12px 10px; font-weight:600; color:#5b2a5a; text-decoration:none;
-      border-radius:14px;
-    }
-    .mobile-drawer a.active{ color:#7A276C; background:rgba(122,39,108,0.08); }
-
-    .backdrop{
-      position: fixed; inset:0; background:rgba(0,0,0,.25);
-      opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:1000;
-    }
-
-    body.menu-open .mobile-drawer{ transform:translateX(0); }
-    body.menu-open .backdrop{ opacity:1; pointer-events:auto; }
-    body.menu-open .hamburger span:nth-child(1){ top:10px; transform:rotate(45deg); }
-    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
-    body.menu-open .hamburger span:nth-child(3){ top:10px; transform:rotate(-45deg); }
-
-    @media (max-width: 900px){
-      .menu { display: none; }
-      .hamburger { display: inline-block; }
-    }
-
-    /* Keep your mobile product layout tweaks */
-    @media (max-width: 768px) {
-      main.product {
-        flex-direction: column;
-        padding: 10px;
-      }
-      .gallery, .details {
-        width: 100%;
-        margin: 10px 0;
-      }
     }
   </style>
 </head>
@@ -117,7 +58,7 @@
     </button>
   </div>
 
-    <nav class="mobile-drawer" id="drawer">
+    <nav class="mobile-menu" id="mobileMenu">
     <a href="/index.html">Home</a>
     <a href="/shop.html" class="active">Shop</a>
     <a href="/contact.html">Contact</a>
@@ -125,7 +66,6 @@
     <a href="/shipping-delivery.html">Shipping & Delivery</a>
     <a href="/terms.html">Terms</a>
   </nav>
-  <div class="backdrop" id="backdrop"></div>
 </header>
 
 <main class="product">
@@ -210,14 +150,12 @@
   };
 
   const pillButtons = document.querySelectorAll('.pill');
-  const payLink = document.getElementById('instamojoPayLink'); // This is the <a> tag
+  const payLink = document.getElementById('instamojoPayLink');
 
   // Function to handle click event on the link itself
   payLink.addEventListener('click', function(e) {
-    // Prevent the default link action (to only open the Instamojo link once)
     e.preventDefault(); 
     
-    // Get the currently set Instamojo URL from the 'href'
     const instamojoURL = payLink.href;
 
     if (instamojoURL && instamojoURL !== '#') {
@@ -244,7 +182,7 @@
     const selectedLink = instamojoLinks[selectedPrice];
 
     if (selectedLink) {
-      payLink.href = selectedLink; // Update the href attribute
+      payLink.href = selectedLink;
       payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${new Intl.NumberFormat('en-IN').format(selectedPrice)}`;
     } else {
       payLink.href = '#';
@@ -262,23 +200,23 @@
 
 
   // ======================================================
-  // 2. DRAWER NAV TOGGLE LOGIC (UNTOUCHED)
+  // 2. MOBILE NAVIGATION TOGGLE LOGIC (For dropdown from style.css)
   // ======================================================
   (function(){
     const btn = document.querySelector('.hamburger');
-    const backdrop = document.getElementById('backdrop');
-    const drawer = document.getElementById('drawer');
-    if(!btn || !drawer) return;
+    const menu = document.getElementById('mobileMenu');
+    if(!btn || !menu) return;
 
-    function toggleDrawer(){
-      document.body.classList.toggle('menu-open');
-      btn.setAttribute('aria-expanded', document.body.classList.contains('menu-open'));
+    function toggleMenu(){
+      menu.classList.toggle('show');
+      btn.classList.toggle('active');
     }
-    btn.addEventListener('click', toggleDrawer);
-    backdrop.addEventListener('click', toggleDrawer);
-    drawer.querySelectorAll('a').forEach(a => {
+    btn.addEventListener('click', toggleMenu);
+
+    // Close menu if a link is clicked (optional)
+    menu.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', () => {
-        if (document.body.classList.contains('menu-open')) toggleDrawer();
+        if (menu.classList.contains('show')) toggleMenu();
       });
     });
   })();
