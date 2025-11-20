@@ -7,11 +7,8 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="/style.css">
-
-    <style>
-    /* Styling for the dynamic payment link */
-    /* NOTE: We changed the element to a <button> but kept the styling ID for continuity */
+  <link rel="stylesheet" href="style.css">     <style>
+    /* Styling for the dynamic payment link (<a> tag styles) */
     #instamojoPayLink {
       display: block;
       width: 100%;
@@ -33,64 +30,64 @@
       background-color: #e652a1;
     }
 
-    /* --- Drawer-style mobile nav (same as other pages) --- */
-    .nav { position: sticky; top: 0; z-index: 1000; }
+    /* --- Drawer-style mobile nav (left for layout, as it was untouched) --- */
+    .nav { position: sticky; top: 0; z-index: 1000; }
 
-    .hamburger {
-      display: none;
-      width: 28px; height: 22px; position: relative;
-      border: 0; background: none; padding: 0; cursor: pointer;
-      margin-left: 8px;
-    }
-    .hamburger span {
-      position: absolute; left: 0; right: 0; height: 2px;
-      background: #7A276C;
-      border-radius: 2px; transition: transform .2s ease, top .2s ease, opacity .2s ease;
-    }
-    .hamburger span:nth-child(1){ top: 0; }
-    .hamburger span:nth-child(2){ top: 10px; }
-    .hamburger span:nth-child(3){ top: 20px; }
+    .hamburger {
+        display: none;
+        width: 28px; height: 22px; position: relative;
+        border: 0; background: none; padding: 0; cursor: pointer;
+        margin-left: 8px;
+    }
+    .hamburger span {
+        position: absolute; left: 0; right: 0; height: 2px;
+        background: #7A276C;
+        border-radius: 2px; transition: transform .2s ease, top .2s ease, opacity .2s ease;
+    }
+    .hamburger span:nth-child(1){ top: 0; }
+    .hamburger span:nth-child(2){ top: 10px; }
+    .hamburger span:nth-child(3){ top: 20px; }
 
-    .mobile-drawer{
-      position: fixed; top:0; right:0; height:100dvh; width:260px;
-      background:#ffd8e8;
-      padding:80px 24px 24px; box-shadow:-8px 0 24px rgba(0,0,0,.15);
-      transform:translateX(100%); transition:transform .25s ease-in-out; z-index:1001;
-      display:flex; flex-direction:column; gap:6px;
-    }
-    .mobile-drawer a{
-      display:block; padding:12px 10px; font-weight:600; color:#5b2a5a; text-decoration:none;
-      border-radius:14px;
-    }
-    .mobile-drawer a.active{ color:#7A276C; background:rgba(122,39,108,0.08); }
+    .mobile-drawer{
+        position: fixed; top:0; right:0; height:100dvh; width:260px;
+        background:#ffd8e8;
+        padding:80px 24px 24px; box-shadow:-8px 0 24px rgba(0,0,0,.15);
+        transform:translateX(100%); transition:transform .25s ease-in-out; z-index:1001;
+        display:flex; flex-direction:column; gap:6px;
+    }
+    .mobile-drawer a{
+        display:block; padding:12px 10px; font-weight:600; color:#5b2a5a; text-decoration:none;
+        border-radius:14px;
+    }
+    .mobile-drawer a.active{ color:#7A276C; background:rgba(122,39,108,0.08); }
 
-    .backdrop{
-      position: fixed; inset:0; background:rgba(0,0,0,.25);
-      opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:1000;
-    }
+    .backdrop{
+        position: fixed; inset:0; background:rgba(0,0,0,.25);
+        opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:1000;
+    }
 
-    body.menu-open .mobile-drawer{ transform:translateX(0); }
-    body.menu-open .backdrop{ opacity:1; pointer-events:auto; }
-    body.menu-open .hamburger span:nth-child(1){ top:10px; transform:rotate(45deg); }
-    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
-    body.menu-open .hamburger span:nth-child(3){ top:10px; transform:rotate(-45deg); }
+    body.menu-open .mobile-drawer{ transform:translateX(0); }
+    body.menu-open .backdrop{ opacity:1; pointer-events:auto; }
+    body.menu-open .hamburger span:nth-child(1){ top:10px; transform:rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
+    body.menu-open .hamburger span:nth-child(3){ top:10px; transform:rotate(-45deg); }
 
-    @media (max-width: 900px){
-      .menu { display: none; }
-      .hamburger { display: inline-block; }
-    }
+    @media (max-width: 900px){
+        .menu { display: none; }
+        .hamburger { display: inline-block; }
+    }
 
-    /* Keep your mobile product layout tweaks */
-    @media (max-width: 768px) {
-      main.product {
-        flex-direction: column;
-        padding: 10px;
-      }
-      .gallery, .details {
-        width: 100%;
-        margin: 10px 0;
-      }
-    }
+    /* Keep your mobile product layout tweaks */
+    @media (max-width: 768px) {
+        main.product {
+            flex-direction: column;
+            padding: 10px;
+        }
+        .gallery, .details {
+            width: 100%;
+            margin: 10px 0;
+        }
+    }
   </style>
 </head>
 <body>
@@ -144,9 +141,9 @@
     </div>
 
     <div class="purchase-row" style="margin-top: 20px;">
-            <button id="instamojoPayLink" class="cta" type="button" target="_blank" rel="noopener noreferrer">
+            <a id="instamojoPayLink" href="https://imjo.in/WXCaWg" class="cta" target="_blank" rel="noopener noreferrer">
         <i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹999 
-      </button>
+      </a>
     </div>
 
     <div class="info">
@@ -197,13 +194,12 @@
 
 <script>
   // ======================================================
-  // 1. DYNAMIC PAYMENT & FORM OPEN LOGIC
+  // 1. DYNAMIC INSTAMOJO PAYMENT LINK & FORM OPEN LOGIC
   // ======================================================
 
   // YOUR FORM SPREE ENDPOINT
   const formspreeEndpoint = 'https://formspree.io/f/xanvkjkn'; 
 
-  // Instamojo links remain the same
   const instamojoLinks = {
     '999': 'https://imjo.in/WXCaWg',
     '1999': 'https://imjo.in/kyPr56',
@@ -211,58 +207,59 @@
   };
 
   const pillButtons = document.querySelectorAll('.pill');
-  const payButton = document.getElementById('instamojoPayLink'); // This is now the <button>
-  let currentInstamojoURL = instamojoLinks['999']; // Store the currently selected URL
+  const payLink = document.getElementById('instamojoPayLink'); // This is now the <a> tag
 
-  function updatePaymentState(event) {
-    // Update active pill styling
+  // Updated to handle click event on the link itself
+  payLink.addEventListener('click', function(e) {
+    // Prevent the default link action (to only open the Instamojo link once)
+    e.preventDefault(); 
+    
+    // Get the currently set Instamojo URL from the 'href'
+    const instamojoURL = payLink.href;
+
+    if (instamojoURL && instamojoURL !== '#') {
+        // 1. Open the payment page in a new tab/window
+        window.open(instamojoURL, '_blank');
+        
+        // 2. Open the Formspree page in a second new tab/window
+        window.open(formspreeEndpoint, '_blank');
+        
+        // Critical instruction for the user
+        alert("Payment and Order Form opened in TWO new tabs! \n\n1. Complete your payment in the Instamojo tab. \n2. THEN, switch to the Form tab to enter your details (name, address, etc.) and submit.");
+
+    } else {
+        alert("Please select a scoop size before proceeding to payment.");
+    }
+});
+
+
+  function updatePaymentLink(event) {
     pillButtons.forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
 
-    // Get selected price and corresponding Instamojo link
     const selectedPrice = event.target.getAttribute('data-price');
-    currentInstamojoURL = instamojoLinks[selectedPrice];
+    const selectedLink = instamojoLinks[selectedPrice];
 
-    if (currentInstamojoURL) {
-      // Update the visible button text
-      payButton.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${new Intl.NumberFormat('en-IN').format(selectedPrice)}`;
+    if (selectedLink) {
+      payLink.href = selectedLink; // Update the href attribute
+      payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹${new Intl.NumberFormat('en-IN').format(selectedPrice)}`;
     } else {
-      currentInstamojoURL = '#';
-      payButton.innerHTML = `<i class="fa-solid fa-credit-card"></i> Error: Select a Scoop`;
+      payLink.href = '#';
+      payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Error: Select a Scoop`;
     }
   }
 
-  // New function to handle the button click (opening two tabs)
-  function handleDualAction(e) {
-    e.preventDefault(); // Prevent default button submission if applicable
-    
-    if (currentInstamojoURL && currentInstamojoURL !== '#') {
-      // 1. Open the payment page in a new tab/window
-      window.open(currentInstamojoURL, '_blank');
-      
-      // 2. Open the Formspree page in a second new tab/window
-      window.open(formspreeEndpoint, '_blank');
-      
-      // Critical instruction for the user
-      alert("Payment and Order Form opened in TWO new tabs! \n\n1. Complete your payment in the Instamojo tab. \n2. THEN, switch to the Form tab to enter your details (name, address, etc.) and submit.");
-
-    } else {
-      alert("Please select a scoop size before proceeding to payment.");
-    }
-  }
-
-
-  // Attach event listeners
   pillButtons.forEach(button => {
-    button.addEventListener('click', updatePaymentState);
+    button.addEventListener('click', updatePaymentLink);
   });
-  
-  // Attach the dual-action handler to the main purchase button
-  payButton.addEventListener('click', handleDualAction);
+  
+  // Set initial state
+  payLink.href = instamojoLinks['999'];
+  payLink.innerHTML = `<i class="fa-solid fa-credit-card"></i> Proceed to Pay ₹999`;
 
 
   // ======================================================
-  // 2. DRAWER NAV TOGGLE LOGIC
+  // 2. DRAWER NAV TOGGLE LOGIC (UNTOUCHED)
   // ======================================================
   (function(){
     const btn = document.querySelector('.hamburger');
